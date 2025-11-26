@@ -1,0 +1,117 @@
+# 文风字库 (Font Management System)
+
+基于 Next.js 15、shadcn/ui 和 SQLite 构建的现代化字体管理平台。
+
+## 技术栈
+
+- **前端框架**: Next.js 15.5 (App Router)
+- **UI 组件**: React 19.1
+- **样式**: Tailwind CSS 4.0
+- **组件库**: shadcn/ui
+- **数据库**: SQLite 3 + Drizzle ORM 0.36
+- **认证**: NextAuth.js 5
+- **状态管理**: Zustand 5.0
+- **数据验证**: Zod 3.23
+- **测试**: Vitest 4.0 + fast-check 3.22
+- **代码质量**: ESLint 9 + Prettier 3 + Husky 9
+
+## 开发环境设置
+
+### 前置要求
+
+- Node.js 20+
+- npm 或 yarn
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 环境变量配置
+
+复制 `.env.example` 到 `.env.development` 并配置相应的环境变量：
+
+```bash
+cp .env.example .env.development
+```
+
+### 数据库初始化
+
+```bash
+# 生成数据库迁移文件
+npm run db:generate
+
+# 应用迁移
+npm run db:migrate
+
+# 打开数据库管理界面
+npm run db:studio
+```
+
+### 启动开发服务器
+
+```bash
+npm run dev
+```
+
+访问 [http://localhost:3000](http://localhost:3000) 查看应用。
+
+## 可用脚本
+
+- `npm run dev` - 启动开发服务器（使用 Turbopack）
+- `npm run build` - 构建生产版本
+- `npm run start` - 启动生产服务器
+- `npm run typecheck` - TypeScript 类型检查
+- `npm run lint` - ESLint 代码检查
+- `npm run lint:fix` - 自动修复 ESLint 问题
+- `npm run format` - Prettier 格式化代码
+- `npm run format:check` - 检查代码格式
+- `npm run test` - 运行测试
+- `npm run test:watch` - 监听模式运行测试
+- `npm run test:coverage` - 生成测试覆盖率报告
+- `npm run db:generate` - 生成数据库迁移
+- `npm run db:push` - 推送数据库变更
+- `npm run db:migrate` - 应用数据库迁移
+- `npm run db:studio` - 打开 Drizzle Studio
+
+## 项目结构
+
+```
+font-management-system/
+├── app/                      # Next.js App Router
+│   ├── (public)/            # 公开路由组
+│   ├── admin/               # 管理后台
+│   ├── api/                 # API 路由
+│   └── login/               # 登录页
+├── src/
+│   ├── components/          # React 组件
+│   │   ├── ui/             # shadcn/ui 组件
+│   │   ├── font/           # 字体相关组件
+│   │   ├── admin/          # 管理后台组件
+│   │   └── layout/         # 布局组件
+│   ├── lib/
+│   │   ├── db/             # 数据库配置和 schema
+│   │   └── services/       # 业务逻辑服务
+│   ├── types/              # TypeScript 类型定义
+│   └── hooks/              # React Hooks
+├── data/                    # SQLite 数据库文件
+├── drizzle/                 # 数据库迁移文件
+└── public/                  # 静态资源
+```
+
+## 代码规范
+
+项目使用 ESLint 和 Prettier 进行代码质量控制，并通过 Husky 和 lint-staged 在提交前自动检查和格式化代码。
+
+### 命名规范
+
+- 组件：PascalCase (`FontCard.tsx`)
+- 文件：kebab-case (`font-service.ts`)
+- 变量/函数：camelCase (`getFontList`)
+- 常量：UPPER_SNAKE_CASE (`API_BASE_URL`)
+- 类型/接口：PascalCase (`FontCreateDto`)
+
+## License
+
+GPL-3.0
