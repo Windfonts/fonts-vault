@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { syncService } from '@/lib/services/sync.service';
-import { withAdmin, handleApiError } from '@/lib/auth/api-guard';
+import { handleApiError, withAdmin } from '@/lib/auth/api-guard';
 import { logger } from '@/lib/logger';
+import { syncService } from '@/lib/services/sync.service';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * POST /api/sync
  * 触发从OSS同步字体列表
  * 需要管理员认证
  */
-export const POST = withAdmin(async (req: NextRequest) => {
+export const POST = withAdmin(async () => {
   try {
     logger.info('[API-sync] 开始同步字体列表');
 

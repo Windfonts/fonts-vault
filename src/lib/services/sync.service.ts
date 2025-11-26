@@ -152,7 +152,7 @@ export class SyncService {
               statusText: ar.statusText,
             });
           }
-        } catch (e) {
+        } catch {
           logger.warn('[SyncService] 读取分析文件异常');
         }
       }

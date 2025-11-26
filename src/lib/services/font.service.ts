@@ -176,7 +176,7 @@ export class FontService {
 
     // 映射结果，排除大字段但保留必要信息
     const dataList = result.map((row) => {
-      const { copyright, ...fontData } = row.font;
+      const { copyright: _copyright, ...fontData } = row.font;
 
       // 简化 weights 数据，只保留字重名称
       let simplifiedWeights = {};

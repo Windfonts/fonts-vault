@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { handleApiError, withAdmin } from '@/lib/auth/api-guard';
 import { brandService } from '@/lib/services/brand.service';
 import { brandCreateSchema } from '@/lib/services/validation';
-import { withAdmin, handleApiError } from '@/lib/auth/api-guard';
+import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 /**
@@ -9,7 +9,7 @@ import { ZodError } from 'zod';
  * 获取品牌列表
  * 公开访问
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const brands = await brandService.findAll();
 
