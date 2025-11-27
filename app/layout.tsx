@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: '文风字库 - Font Management System',
     template: '%s | 文风字库',
   },
-  description: '基于 Next.js 和 shadcn/ui 构建的现代化字体管理平台',
+  description: '专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成',
   keywords: ['字体', '字体管理', 'Font Management', 'Typography', 'Web Fonts'],
   authors: [{ name: '文风字库' }],
   creator: '文风字库',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'zh_CN',
     title: '文风字库',
-    description: '基于 Next.js 和 shadcn/ui 构建的现代化字体管理平台',
+    description: '专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成',
     siteName: '文风字库',
     images: [
       {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: '文风字库',
-    description: '基于 Next.js 和 shadcn/ui 构建的现代化字体管理平台',
+    description: '专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成',
     images: ['/icon.webp'],
   },
 };

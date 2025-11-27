@@ -1,7 +1,7 @@
 {
   "name": "文风字库",
   "short_name": "字体管理",
-  "description": "基于 Next.js 和 shadcn/ui 构建的现代化字体管理平台",
+  "description": "专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -46,11 +46,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Desktop Login Button */}
-          <Button variant="ghost" asChild className="hidden sm:flex">
-            <Link href="/login">登录</Link>
-          </Button>
-
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="md:hidden">
@@ -77,13 +72,6 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                <div className="border-t pt-4">
-                  <Button asChild className="w-full">
-                    <Link href="/login" onClick={() => setOpen(false)}>
-                      登录
-                    </Link>
-                  </Button>
-                </div>
               </nav>
             </SheetContent>
           </Sheet>

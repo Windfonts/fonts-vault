@@ -27,7 +27,7 @@ export default async function Home() {
               文风字库
             </h1>
             <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg md:text-xl">
-              基于 Next.js 和 shadcn/ui 构建的现代化字体管理平台，提供便捷的字体浏览、预览和管理功能
+              专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" asChild>

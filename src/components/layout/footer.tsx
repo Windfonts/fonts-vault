@@ -8,8 +8,12 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">文风字库</h3>
-            <p className="text-muted-foreground text-sm">
-              基于 Next.js 和 shadcn/ui 构建的现代化字体管理平台
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              海量字体 · CDN 加速
+              <br />
+              实时预览 · 一键集成
+              <br />
+              授权透明 · 开发友好
             </p>
           </div>
           <div className="space-y-3">
@@ -58,14 +62,6 @@ export function Footer() {
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   使用指南
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  管理后台
                 </Link>
               </li>
             </ul>
