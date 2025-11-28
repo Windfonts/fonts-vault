@@ -50,14 +50,14 @@ export function CssApiGuide() {
                 variant="ghost"
                 size="sm"
                 onClick={() =>
-                  copyToClipboard('<link rel="stylesheet" href="/api/css?family=思源黑体">', 0)
+                  copyToClipboard('<link rel="stylesheet" href="/api/css?family=WF-Qtxtt">', 0)
                 }
               >
                 {copiedIndex === 0 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
             <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
-              {`<link rel="stylesheet" href="/api/css?family=思源黑体">`}
+              {`<link rel="stylesheet" href="/api/css?family=WF-Qtxtt">`}
             </pre>
           </div>
 
@@ -68,7 +68,7 @@ export function CssApiGuide() {
                 variant="ghost"
                 size="sm"
                 onClick={() =>
-                  copyToClipboard('body {\n  font-family: "思源黑体", sans-serif;\n}', 1)
+                  copyToClipboard('body {\n  font-family: "WF-Qtxtt", sans-serif;\n}', 1)
                 }
               >
                 {copiedIndex === 1 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -76,7 +76,7 @@ export function CssApiGuide() {
             </div>
             <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
               {`body {
-  font-family: "思源黑体", sans-serif;
+  font-family: "WF-Qtxtt", sans-serif;
 }`}
             </pre>
           </div>
@@ -87,7 +87,7 @@ export function CssApiGuide() {
       <Card>
         <CardHeader>
           <CardTitle>高级用法</CardTitle>
-          <CardDescription>使用多个字体和字重</CardDescription>
+          <CardDescription>使用多个字体</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -100,7 +100,7 @@ export function CssApiGuide() {
                 size="sm"
                 onClick={() =>
                   copyToClipboard(
-                    '<link rel="stylesheet" href="/api/css?family=思源黑体|思源宋体">',
+                    '<link rel="stylesheet" href="/api/css?family=WF-Qtxtt|WF-Hxbsb">',
                     2
                   )
                 }
@@ -109,13 +109,13 @@ export function CssApiGuide() {
               </Button>
             </div>
             <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
-              {`<link rel="stylesheet" href="/api/css?family=思源黑体|思源宋体">`}
+              {`<link rel="stylesheet" href="/api/css?family=WF-Qtxtt|WF-Hxbsb">`}
             </pre>
           </div>
 
           <div>
-            <h4 className="mb-2 text-sm font-semibold">指定字重</h4>
-            <p className="text-muted-foreground mb-2 text-sm">在字体名称后使用 : 指定字重</p>
+            <h4 className="mb-2 text-sm font-semibold">在 CSS 中使用多个字体</h4>
+            <p className="text-muted-foreground mb-2 text-sm">可以为不同元素应用不同字体</p>
             <div className="mb-2 flex items-center justify-between">
               <span className="text-muted-foreground text-xs">示例</span>
               <Button
@@ -123,7 +123,7 @@ export function CssApiGuide() {
                 size="sm"
                 onClick={() =>
                   copyToClipboard(
-                    '<link rel="stylesheet" href="/api/css?family=思源黑体:400,700">',
+                    'body {\n  font-family: "WF-Qtxtt", sans-serif;\n}\n\nh1 {\n  font-family: "WF-Hxbsb", sans-serif;\n}',
                     3
                   )
                 }
@@ -132,15 +132,13 @@ export function CssApiGuide() {
               </Button>
             </div>
             <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
-              {`<link rel="stylesheet" href="/api/css?family=思源黑体:400,700">`}
-            </pre>
-          </div>
+              {`body {
+  font-family: "WF-Qtxtt", sans-serif;
+}
 
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">语言子集</h4>
-            <p className="text-muted-foreground mb-2 text-sm">使用 subset 参数指定字符子集</p>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
-              {`<link rel="stylesheet" href="/api/css?family=思源黑体&subset=chinese-simplified">`}
+h1 {
+  font-family: "WF-Hxbsb", sans-serif;
+}`}
             </pre>
           </div>
         </CardContent>
@@ -217,20 +215,19 @@ export function CssApiGuide() {
   <meta charset="UTF-8">
   <title>字体示例</title>
   <link rel="preconnect" href="${baseUrl}">
-  <link rel="stylesheet" href="${baseUrl}/api/css?family=思源黑体:400,700">
+  <link rel="stylesheet" href="${baseUrl}/api/css?family=WF-Qtxtt|WF-Hxbsb">
   <style>
     body {
-      font-family: "思源黑体", sans-serif;
-      font-weight: 400;
+      font-family: "WF-Qtxtt", sans-serif;
     }
     h1 {
-      font-weight: 700;
+      font-family: "WF-Hxbsb", sans-serif;
     }
   </style>
 </head>
 <body>
   <h1>欢迎使用文风字库</h1>
-  <p>这是使用思源黑体的示例文本。</p>
+  <p>这是使用千图小兔体的示例文本。</p>
 </body>
 </html>`,
                   4
@@ -247,20 +244,19 @@ export function CssApiGuide() {
   <meta charset="UTF-8">
   <title>字体示例</title>
   <link rel="preconnect" href="${baseUrl}">
-  <link rel="stylesheet" href="${baseUrl}/api/css?family=思源黑体:400,700">
+  <link rel="stylesheet" href="${baseUrl}/api/css?family=WF-Qtxtt|WF-Hxbsb">
   <style>
     body {
-      font-family: "思源黑体", sans-serif;
-      font-weight: 400;
+      font-family: "WF-Qtxtt", sans-serif;
     }
     h1 {
-      font-weight: 700;
+      font-family: "WF-Hxbsb", sans-serif;
     }
   </style>
 </head>
 <body>
   <h1>欢迎使用文风字库</h1>
-  <p>这是使用思源黑体的示例文本。</p>
+  <p>这是使用千图小兔体的示例文本。</p>
 </body>
 </html>`}
           </pre>
@@ -306,16 +302,16 @@ export function CssApiGuide() {
                     `import { loadFont } from '@windfonts/chinese-fonts';
 
 // 加载完整字符集
-loadFont('Siyuan-Heiti-Regular');
+loadFont('WF-Qtxtt');
 
 // 加载常用中文字符（推荐，文件更小）
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh-common' });
+loadFont('WF-Qtxtt', { subset: 'zh-common' });
 
 // 加载中文字符集
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh' });
+loadFont('WF-Qtxtt', { subset: 'zh' });
 
 // 加载英文字符集
-loadFont('Siyuan-Heiti-Regular', { subset: 'en' });`,
+loadFont('WF-Qtxtt', { subset: 'en' });`,
                     6
                   )
                 }
@@ -327,16 +323,16 @@ loadFont('Siyuan-Heiti-Regular', { subset: 'en' });`,
               {`import { loadFont } from '@windfonts/chinese-fonts';
 
 // 加载完整字符集
-loadFont('Siyuan-Heiti-Regular');
+loadFont('WF-Qtxtt');
 
 // 加载常用中文字符（推荐，文件更小）
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh-common' });
+loadFont('WF-Qtxtt', { subset: 'zh-common' });
 
 // 加载中文字符集
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh' });
+loadFont('WF-Qtxtt', { subset: 'zh' });
 
 // 加载英文字符集
-loadFont('Siyuan-Heiti-Regular', { subset: 'en' });`}
+loadFont('WF-Qtxtt', { subset: 'en' });`}
             </pre>
           </div>
 
@@ -353,12 +349,12 @@ loadFont('Siyuan-Heiti-Regular', { subset: 'en' });`}
 import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载字体
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh-common' });
+loadFont('WF-Qtxtt', { subset: 'zh-common' });
 
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN">
-      <body style={{ fontFamily: 'Siyuan-Heiti, sans-serif' }}>
+      <body style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
         {children}
       </body>
     </html>
@@ -376,12 +372,12 @@ export default function RootLayout({ children }) {
 import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载字体
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh-common' });
+loadFont('WF-Qtxtt', { subset: 'zh-common' });
 
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN">
-      <body style={{ fontFamily: 'Siyuan-Heiti, sans-serif' }}>
+      <body style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
         {children}
       </body>
     </html>
@@ -402,11 +398,11 @@ export default function RootLayout({ children }) {
                     `import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh-common' });
+loadFont('WF-Qtxtt', { subset: 'zh-common' });
 
 function MyComponent() {
   return (
-    <div style={{ fontFamily: 'Siyuan-Heiti, sans-serif' }}>
+    <div style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
       <h1>欢迎使用文风字库</h1>
       <p>这是使用 NPM 包加载的字体</p>
     </div>
@@ -423,11 +419,11 @@ function MyComponent() {
               {`import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载
-loadFont('Siyuan-Heiti-Regular', { subset: 'zh-common' });
+loadFont('WF-Qtxtt', { subset: 'zh-common' });
 
 function MyComponent() {
   return (
-    <div style={{ fontFamily: 'Siyuan-Heiti, sans-serif' }}>
+    <div style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
       <h1>欢迎使用文风字库</h1>
       <p>这是使用 NPM 包加载的字体</p>
     </div>
@@ -442,16 +438,9 @@ function MyComponent() {
             </div>
             <ul className="list-inside list-disc space-y-1 text-sm text-blue-800 dark:text-blue-200">
               <li>
-                <strong>格式</strong>：<code>[标准化名称]-[字重]</code>，如{' '}
-                <code>Siyuan-Heiti-Regular</code>
-              </li>
-              <li>
-                <strong>标准化名称</strong>：使用 PascalCase 格式，如 <code>Siyuan-Heiti</code>
-                （思源黑体）
-              </li>
-              <li>
-                <strong>字重名称</strong>：首字母大写，如 <code>Regular</code>、<code>Bold</code>、
-                <code>Light</code>
+                <strong>格式</strong>：使用字体的 font_family 字段，如 <code>WF-Qtxtt</code>
+                （千图小兔体）、
+                <code>WF-Hxbsb</code>（胡晓波骚包体）
               </li>
               <li>
                 <strong>字符子集</strong>：
@@ -475,28 +464,20 @@ function MyComponent() {
             <h4 className="mb-2 text-sm font-semibold">常用字体加载示例</h4>
             <div className="bg-muted space-y-2 rounded-md p-4 text-xs">
               <div>
-                <strong>思源黑体 Regular：</strong>
-                <code className="ml-2">
-                  loadFont('Siyuan-Heiti-Regular', {"{ subset: 'zh-common' }"})
-                </code>
+                <strong>千图小兔体：</strong>
+                <code className="ml-2">loadFont('WF-Qtxtt', {"{ subset: 'zh-common' }"})</code>
               </div>
               <div>
-                <strong>思源黑体 Bold：</strong>
-                <code className="ml-2">
-                  loadFont('Siyuan-Heiti-Bold', {"{ subset: 'zh-common' }"})
-                </code>
+                <strong>胡晓波骚包体：</strong>
+                <code className="ml-2">loadFont('WF-Hxbsb', {"{ subset: 'zh-common' }"})</code>
               </div>
               <div>
-                <strong>思源宋体 Regular：</strong>
-                <code className="ml-2">
-                  loadFont('Siyuan-Songti-Regular', {"{ subset: 'zh-common' }"})
-                </code>
+                <strong>霞鹜马克哥特体：</strong>
+                <code className="ml-2">loadFont('WF-Xwmh', {"{ subset: 'zh-common' }"})</code>
               </div>
               <div>
-                <strong>霞鹜文楷 Regular：</strong>
-                <code className="ml-2">
-                  loadFont('Lxgw-Wenkai-Regular', {"{ subset: 'zh-common' }"})
-                </code>
+                <strong>寒蝉手拙体：</strong>
+                <code className="ml-2">loadFont('WF-Hcszt', {"{ subset: 'zh-common' }"})</code>
               </div>
             </div>
           </div>
