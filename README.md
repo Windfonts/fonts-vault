@@ -99,9 +99,6 @@ npm run dev
 - `npm run lint:fix` - 自动修复 ESLint 问题
 - `npm run format` - Prettier 格式化代码
 - `npm run format:check` - 检查代码格式
-- `npm run test` - 运行测试
-- `npm run test:watch` - 监听模式运行测试
-- `npm run test:coverage` - 生成测试覆盖率报告
 - `npm run db:generate` - 生成数据库迁移
 - `npm run db:push` - 推送数据库变更
 - `npm run db:migrate` - 应用数据库迁移
