@@ -34,10 +34,10 @@ export function DocsContent() {
   }, [searchQuery]);
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <div className="container py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="mb-4 text-4xl font-bold">使用文档</h1>
+        <h1 className="mb-4 text-2xl font-bold">使用文档</h1>
         <p className="text-muted-foreground text-lg">了解如何使用文风字库的 API 和服务</p>
       </div>
 

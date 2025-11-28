@@ -49,6 +49,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
   } | null>(null);
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [localAnalysis, setLocalAnalysis] = useState(analysis);
+  const [copiedNpm, setCopiedNpm] = useState(false);
 
   // 加载字体 CSS（详情页使用 full 版本）
   useFontCSS({
@@ -71,6 +72,26 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
     } catch (error) {
       toast.error('复制失败，请手动复制');
     }
+  };
+
+  // Copy NPM code to clipboard
+  const handleCopyNpm = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedNpm(true);
+      toast.success('代码已复制到剪贴板');
+      setTimeout(() => setCopiedNpm(false), 2000);
+    } catch {
+      toast.error('复制失败，请手动复制');
+    }
+  };
+
+  // 生成标准化的字体名称（PascalCase）
+  const getNormalizedFontName = () => {
+    return font.normalizedName
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join('-');
   };
 
   // 加载字体分析数据
@@ -392,6 +413,121 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
   font-family: '${font.fontFamily}', sans-serif;
 }`}</code>
                 </pre>
+              </div>
+
+              {/* NPM Package Usage */}
+              <div>
+                <label className="mb-2 block text-sm font-medium">NPM 包使用方式</label>
+                <div className="space-y-3">
+                  {/* Installation */}
+                  <div>
+                    <div className="text-muted-foreground mb-2 text-xs">1. 安装依赖</div>
+                    <div className="flex min-w-0 gap-2">
+                      <pre className="bg-muted flex-1 overflow-x-auto rounded-md p-4 text-sm">
+                        <code className="text-xs">{`npm install @windfonts/chinese-fonts`}</code>
+                      </pre>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleCopyNpm('npm install @windfonts/chinese-fonts')}
+                      >
+                        {copiedNpm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Import Usage */}
+                  <div>
+                    <div className="text-muted-foreground mb-2 text-xs">
+                      2. 使用 loadFont 函数加载字体（当前选择：{selectedWeight}）
+                    </div>
+                    <div className="flex min-w-0 gap-2">
+                      <pre className="bg-muted flex-1 overflow-x-auto rounded-md p-4 text-sm">
+                        <code className="text-xs">{`import { loadFont } from '@windfonts/chinese-fonts';
+
+// 加载当前选择的字重（推荐使用 zh-common 子集）
+loadFont('${getNormalizedFontName()}-${selectedWeight}', { subset: 'zh-common' });
+
+// 在组件中使用
+const MyComponent = () => (
+  <div style={{ fontFamily: '${font.fontFamily}' }}>
+    你的文本内容
+  </div>
+);`}</code>
+                      </pre>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() =>
+                          handleCopyNpm(`import { loadFont } from '@windfonts/chinese-fonts';
+
+// 加载当前选择的字重（推荐使用 zh-common 子集）
+loadFont('${getNormalizedFontName()}-${selectedWeight}', { subset: 'zh-common' });
+
+// 在组件中使用
+const MyComponent = () => (
+  <div style={{ fontFamily: '${font.fontFamily}' }}>
+    你的文本内容
+  </div>
+);`)
+                        }
+                      >
+                        {copiedNpm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Available Weights */}
+                  {availableWeights.length > 0 && (
+                    <div className="bg-muted rounded-md p-3">
+                      <div className="mb-2 text-xs font-medium">可用字重加载方式：</div>
+                      <div className="space-y-2 text-xs">
+                        {availableWeights.map((weight) => (
+                          <div
+                            key={weight.name}
+                            className="flex items-center justify-between gap-2"
+                          >
+                            <code className="bg-background text-muted-foreground flex-1 rounded px-1.5 py-0.5">
+                              loadFont('{getNormalizedFontName()}-{weight.name}',{' '}
+                              {"{ subset: 'zh-common' }"})
+                            </code>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 px-2"
+                              onClick={() =>
+                                handleCopyNpm(
+                                  `loadFont('${getNormalizedFontName()}-${weight.name}', { subset: 'zh-common' })`
+                                )
+                              }
+                            >
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Subset Options */}
+                  <div className="bg-muted rounded-md p-3">
+                    <div className="mb-2 text-xs font-medium">字符子集选项：</div>
+                    <ul className="text-muted-foreground list-inside list-disc space-y-1 text-xs">
+                      <li>
+                        <code className="bg-background rounded px-1.5 py-0.5">zh-common</code> -
+                        常用中文（推荐，文件小）
+                      </li>
+                      <li>
+                        <code className="bg-background rounded px-1.5 py-0.5">zh</code> -
+                        完整中文字符集
+                      </li>
+                      <li>
+                        <code className="bg-background rounded px-1.5 py-0.5">en</code> - 英文字符集
+                      </li>
+                      <li>不指定 - 完整字符集</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               {/* Version Recommendation */}

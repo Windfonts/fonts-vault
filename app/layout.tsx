@@ -1,9 +1,10 @@
 import { Toaster } from '@/components/ui/sonner';
+import { loadFont } from '@windfonts/chinese-fonts';
 import type { Metadata, Viewport } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-
+loadFont('Hclcks-Regular', { subset: 'zh-common' });
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

@@ -23,7 +23,10 @@ export default async function Home() {
         {/* Hero Section - 平台介绍区域 */}
         <section className="mb-16 text-center">
           <div className="mx-auto max-w-4xl">
-            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+            <h1
+              className="mb-4 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl"
+              style={{ fontFamily: 'WF-Hclcks, sans-serif' }}
+            >
               文风字库
             </h1>
             <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg md:text-xl">

@@ -7,7 +7,9 @@ export function Footer() {
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 md:py-12 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold">文风字库</h3>
+            <h3 className="text-lg font-semibold" style={{ fontFamily: 'WF-Hclcks, sans-serif' }}>
+              文风字库
+            </h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
               海量字体 · CDN 加速
               <br />

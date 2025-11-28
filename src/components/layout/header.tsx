@@ -9,7 +9,7 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
+import { Github, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -28,7 +28,12 @@ export function Header() {
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center space-x-2">
             <img src="/icon.webp" alt="Logo" className="h-8 w-8 rounded" />
-            <span className="text-lg font-bold sm:text-xl">文风字库</span>
+            <span
+              className="text-lg font-bold sm:text-xl"
+              style={{ fontFamily: 'WF-Hclcks, sans-serif' }}
+            >
+              文风字库
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -46,6 +51,18 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* GitHub Link */}
+          <Button variant="outline" size="icon" asChild className="hidden sm:flex">
+            <a
+              href="https://feicode.com/Windfonts/font-packages.git"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="字体源码仓库"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+          </Button>
+
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="md:hidden">
@@ -72,6 +89,18 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
+                <div className="border-t pt-4">
+                  <a
+                    href="https://feicode.com/Windfonts/font-packages.git"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                    className="hover:text-primary flex items-center gap-2 text-lg font-medium transition-colors"
+                  >
+                    <Github className="h-5 w-5" />
+                    字体源码
+                  </a>
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

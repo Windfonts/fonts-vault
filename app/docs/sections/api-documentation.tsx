@@ -2,6 +2,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function ApiDocumentation() {
+  // 获取当前域名
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
   return (
     <div className="space-y-6">
       <Card>
@@ -12,7 +15,7 @@ export function ApiDocumentation() {
         <CardContent className="space-y-4">
           <div>
             <h3 className="mb-2 font-semibold">基础 URL</h3>
-            <code className="bg-muted block rounded-md p-3">https://your-domain.com/api</code>
+            <code className="bg-muted block rounded-md p-3">{baseUrl}/api</code>
           </div>
           <div>
             <h3 className="mb-2 font-semibold">响应格式</h3>
