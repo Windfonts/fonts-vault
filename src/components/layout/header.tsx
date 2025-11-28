@@ -54,7 +54,7 @@ export function Header() {
           {/* GitHub Link */}
           <Button variant="outline" size="icon" asChild className="hidden sm:flex">
             <a
-              href="https://feicode.com/Windfonts/font-packages.git"
+              href="https://github.com/Windfonts/font-packages.git"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="字体源码仓库"
@@ -91,7 +91,7 @@ export function Header() {
                 ))}
                 <div className="border-t pt-4">
                   <a
-                    href="https://feicode.com/Windfonts/font-packages.git"
+                    href="https://github.com/Windfonts/font-packages.git"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setOpen(false)}

@@ -1,5 +1,5 @@
 {
-  "name": "font-management-system",
+  "name": "windfonts-vault",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -29,7 +29,7 @@
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
-    "@windfonts/chinese-fonts": "^1.0.7",
+    "@windfonts/chinese-fonts": "^1.0.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.31.7",

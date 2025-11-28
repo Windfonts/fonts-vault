@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: '文风字库 - Font Management System',
+    default: '文风字库',
     template: '%s | 文风字库',
   },
   description: '专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成',
