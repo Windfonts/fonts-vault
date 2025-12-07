@@ -10,16 +10,18 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function FontDetailPage({ params }: PageProps) {
   await requireAuth();
 
+  const { id } = await params;
+
   // 获取字体详情（带关联数据）- 使用 normalizedName
-  const font = await fontService.findByNormalizedNameWithRelations(params.id);
+  const font = await fontService.findByNormalizedNameWithRelations(id);
   if (!font) {
     notFound();
   }

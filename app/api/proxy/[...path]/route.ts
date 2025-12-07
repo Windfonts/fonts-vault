@@ -11,10 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * - 统一缓存策略
  * - 记录访问日志
  */
-export async function GET(
-  request: NextRequest,
-  ctx: { params: { path: string[] } | Promise<{ path: string[] }> }
-) {
+export async function GET(request: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   try {
     const { path } = await ctx.params;
     const normalizedPath = path.join('/');

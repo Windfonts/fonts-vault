@@ -51,3 +51,6 @@ next-env.d.ts
 # logs
 /logs
 *.log
+
+# Docker
+docker-compose.override.yml

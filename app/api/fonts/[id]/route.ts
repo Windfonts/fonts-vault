@@ -10,9 +10,9 @@ import { ZodError } from 'zod';
  * 公开访问
  * 支持通过 ID 或 normalizedName 查询
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // 尝试通过 normalizedName 查询，如果失败则通过 ID 查询
     let font = await fontService.findByNormalizedName(id);
@@ -50,13 +50,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * 需要管理员认证
  * 支持通过 ID 或 normalizedName 查询
  */
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // 验证管理员权限
     const { verifyAdmin } = await import('@/lib/auth/api-guard');
     await verifyAdmin();
 
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
 
     // 检查字体是否存在 - 支持 normalizedName 或 ID
@@ -124,13 +124,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
  * 需要管理员认证
  * 支持通过 ID 或 normalizedName 查询
  */
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // 验证管理员权限
     const { verifyAdmin } = await import('@/lib/auth/api-guard');
     await verifyAdmin();
 
-    const { id } = params;
+    const { id } = await params;
 
     // 检查字体是否存在 - 支持 normalizedName 或 ID
     let existing = await fontService.findByNormalizedName(id);

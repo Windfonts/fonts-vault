@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { handleApiError } from '@/lib/auth/api-guard';
 import { categoryService } from '@/lib/services/category.service';
 import { categoryUpdateSchema } from '@/lib/services/validation';
-import { handleApiError } from '@/lib/auth/api-guard';
+import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 /**
@@ -9,9 +9,10 @@ import { ZodError } from 'zod';
  * 获取分类详情
  * 公开访问
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const category = await categoryService.findById(params.id);
+    const { id } = await params;
+    const category = await categoryService.findById(id);
 
     if (!category) {
       return NextResponse.json(
@@ -39,19 +40,20 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * 更新分类
  * 需要管理员认证
  */
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // 验证管理员权限
     const { verifyAdmin } = await import('@/lib/auth/api-guard');
     await verifyAdmin();
 
+    const { id } = await params;
     const body = await req.json();
 
     // 验证数据
     const validated = categoryUpdateSchema.parse(body);
 
     // 更新分类
-    const category = await categoryService.update(params.id, validated);
+    const category = await categoryService.update(id, validated);
 
     return NextResponse.json({
       code: 200,
@@ -107,13 +109,14 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
  * 删除分类
  * 需要管理员认证
  */
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // 验证管理员权限
     const { verifyAdmin } = await import('@/lib/auth/api-guard');
     await verifyAdmin();
 
-    await categoryService.delete(params.id);
+    const { id } = await params;
+    await categoryService.delete(id);
 
     return NextResponse.json({
       code: 200,

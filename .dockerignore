@@ -1,0 +1,54 @@
+# 依赖
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+.next
+out
+build
+
+# LICENSE 文件（避免构建错误）
+**/LICENSE
+**/LICENSE.txt
+**/LICENSE.md
+
+# 测试
+coverage
+
+# 环境变量
+.env*.local
+.env.development
+.env.production
+
+# 数据库
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# 日志
+logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 其他
+.trae
+*.pem
+.vercel
+README.md

@@ -19,7 +19,7 @@ export default async function Home() {
 
   return (
     <PublicLayout>
-      <div className="container py-8 md:py-16">
+      <div className="container mx-auto py-8 md:py-16">
         {/* Hero Section - 平台介绍区域 */}
         <section className="mb-16 text-center">
           <div className="mx-auto max-w-4xl">

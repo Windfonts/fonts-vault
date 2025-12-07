@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   // Webpack 配置
   webpack: (config) => {
-    // 排除 LICENSE 文件
+    // 排除 LICENSE 文件，避免被当作 JS 解析
     config.module.rules.push({
       test: /LICENSE$/,
       type: 'asset/source',
@@ -52,6 +52,9 @@ const nextConfig: NextConfig = {
   // 性能优化
   poweredByHeader: false,
   compress: true,
+
+  // Docker 部署配置
+  output: 'standalone',
 
   // 静态资源缓存
   async headers() {

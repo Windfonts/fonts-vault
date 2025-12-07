@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { handleApiError } from '@/lib/auth/api-guard';
 import { brandService } from '@/lib/services/brand.service';
 import { brandUpdateSchema } from '@/lib/services/validation';
-import { handleApiError } from '@/lib/auth/api-guard';
+import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 /**
@@ -9,9 +9,10 @@ import { ZodError } from 'zod';
  * 获取品牌详情
  * 公开访问
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const brand = await brandService.findById(params.id);
+    const { id } = await params;
+    const brand = await brandService.findById(id);
 
     if (!brand) {
       return NextResponse.json(
@@ -39,19 +40,20 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * 更新品牌
  * 需要管理员认证
  */
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // 验证管理员权限
     const { verifyAdmin } = await import('@/lib/auth/api-guard');
     await verifyAdmin();
 
+    const { id } = await params;
     const body = await req.json();
 
     // 验证数据
     const validated = brandUpdateSchema.parse(body);
 
     // 更新品牌
-    const brand = await brandService.update(params.id, validated);
+    const brand = await brandService.update(id, validated);
 
     return NextResponse.json({
       code: 200,
@@ -107,13 +109,14 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
  * 删除品牌
  * 需要管理员认证
  */
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // 验证管理员权限
     const { verifyAdmin } = await import('@/lib/auth/api-guard');
     await verifyAdmin();
 
-    await brandService.delete(params.id);
+    const { id } = await params;
+    await brandService.delete(id);
 
     return NextResponse.json({
       code: 200,

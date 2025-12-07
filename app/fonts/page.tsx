@@ -16,8 +16,10 @@ export async function generateStaticParams() {
 export default async function FontsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  // Await searchParams in Next.js 15
+  await searchParams;
   // 获取分类和品牌数据用于筛选器
   const [categories, brands] = await Promise.all([
     categoryService.findAll(),

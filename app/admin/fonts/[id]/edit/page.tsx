@@ -10,16 +10,18 @@ import { notFound } from 'next/navigation';
 import { FontForm } from '../../font-form';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditFontPage({ params }: PageProps) {
   await requireAuth();
 
+  const { id } = await params;
+
   // 获取字体详情 - 使用 normalizedName
-  const font = await fontService.findByNormalizedName(params.id);
+  const font = await fontService.findByNormalizedName(id);
   if (!font) {
     notFound();
   }

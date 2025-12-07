@@ -15,9 +15,10 @@ const styleUpdateSchema = z.object({
  * 获取单个风格
  * 公开访问
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const style = await styleService.findById(params.id);
+    const { id } = await params;
+    const style = await styleService.findById(id);
 
     if (!style) {
       return NextResponse.json(
@@ -45,62 +46,65 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * 更新风格
  * 需要管理员认证
  */
-export const PUT = withAdmin(async (req: NextRequest, { params }: { params: { id: string } }) => {
-  try {
-    const body = await req.json();
+export const PUT = withAdmin(
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    try {
+      const { id } = await params;
+      const body = await req.json();
 
-    // 验证数据
-    const validated = styleUpdateSchema.parse(body);
+      // 验证数据
+      const validated = styleUpdateSchema.parse(body);
 
-    // 更新风格
-    const style = await styleService.update(params.id, validated);
+      // 更新风格
+      const style = await styleService.update(id, validated);
 
-    return NextResponse.json({
-      code: 200,
-      data: style,
-      message: '更新风格成功',
-    });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        {
-          code: 400,
-          message: '数据验证失败',
-          status: 'fail',
-          errors: error.errors.map((e) => ({
-            field: e.path.join('.'),
-            message: e.message,
-          })),
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        code: 200,
+        data: style,
+        message: '更新风格成功',
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return NextResponse.json(
+          {
+            code: 400,
+            message: '数据验证失败',
+            status: 'fail',
+            errors: error.errors.map((e) => ({
+              field: e.path.join('.'),
+              message: e.message,
+            })),
+          },
+          { status: 400 }
+        );
+      }
+
+      if (error instanceof Error && error.message.includes('不存在')) {
+        return NextResponse.json(
+          {
+            code: 404,
+            message: error.message,
+            status: 'fail',
+          },
+          { status: 404 }
+        );
+      }
+
+      if (error instanceof Error && error.message.includes('已存在')) {
+        return NextResponse.json(
+          {
+            code: 422,
+            message: error.message,
+            status: 'fail',
+          },
+          { status: 422 }
+        );
+      }
+
+      return handleApiError(error);
     }
-
-    if (error instanceof Error && error.message.includes('不存在')) {
-      return NextResponse.json(
-        {
-          code: 404,
-          message: error.message,
-          status: 'fail',
-        },
-        { status: 404 }
-      );
-    }
-
-    if (error instanceof Error && error.message.includes('已存在')) {
-      return NextResponse.json(
-        {
-          code: 422,
-          message: error.message,
-          status: 'fail',
-        },
-        { status: 422 }
-      );
-    }
-
-    return handleApiError(error);
   }
-});
+);
 
 /**
  * DELETE /api/styles/[id]
@@ -108,9 +112,10 @@ export const PUT = withAdmin(async (req: NextRequest, { params }: { params: { id
  * 需要管理员认证
  */
 export const DELETE = withAdmin(
-  async (req: NextRequest, { params }: { params: { id: string } }) => {
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
-      await styleService.delete(params.id);
+      const { id } = await params;
+      await styleService.delete(id);
 
       return NextResponse.json({
         code: 200,
