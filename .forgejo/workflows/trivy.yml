@@ -1,0 +1,34 @@
+name: Trivy 依赖漏洞扫描
+
+on:
+  push:
+    branches: ['main', 'master']
+    paths:
+      - 'composer.lock'
+      - 'package-lock.json'
+      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
+  pull_request:
+    branches: ['main', 'master']
+  # 每周一早上 8 点定时扫描
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  trivy-scan:
+    runs-on: docker
+    container:
+      image: aquasec/trivy:latest
+    steps:
+      - name: Checkout
+        uses: https://code.forgejo.org/actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        run: |
+          trivy filesystem .             --scanners vuln             --severity HIGH,CRITICAL             --exit-code 1             --format table             --ignorefile .trivyignore             2>&1 || {
+              echo 
+              echo ::warning::Trivy 发现了高危/严重漏洞，请检查上方输出。
+              echo 如需忽略特定 CVE，请在仓库根目录创建 .trivyignore 文件。
+              exit 1
+            }
+          echo ✅ Trivy 扫描通过，未发现高危漏洞。
