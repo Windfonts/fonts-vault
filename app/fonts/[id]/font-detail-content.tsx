@@ -280,8 +280,8 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
                         key={weight.value}
                         onClick={() => setSelectedWeight(weight.name)}
                         className={`rounded-md border px-3 py-1.5 text-sm transition-colors ${selectedWeight === weight.name
-                            ? 'bg-primary text-primary-foreground border-primary'
-                            : 'bg-background hover:bg-accent'
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-background hover:bg-accent'
                           }`}
                       >
                         {weight.name}
@@ -855,6 +855,45 @@ const MyComponent = () => (
 
         {/* Sidebar */}
         <aside className="space-y-6">
+          {/* Brand Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">厂商信息</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {font.brand ? (
+                <>
+                  {font.brand.logoUrl && (
+                    <div className="bg-muted flex justify-center rounded-md p-4">
+                      <img
+                        src={font.brand.logoUrl}
+                        alt={font.brand.name}
+                        className="max-h-16 object-contain"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="text-sm font-medium">{font.brand.name}</h4>
+                    {font.brand.description && (
+                      <p className="text-muted-foreground mt-1 text-sm">
+                        {font.brand.description}
+                      </p>
+                    )}
+                  </div>
+                  {font.brand.website && (
+                    <Button variant="outline" size="sm" asChild className="w-full">
+                      <a href={font.brand.website} target="_blank" rel="noopener noreferrer">
+                        访问官网
+                      </a>
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <div className="text-muted-foreground text-sm">暂无品牌</div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Tags */}
           {font.tags && font.tags.length > 0 && (
             <Card>
@@ -911,39 +950,6 @@ const MyComponent = () => (
               </div>
             </CardContent>
           </Card>
-
-          {/* Brand Info */}
-          {font.brand && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">厂商信息</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {font.brand.logoUrl && (
-                  <div className="bg-muted flex justify-center rounded-md p-4">
-                    <img
-                      src={font.brand.logoUrl}
-                      alt={font.brand.name}
-                      className="max-h-16 object-contain"
-                    />
-                  </div>
-                )}
-                <div>
-                  <h4 className="text-sm font-medium">{font.brand.name}</h4>
-                  {font.brand.description && (
-                    <p className="text-muted-foreground mt-1 text-sm">{font.brand.description}</p>
-                  )}
-                </div>
-                {font.brand.website && (
-                  <Button variant="outline" size="sm" asChild className="w-full">
-                    <a href={font.brand.website} target="_blank" rel="noopener noreferrer">
-                      访问官网
-                    </a>
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          )}
         </aside>
       </div>
 

@@ -64,7 +64,7 @@ export function FontCard({
         <CardContent className={cn(isGrid ? '' : 'flex-1')}>
           {showPreview && (
             <div
-              className="bg-muted mb-4 overflow-hidden rounded-md p-4 text-center"
+              className="bg-muted mb-4 h-24 overflow-hidden rounded-md p-4 text-center"
               style={{
                 fontFamily: font.fontFamily,
                 fontSize: isGrid ? '1.5rem' : '1.25rem',
