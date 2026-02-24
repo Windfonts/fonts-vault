@@ -16,9 +16,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 删除所有 LICENSE 文件以避免构建错误
-RUN find node_modules -name "LICENSE" -type f -delete
-
 # 设置环境变量
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
@@ -26,35 +23,40 @@ ENV NODE_ENV=production
 # 构建应用
 RUN npm run build
 
-# 运行阶段
+# 运行阶段 - 使用 standalone 输出
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV AUTH_TRUST_HOST=true
+ENV DATABASE_URL=file:./data/prod.db
 
 # 创建非 root 用户
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# 复制必要文件
+# 只复制 standalone 输出
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# 创建数据目录
-RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
-RUN mkdir -p /app/logs && chown -R nextjs:nodejs /app/logs
+# 创建数据和日志目录
+RUN mkdir -p /app/data /app/logs && chown -R nextjs:nodejs /app/data /app/logs
 
-# 切换到非 root 用户
+# 复制本地初始化好的数据库
+COPY --from=builder --chown=nextjs:nodejs /app/data/prod.db /app/data/prod.db
+
+# 复制环境变量文件和启动脚本
+COPY --from=builder --chown=nextjs:nodejs /app/.env.production ./.env.production
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/start.sh ./start.sh
+RUN chmod +x ./start.sh
+
 USER nextjs
 
-# 暴露端口
-EXPOSE 3000
+EXPOSE 4000
 
-ENV PORT=3000
+ENV PORT=4000
 ENV HOSTNAME="0.0.0.0"
 
-# 启动应用
-CMD ["npm", "start"]
+CMD ["./start.sh"]

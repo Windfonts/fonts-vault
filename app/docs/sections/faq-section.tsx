@@ -233,12 +233,12 @@ export function FaqSection() {
             <p>
               <strong>GitHub：</strong>{' '}
               <a
-                href="https://github.com/feicode-com/font-vault"
+                href="https://feicode.com/Windfonts/fonts-vault"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
               >
-                https://github.com/feicode-com/font-vault
+                https://feicode.com/Windfonts/fonts-vault
               </a>
             </p>
           </div>

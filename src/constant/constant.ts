@@ -12,8 +12,8 @@ export const EXTRA_LINKS = [
     path: 'https://admincdn.com',
   },
   {
-    label: '方块字库',
-    path: 'https://fontsquare.com',
+    label: '赛博字库',
+    path: 'https://cyberfonts.com',
   },
   {
     label: '文派开源',

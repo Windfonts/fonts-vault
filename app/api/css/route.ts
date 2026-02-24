@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { cssService } from '@/lib/services/css.service';
 import { logger } from '@/lib/logger';
+import { cssService } from '@/lib/services/css.service';
+import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 /**
@@ -41,10 +41,13 @@ export async function GET(request: NextRequest) {
     }
 
     // 生成CSS
+    // 将 subset/lang 参数映射到 version
+    const version = (subset || lang || 'full') as 'en' | 'zh' | 'zh-common' | 'full';
+    const weight = searchParams.get('weight') || 'Regular';
     const { css, etag } = await cssService.generateCSS({
       family,
-      subset,
-      lang,
+      version,
+      weight,
     });
 
     // 检查条件请求（If-None-Match）

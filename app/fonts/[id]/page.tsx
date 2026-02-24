@@ -6,31 +6,8 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { FontDetailContent } from './font-detail-content';
 
-// ISR: 每小时重新生成页面
-export const revalidate = 3600;
-
-// 动态路由参数
-export const dynamicParams = true;
-
-// 生成静态参数 - 预渲染热门字体
-export async function generateStaticParams() {
-  try {
-    // 获取前20个最受欢迎的字体进行预渲染
-    const fonts = await fontService.findAll({
-      page: 1,
-      size: 20,
-      sort: 'viewCount',
-      order: 'desc',
-    });
-
-    return fonts.dataList.map((font) => ({
-      id: font.normalizedName,
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
+// 动态渲染，避免构建时查询数据库
+export const dynamic = 'force-dynamic';
 
 export default async function FontDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -53,14 +30,24 @@ export default async function FontDetailPage({ params }: { params: Promise<{ id:
   });
 
   // Filter out current font from related fonts
-  const filteredRelatedFonts = relatedFonts.dataList.filter((f) => f.id !== font.id);
+  const filteredRelatedFonts = relatedFonts.dataList
+    .filter((f) => f.id !== font.id)
+    .map((f) => ({
+      ...f,
+      brand: f.brand ?? null,
+      category: f.category ?? null,
+    }));
 
   const analysis = await syncService.fetchFontAnalysis(font.normalizedName);
 
   return (
     <PublicLayout>
       <Suspense fallback={<FontDetailSkeleton />}>
-        <FontDetailContent font={font} relatedFonts={filteredRelatedFonts} analysis={analysis} />
+        <FontDetailContent
+          font={font}
+          relatedFonts={filteredRelatedFonts as Parameters<typeof FontDetailContent>[0]['relatedFonts']}
+          analysis={analysis}
+        />
       </Suspense>
     </PublicLayout>
   );

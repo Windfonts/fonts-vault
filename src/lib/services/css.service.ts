@@ -11,14 +11,15 @@ interface CacheEntry {
 export class CSSService {
   private cache: Map<string, CacheEntry> = new Map();
   private cacheTTL: number = 30 * 60 * 1000; // 30分钟
-  private proxyBaseUrl: string;
-  private cdnBaseUrl: string;
 
-  constructor() {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    this.proxyBaseUrl = `${baseUrl}/api/proxy`;
+  private get proxyBaseUrl(): string {
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:4000';
+    return `${baseUrl}/api/proxy`;
+  }
+
+  private get cdnBaseUrl(): string {
     const cdnEnv = process.env.NEXT_PUBLIC_FONT_STATIC_URL;
-    this.cdnBaseUrl = (cdnEnv && cdnEnv.replace(/\/$/, '')) || '';
+    return (cdnEnv && cdnEnv.replace(/\/$/, '')) || '';
   }
 
   /**

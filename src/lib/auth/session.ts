@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth/config';
+import { redirect } from 'next/navigation';
 
 export async function getSession() {
   const disableAuth = process.env.DISABLE_AUTH === 'true';
@@ -16,11 +17,15 @@ export async function getSession() {
   return await auth();
 }
 
+/**
+ * Require authentication for server components
+ * Redirects to login if not authenticated
+ */
 export async function requireAuth() {
   const session = await getSession();
 
   if (!session?.user) {
-    throw new Error('未授权访问');
+    redirect('/login');
   }
 
   return session;

@@ -1,15 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Webpack 配置
-  webpack: (config) => {
-    // 排除 LICENSE 文件，避免被当作 JS 解析
-    config.module.rules.push({
-      test: /LICENSE$/,
-      type: 'asset/source',
-    });
-    return config;
-  },
+  // Turbopack 配置 (Next.js 16 默认使用 Turbopack)
+  turbopack: {},
 
   // 图片优化配置
   images: {

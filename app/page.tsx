@@ -7,8 +7,8 @@ import { fontService } from '@/lib/services/font.service';
 import { ArrowRight, Palette, Search, Shield, Zap } from 'lucide-react';
 import Link from 'next/link';
 
-// ISR: 每小时重新生成首页
-export const revalidate = 3600;
+// 动态渲染，避免构建时查询数据库
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   // 获取推荐字体（热门字体，带关联数据）

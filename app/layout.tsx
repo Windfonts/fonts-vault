@@ -2,20 +2,11 @@ import { Toaster } from '@/components/ui/sonner';
 import { loadFont } from '@windfonts/chinese-fonts';
 import type { Metadata, Viewport } from 'next';
 import { SessionProvider } from 'next-auth/react';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 loadFont('Hclcks-Regular', { subset: 'zh-common' });
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://fonts.wptea.com'),
   title: {
     default: '文风字库',
     template: '%s | 文风字库',
@@ -72,9 +63,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className="overscroll-none">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} touch-pan-y overscroll-none antialiased`}
-      >
+      <body className="touch-pan-y overscroll-none antialiased">
         <SessionProvider>{children}</SessionProvider>
         <Toaster />
       </body>

@@ -21,10 +21,9 @@ coverage
 # 环境变量
 .env*.local
 .env.development
-.env.production
 
-# 数据库
-data/*.db
+# 数据库（保留 prod.db）
+data/dev.db
 data/*.db-shm
 data/*.db-wal
 

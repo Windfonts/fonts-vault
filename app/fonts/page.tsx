@@ -5,21 +5,10 @@ import { categoryService } from '@/lib/services/category.service';
 import { Suspense } from 'react';
 import { FontListContent } from './font-list-content';
 
-// ISR: 每小时重新生成页面
-export const revalidate = 3600;
+// 动态渲染，避免构建时查询数据库
+export const dynamic = 'force-dynamic';
 
-// 生成静态参数
-export async function generateStaticParams() {
-  return [{ searchParams: {} }];
-}
-
-export default async function FontsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  // Await searchParams in Next.js 15
-  await searchParams;
+export default async function FontsPage() {
   // 获取分类和品牌数据用于筛选器
   const [categories, brands] = await Promise.all([
     categoryService.findAll(),

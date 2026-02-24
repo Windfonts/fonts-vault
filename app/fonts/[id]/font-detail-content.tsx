@@ -30,9 +30,9 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
   // Get available weights from font data
   const availableWeights = font.weights
     ? Object.values(font.weights).map((w) => ({
-        name: w.weight_name,
-        value: w.font_weight,
-      }))
+      name: w.weight_name,
+      value: w.font_weight,
+    }))
     : [];
 
   const firstWeightName = font.weights ? Object.keys(font.weights)[0] : 'Regular';
@@ -279,11 +279,10 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
                       <button
                         key={weight.value}
                         onClick={() => setSelectedWeight(weight.name)}
-                        className={`rounded-md border px-3 py-1.5 text-sm transition-colors ${
-                          selectedWeight === weight.name
+                        className={`rounded-md border px-3 py-1.5 text-sm transition-colors ${selectedWeight === weight.name
                             ? 'bg-primary text-primary-foreground border-primary'
                             : 'bg-background hover:bg-accent'
-                        }`}
+                          }`}
                       >
                         {weight.name}
                       </button>
@@ -811,9 +810,10 @@ const MyComponent = () => (
                         {
                           ((localAnalysis || analysis)?.total_char_count ??
                             (localAnalysis || analysis)?.char_count ??
-                            (localAnalysis || analysis)?.chars?.length ??
-                            (localAnalysis || analysis)?.characters?.length ??
-                            '-') as any
+                            ((localAnalysis || analysis)?.chars as string[] | undefined)?.length ??
+                            ((localAnalysis || analysis)?.characters as string[] | undefined)
+                              ?.length ??
+                            '-') as string | number
                         }
                       </div>
                     </div>
