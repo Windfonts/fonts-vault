@@ -1,0 +1,33 @@
+name: gitleaks 密钥泄露扫描
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  gitleaks:
+    runs-on: docker
+    container:
+      image: zricethezav/gitleaks:latest
+    steps:
+      - name: Checkout
+        uses: https://code.forgejo.org/actions/checkout@v4
+
+      - name: Run gitleaks
+        run: |
+          # 对增量提交扫描（push 事件）
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            gitleaks detect --source=. --log-opts="$GITHUB_SHA~1..$GITHUB_SHA" --verbose --exit-code 1 || {
+              echo "::error::gitleaks 发现了潜在的密钥泄露！请检查上方输出并移除敏感信息。"
+              exit 1
+            }
+          else
+            # PR 事件扫描全量
+            gitleaks detect --source=. --verbose --exit-code 1 || {
+              echo "::error::gitleaks 发现了潜在的密钥泄露！请检查上方输出并移除敏感信息。"
+              exit 1
+            }
+          fi
+          echo "✅ gitleaks 扫描通过，未发现密钥泄露。"
