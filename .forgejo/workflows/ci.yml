@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: docker
+    container:
+      image: node:20-alpine
+    steps:
+      - name: Checkout
+        uses: https://code.forgejo.org/actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: TypeCheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: "file:./data/test.db"
+          AUTH_TRUST_HOST: "true"
+          AUTH_SECRET: "ci-test-secret-not-real"
+          NEXTAUTH_URL: "http://localhost:3000"
