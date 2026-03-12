@@ -38,7 +38,7 @@ echo -e "${GREEN}启动新容器...${NC}"
 docker run -d \
   --name ${CONTAINER_NAME} \
   --restart unless-stopped \
-  -p 3000:3000 \
+  -p 4000:4000 \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   --env-file .env.production \

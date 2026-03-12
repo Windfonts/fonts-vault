@@ -1,10 +1,12 @@
 #!/bin/sh
 set -e
 
-# 加载环境变量
-if [ -f .env.production ]; then
-  echo "Loading .env.production..."
-  export $(grep -v '^#' .env.production | xargs)
+# 回退加载环境变量（仅在运行时未注入 AUTH_SECRET 时启用）
+if [ -z "${AUTH_SECRET:-}" ] && [ -f .env.production ]; then
+  echo "AUTH_SECRET 未注入，回退加载 .env.production..."
+  set -a
+  . ./.env.production
+  set +a
 fi
 
 echo "Starting server with environment:"

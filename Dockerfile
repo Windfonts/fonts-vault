@@ -21,6 +21,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 # 构建应用
+RUN mkdir -p /app/data && if [ ! -f /app/data/prod.db ]; then : > /app/data/prod.db; fi
 RUN npm run build
 
 # 运行阶段 - 使用 standalone 输出
@@ -47,8 +48,7 @@ RUN mkdir -p /app/data /app/logs && chown -R nextjs:nodejs /app/data /app/logs
 # 复制本地初始化好的数据库
 COPY --from=builder --chown=nextjs:nodejs /app/data/prod.db /app/data/prod.db
 
-# 复制环境变量文件和启动脚本
-COPY --from=builder --chown=nextjs:nodejs /app/.env.production ./.env.production
+# 复制启动脚本
 COPY --from=builder --chown=nextjs:nodejs /app/scripts/start.sh ./start.sh
 RUN chmod +x ./start.sh
 
