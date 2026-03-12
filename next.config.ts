@@ -53,6 +53,24 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: '/login',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store',
+          },
+        ],
+      },
+      {
+        source: '/admin/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store',
+          },
+        ],
+      },
+      {
         source: '/fonts/:path*',
         headers: [
           {
