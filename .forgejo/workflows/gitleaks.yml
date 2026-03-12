@@ -8,7 +8,7 @@ on:
 
 jobs:
   gitleaks:
-    runs-on: docker
+    runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks:latest
     steps:
