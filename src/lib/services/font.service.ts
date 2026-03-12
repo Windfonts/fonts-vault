@@ -177,18 +177,22 @@ export class FontService {
     // 映射结果，排除大字段但保留必要信息
     const dataList = result.map((row) => {
       const { copyright: _copyright, ...fontData } = row.font;
+      void _copyright;
 
       // 简化 weights 数据，只保留字重名称
-      let simplifiedWeights = {};
+      let simplifiedWeights: Record<string, { weight_name: string; font_weight: number }> = {};
       if (fontData.weights) {
-        const weightsObj = fontData.weights as any;
-        simplifiedWeights = Object.keys(weightsObj).reduce((acc, key) => {
-          acc[key] = {
-            weight_name: weightsObj[key].weight_name,
-            font_weight: weightsObj[key].font_weight,
-          };
-          return acc;
-        }, {} as any);
+        const weightsObj = fontData.weights;
+        simplifiedWeights = Object.keys(weightsObj).reduce(
+          (acc, key) => {
+            acc[key] = {
+              weight_name: weightsObj[key].weight_name,
+              font_weight: weightsObj[key].font_weight,
+            };
+            return acc;
+          },
+          {} as Record<string, { weight_name: string; font_weight: number }>
+        );
       }
 
       return {
@@ -246,10 +250,11 @@ export class FontService {
    * 根据normalizedName获取字体
    */
   async findByNormalizedName(normalizedName: string): Promise<Font | undefined> {
+    const normalized = normalizedName.trim().toLowerCase();
     const result = await db
       .select()
       .from(fonts)
-      .where(eq(fonts.normalizedName, normalizedName))
+      .where(sql`lower(${fonts.normalizedName}) = ${normalized}`)
       .limit(1);
     return result[0];
   }
@@ -258,6 +263,7 @@ export class FontService {
    * 根据normalizedName获取字体详情（带关联数据）
    */
   async findByNormalizedNameWithRelations(normalizedName: string) {
+    const normalized = normalizedName.trim().toLowerCase();
     const result = await db
       .select({
         font: fonts,
@@ -267,7 +273,7 @@ export class FontService {
       .from(fonts)
       .leftJoin(brands, eq(fonts.brandId, brands.id))
       .leftJoin(categories, eq(fonts.categoryId, categories.id))
-      .where(eq(fonts.normalizedName, normalizedName))
+      .where(sql`lower(${fonts.normalizedName}) = ${normalized}`)
       .limit(1);
 
     if (result.length === 0) {
@@ -285,7 +291,11 @@ export class FontService {
    * 根据fontFamily获取字体
    */
   async findByFontFamily(fontFamily: string): Promise<Font[]> {
-    return await db.select().from(fonts).where(eq(fonts.fontFamily, fontFamily));
+    const normalizedFamily = fontFamily.trim().toLowerCase();
+    return await db
+      .select()
+      .from(fonts)
+      .where(sql`lower(${fonts.fontFamily}) = ${normalizedFamily}`);
   }
 
   /**
@@ -313,7 +323,7 @@ export class FontService {
    */
   async create(data: Partial<FontCreateDto>): Promise<Font> {
     // 验证数据
-    const validated = fontCreateSchema.parse(data as any);
+    const validated = fontCreateSchema.parse(data);
 
     // 检查normalizedName唯一性
     const existing = await this.findByNormalizedName(validated.normalizedName);

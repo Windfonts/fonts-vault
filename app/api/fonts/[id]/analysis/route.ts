@@ -1,3 +1,4 @@
+import { withFontApiAuth } from '@/lib/api/font-api-auth';
 import { handleApiError } from '@/lib/auth/api-guard';
 import { fontService } from '@/lib/services/font.service';
 import { syncService } from '@/lib/services/sync.service';
@@ -8,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * 获取字体的字符分析数据
  * 公开访问
  */
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+const handleGet = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const { id } = await params;
 
@@ -53,7 +54,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       message: '获取字体分析数据成功',
     });
   } catch (error) {
-    console.error('Error fetching font analysis:', error);
-    return handleApiError(error);
+    return handleApiError(error, { url: req.url, method: req.method });
   }
-}
+};
+
+export const GET = async (req: NextRequest, ctx: { params: Promise<{ id: string }> }) => {
+  const wrapped = withFontApiAuth((request) => handleGet(request as NextRequest, ctx));
+  return wrapped(req);
+};

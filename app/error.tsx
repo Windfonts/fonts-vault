@@ -8,6 +8,7 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Home, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Error({
   error,
@@ -64,10 +65,10 @@ export default function Error({
             重试
           </Button>
           <Button asChild variant="outline" size="lg">
-            <a href="/">
+            <Link href="/">
               <Home className="mr-2 h-4 w-4" />
               返回首页
-            </a>
+            </Link>
           </Button>
         </div>
 

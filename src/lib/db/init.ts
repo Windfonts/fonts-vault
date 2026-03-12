@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { client } from './client';
 
 /**
@@ -92,9 +93,10 @@ export async function initializeTables(): Promise<void> {
       CREATE INDEX IF NOT EXISTS fonts_brand_idx ON fonts(brand_id);
     `);
 
-    console.log('✅ Database tables initialized successfully');
+    logger.info('Database tables initialized successfully');
   } catch (error) {
-    console.error('❌ Failed to initialize database tables:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error('Failed to initialize database tables', { error: errorMessage });
     throw error;
   }
 }
@@ -107,7 +109,8 @@ export async function checkDatabaseConnection(): Promise<boolean> {
     const result = await client.execute('SELECT 1 as test');
     return result !== undefined;
   } catch (error) {
-    console.error('❌ Database connection check failed:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error('Database connection check failed', { error: errorMessage });
     return false;
   }
 }

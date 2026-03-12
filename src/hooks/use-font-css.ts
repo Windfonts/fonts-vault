@@ -14,32 +14,35 @@ interface UseFontCSSOptions {
  * 动态加载字体 CSS 的 Hook
  *
  * @param options.family - 字体的 normalizedName
- * @param options.weight - 字重名称，默认 'Regular'
+ * @param options.weight - 字重名称，默认 'regular'
  * @param options.version - 版本，默认 'full'
  * @param options.enabled - 是否启用加载，默认 true
  *
  * @example
  * // 在卡片中使用 zh-common 版本
- * useFontCSS({ family: 'Qtxtt', weight: 'Regular', version: 'zh-common' });
+ * useFontCSS({ family: 'qtxtt', weight: 'regular', version: 'zh-common' });
  *
  * // 在详情页使用 full 版本
- * useFontCSS({ family: 'Qtxtt', weight: 'Regular', version: 'full' });
+ * useFontCSS({ family: 'qtxtt', weight: 'regular', version: 'full' });
  */
 export function useFontCSS({
   family,
-  weight = 'Regular',
+  weight = 'regular',
   version = 'full',
   enabled = true,
 }: UseFontCSSOptions) {
   const linkRef = useRef<HTMLLinkElement | null>(null);
+  const normalizedFamily = family.toLowerCase();
+  const normalizedWeight = weight.toLowerCase();
+  const normalizedVersion = version.toLowerCase() as 'en' | 'zh' | 'zh-common' | 'full';
 
   useEffect(() => {
-    if (!enabled || !family) {
+    if (!enabled || !normalizedFamily) {
       return;
     }
 
     // 生成唯一标识
-    const fontKey = `${family}-${weight}-${version}`;
+    const fontKey = `${normalizedFamily}-${normalizedWeight}-${normalizedVersion}`;
 
     // 如果已经加载过，跳过
     if (loadedFonts.has(fontKey)) {
@@ -47,7 +50,9 @@ export function useFontCSS({
     }
 
     // 构建 CSS API URL
-    const cssUrl = `/api/css?family=${encodeURIComponent(family)}&weight=${encodeURIComponent(weight)}&version=${version}`;
+    const cssUrl = `/api/css?family=${encodeURIComponent(normalizedFamily)}&weight=${encodeURIComponent(
+      normalizedWeight
+    )}&version=${normalizedVersion}`;
 
     // 检查是否已经存在相同的 link 标签
     const existingLink = document.querySelector(`link[href="${cssUrl}"]`) as HTMLLinkElement;
@@ -84,10 +89,10 @@ export function useFontCSS({
       // 不做任何清理，让字体 CSS 保持加载状态
       // 这样可以避免在列表滚动时反复加载/卸载
     };
-  }, [family, weight, version, enabled]);
+  }, [normalizedFamily, normalizedWeight, normalizedVersion, enabled]);
 
   return {
-    isLoaded: loadedFonts.has(`${family}-${weight}-${version}`),
+    isLoaded: loadedFonts.has(`${normalizedFamily}-${normalizedWeight}-${normalizedVersion}`),
   };
 }
 
@@ -96,16 +101,21 @@ export function useFontCSS({
  */
 export function preloadFontCSS(
   family: string,
-  weight: string = 'Regular',
+  weight: string = 'regular',
   version: 'en' | 'zh' | 'zh-common' | 'full' = 'full'
 ) {
-  const fontKey = `${family}-${weight}-${version}`;
+  const normalizedFamily = family.toLowerCase();
+  const normalizedWeight = weight.toLowerCase();
+  const normalizedVersion = version.toLowerCase() as 'en' | 'zh' | 'zh-common' | 'full';
+  const fontKey = `${normalizedFamily}-${normalizedWeight}-${normalizedVersion}`;
 
   if (loadedFonts.has(fontKey)) {
     return;
   }
 
-  const cssUrl = `/api/css?family=${encodeURIComponent(family)}&weight=${encodeURIComponent(weight)}&version=${version}`;
+  const cssUrl = `/api/css?family=${encodeURIComponent(normalizedFamily)}&weight=${encodeURIComponent(
+    normalizedWeight
+  )}&version=${normalizedVersion}`;
 
   const existingLink = document.querySelector(`link[href="${cssUrl}"]`) as HTMLLinkElement;
 

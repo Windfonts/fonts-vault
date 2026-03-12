@@ -4,6 +4,8 @@
 
 import { logger } from './logger';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 // Base application error class
 export class AppError extends Error {
   constructor(
@@ -79,8 +81,6 @@ export interface ErrorResponse {
 
 // Convert error to standardized response format
 export function formatErrorResponse(error: Error | AppError): ErrorResponse {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-
   if (error instanceof AppError) {
     const response: ErrorResponse = {
       code: error.statusCode,
@@ -112,32 +112,33 @@ export function formatErrorResponse(error: Error | AppError): ErrorResponse {
 
 // Log error with appropriate level
 export function logError(error: Error | AppError, context?: Record<string, unknown>): void {
-  const errorInfo = {
+  const baseInfo = {
     name: error.name,
     message: error.message,
-    stack: error.stack,
     ...context,
   };
 
   if (error instanceof AppError) {
     if (error.isOperational) {
-      // Operational errors (expected) - log as warning
       logger.warn(`Operational error: ${error.message}`, {
-        ...errorInfo,
+        ...baseInfo,
         statusCode: error.statusCode,
         code: error.code,
+        ...(isDevelopment && error.stack ? { stack: error.stack } : {}),
       });
     } else {
-      // Programming errors (unexpected) - log as error
       logger.error(`Programming error: ${error.message}`, {
-        ...errorInfo,
+        ...baseInfo,
         statusCode: error.statusCode,
         code: error.code,
+        ...(error.stack ? { stack: error.stack } : {}),
       });
     }
   } else {
-    // Unknown errors - log as error
-    logger.error(`Unknown error: ${error.message}`, errorInfo);
+    logger.error(`Unknown error: ${error.message}`, {
+      ...baseInfo,
+      ...(error.stack ? { stack: error.stack } : {}),
+    });
   }
 }
 

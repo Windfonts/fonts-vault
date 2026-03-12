@@ -1,6 +1,7 @@
+import { withFontApiAuth } from '@/lib/api/font-api-auth';
 import { handleApiError, withAdmin } from '@/lib/auth/api-guard';
 import { fontService } from '@/lib/services/font.service';
-import { fontCreateSchema } from '@/lib/services/validation';
+import { fontCreateSchema, type FontFilterDto } from '@/lib/services/validation';
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
@@ -9,12 +10,13 @@ import { ZodError } from 'zod';
  * 获取字体列表（支持分页和筛选）
  * 公开访问
  */
-export async function GET(req: NextRequest) {
+export const GET = withFontApiAuth(async (req) => {
+  const nextRequest = req as NextRequest;
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(nextRequest.url);
 
     // 解析查询参数
-    const filters: any = {};
+    const filters: Partial<FontFilterDto> = {};
 
     const pageParam = searchParams.get('page');
     if (pageParam) {
@@ -57,12 +59,17 @@ export async function GET(req: NextRequest) {
     }
 
     const sortParam = searchParams.get('sort');
-    if (sortParam) {
+    if (
+      sortParam === 'name' ||
+      sortParam === 'createdAt' ||
+      sortParam === 'viewCount' ||
+      sortParam === 'downloadCount'
+    ) {
       filters.sort = sortParam;
     }
 
     const orderParam = searchParams.get('order');
-    if (orderParam) {
+    if (orderParam === 'asc' || orderParam === 'desc') {
       filters.order = orderParam;
     }
 
@@ -92,7 +99,7 @@ export async function GET(req: NextRequest) {
 
     return handleApiError(error);
   }
-}
+});
 
 /**
  * POST /api/fonts

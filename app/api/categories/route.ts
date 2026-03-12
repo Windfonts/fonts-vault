@@ -1,3 +1,4 @@
+import { withFontApiAuth } from '@/lib/api/font-api-auth';
 import { handleApiError, withAdmin } from '@/lib/auth/api-guard';
 import { categoryService } from '@/lib/services/category.service';
 import { categoryCreateSchema } from '@/lib/services/validation';
@@ -7,9 +8,9 @@ import { ZodError } from 'zod';
 /**
  * GET /api/categories
  * 获取分类列表
- * 公开访问
+ * 公开访问（支持 API Key）
  */
-export async function GET() {
+export const GET = withFontApiAuth(async () => {
   try {
     const categories = await categoryService.findAll();
 
@@ -21,7 +22,7 @@ export async function GET() {
   } catch (error) {
     return handleApiError(error);
   }
-}
+});
 
 /**
  * POST /api/categories

@@ -1,5 +1,6 @@
 import { db } from '@/lib/db';
 import { styles, type NewStyle, type Style } from '@/lib/db/schema';
+import { logger } from '@/lib/logger';
 import { asc, eq } from 'drizzle-orm';
 import fs from 'fs/promises';
 import path from 'path';
@@ -140,7 +141,8 @@ class StyleService {
         }
       }
     } catch (error) {
-      console.error('Failed to initialize styles from JSON:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Failed to initialize styles from JSON', { error: errorMessage });
       throw error;
     }
   }

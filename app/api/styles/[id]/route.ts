@@ -47,9 +47,19 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
  * 需要管理员认证
  */
 export const PUT = withAdmin(
-  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  async (req: NextRequest, _session, ctx?: { params?: Promise<{ id: string }> | { id: string } }) => {
     try {
-      const { id } = await params;
+      if (!ctx?.params) {
+        return NextResponse.json(
+          {
+            code: 400,
+            message: '缺少参数',
+            status: 'fail',
+          },
+          { status: 400 }
+        );
+      }
+      const { id } = await Promise.resolve(ctx.params);
       const body = await req.json();
 
       // 验证数据
@@ -112,9 +122,19 @@ export const PUT = withAdmin(
  * 需要管理员认证
  */
 export const DELETE = withAdmin(
-  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  async (req: NextRequest, _session, ctx?: { params?: Promise<{ id: string }> | { id: string } }) => {
     try {
-      const { id } = await params;
+      if (!ctx?.params) {
+        return NextResponse.json(
+          {
+            code: 400,
+            message: '缺少参数',
+            status: 'fail',
+          },
+          { status: 400 }
+        );
+      }
+      const { id } = await Promise.resolve(ctx.params);
       await styleService.delete(id);
 
       return NextResponse.json({

@@ -1,3 +1,4 @@
+import { withFontApiAuth } from '@/lib/api/font-api-auth';
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,7 +12,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * - 统一缓存策略
  * - 记录访问日志
  */
-export async function GET(request: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
+const handleGet = async (request: NextRequest, ctx: { params: Promise<{ path: string[] }> }) => {
   try {
     const { path } = await ctx.params;
     const normalizedPath = path.join('/');
@@ -55,6 +56,27 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ path: s
 
     // 确定Content-Type
     const contentType = response.headers.get('content-type') || getContentType(normalizedPath);
+    const lowerContentType = contentType.toLowerCase();
+
+    if (
+      lowerContentType.startsWith('text/') ||
+      lowerContentType.includes('application/json')
+    ) {
+      const text = new TextDecoder().decode(buffer);
+      if (
+        text.includes('failed to instantiate the resolver') ||
+        text.includes('network is unreachable')
+      ) {
+        return NextResponse.json(
+          {
+            code: 502,
+            message: '字体文件上游网络不可达，请检查 OSS 访问环境或改用直连',
+            status: 'error',
+          },
+          { status: 502 }
+        );
+      }
+    }
 
     // 返回文件内容
     return new NextResponse(buffer, {
@@ -82,7 +104,12 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ path: s
       { status: 500 }
     );
   }
-}
+};
+
+export const GET = async (request: NextRequest, ctx: { params: Promise<{ path: string[] }> }) => {
+  const wrapped = withFontApiAuth((req) => handleGet(req as NextRequest, ctx));
+  return wrapped(request);
+};
 
 /**
  * OPTIONS /api/proxy/[...path]

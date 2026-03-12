@@ -235,7 +235,7 @@ export function StyleManagementContent({ initialStyles }: StyleManagementContent
       const result = await response.json();
       setStyles(result.data);
       handleSearch(searchQuery);
-    } catch (error) {
+    } catch {
       toast.error('排序失败');
     } finally {
       setIsSaving(false);
@@ -270,7 +270,7 @@ export function StyleManagementContent({ initialStyles }: StyleManagementContent
       const result = await response.json();
       setStyles(result.data);
       handleSearch(searchQuery);
-    } catch (error) {
+    } catch {
       toast.error('排序失败');
     } finally {
       setIsSaving(false);

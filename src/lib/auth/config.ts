@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
@@ -38,7 +39,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           return null;
         } catch (error) {
-          console.error('认证错误:', error);
+          const err = error instanceof Error ? error : new Error(String(error));
+          if (err.message === '管理员凭证未配置') {
+            logger.error('认证失败：管理员凭证未配置', {
+              name: err.name,
+              message: err.message,
+            });
+          } else {
+            logger.debug('认证失败', {
+              name: err.name,
+              message: err.message,
+            });
+          }
           return null;
         }
       },

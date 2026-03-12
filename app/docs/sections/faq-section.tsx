@@ -1,8 +1,6 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 interface FaqItem {
   question: string;
@@ -144,106 +142,80 @@ const faqData: FaqItem[] = [
 ];
 
 export function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
   const categories = Array.from(new Set(faqData.map((item) => item.category)));
 
-  const toggleFaq = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>常见问题解答</CardTitle>
-          <CardDescription>查找关于文风字库的常见问题和解答</CardDescription>
-        </CardHeader>
-      </Card>
+    <div className="space-y-12">
+      <div id="faq-overview" className="space-y-4 pt-4"></div>
 
-      {categories.map((category) => (
-        <Card key={category}>
-          <CardHeader>
-            <CardTitle className="text-lg">{category}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {faqData
-              .filter((item) => item.category === category)
-              .map((item, index) => {
-                const globalIndex = faqData.indexOf(item);
-                const isOpen = openIndex === globalIndex;
-
-                return (
-                  <div key={globalIndex} className="overflow-hidden rounded-lg border">
-                    <button
-                      onClick={() => toggleFaq(globalIndex)}
-                      className="hover:bg-accent flex w-full items-center justify-between px-4 py-3 text-left transition-colors"
-                    >
-                      <span className="font-medium">{item.question}</span>
-                      {isOpen ? (
-                        <ChevronUp className="text-muted-foreground h-5 w-5 flex-shrink-0" />
-                      ) : (
-                        <ChevronDown className="text-muted-foreground h-5 w-5 flex-shrink-0" />
-                      )}
-                    </button>
-                    {isOpen && (
-                      <div className="bg-muted/50 border-t px-4 py-3">
-                        <p className="text-muted-foreground text-sm">{item.answer}</p>
+      <div className="space-y-8">
+        {categories.map((category) => (
+          <div key={category} className="space-y-4">
+            <h3 className="text-xl font-semibold">{category}</h3>
+            <Accordion type="single" collapsible className="w-full">
+              {faqData
+                .filter((item) => item.category === category)
+                .map((item, index) => (
+                  <AccordionItem key={index} value={`item-${category}-${index}`}>
+                    <AccordionTrigger>{item.question}</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="text-muted-foreground space-y-2">
+                        <p>{item.answer}</p>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-          </CardContent>
-        </Card>
-      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+            </Accordion>
+          </div>
+        ))}
+      </div>
+
+      <div className="my-8 border-t" />
 
       {/* Contact Support */}
-      <Card>
-        <CardHeader>
-          <CardTitle>还有其他问题？</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4 text-sm">
+      <div id="contact-support" className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">还有其他问题？</h2>
+          <p className="text-muted-foreground mt-2">
             如果您的问题没有在上面列出，或需要更多帮助，请通过以下方式联系我们。
           </p>
-          <div className="space-y-2 text-sm">
-            <p>
-              <strong>官方网站：</strong>{' '}
-              <a
-                href="https://wenfeng.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                https://wenfeng.org
-              </a>
-            </p>
-            <p>
-              <strong>授权查询：</strong>{' '}
-              <a
-                href="https://wenfeng.org/license"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                https://wenfeng.org/license
-              </a>
-            </p>
-            <p>
-              <strong>GitHub：</strong>{' '}
-              <a
-                href="https://feicode.com/Windfonts/fonts-vault"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                https://feicode.com/Windfonts/fonts-vault
-              </a>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="space-y-2 text-sm text-muted-foreground">
+          <p>
+            <strong>官方网站：</strong>{' '}
+            <a
+              href="https://wenfeng.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              https://wenfeng.org
+            </a>
+          </p>
+          <p>
+            <strong>授权查询：</strong>{' '}
+            <a
+              href="https://wenfeng.org/license"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              https://wenfeng.org/license
+            </a>
+          </p>
+          <p>
+            <strong>GitHub：</strong>{' '}
+            <a
+              href="https://feicode.com/Windfonts/fonts-vault"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              https://feicode.com/Windfonts/fonts-vault
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default async function Home() {
           <div className="mx-auto max-w-4xl">
             <h1
               className="mb-4 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl"
-              style={{ fontFamily: 'WF-Hclcks, sans-serif' }}
+              style={{ fontFamily: 'windfonts-prsxt, sans-serif' }}
             >
               文风字库
             </h1>

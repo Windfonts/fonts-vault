@@ -30,11 +30,11 @@ export async function measurePerformance<T>(name: string, fn: () => Promise<T>):
 /**
  * Wrap API route handler with performance monitoring
  */
-export function withPerformanceMonitoring<T extends (...args: any[]) => Promise<any>>(
+export function withPerformanceMonitoring<T extends (...args: unknown[]) => Promise<unknown>>(
   handler: T,
   name?: string
 ): T {
-  return (async (...args: any[]) => {
+  return (async (...args: Parameters<T>) => {
     const handlerName = name || handler.name || 'anonymous';
     return measurePerformance(handlerName, () => handler(...args));
   }) as T;
@@ -100,7 +100,7 @@ export class MemoryCache<T> {
 /**
  * Debounce function for search inputs
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -122,7 +122,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function for scroll events
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {

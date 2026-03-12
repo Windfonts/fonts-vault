@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
@@ -18,57 +17,55 @@ export function CssApiGuide() {
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>CSS API 概述</CardTitle>
-          <CardDescription>通过 CSS API 在您的网站中安全地加载和使用字体</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground text-sm">
+    <div className="space-y-12">
+      <div id="css-overview" className="space-y-6 pt-4">
+        <div className="space-y-6">
+          <p className="text-muted-foreground text-sm leading-relaxed">
             CSS API 提供了一个安全的方式来加载字体文件，无需直接访问 OSS 存储。
             所有字体文件都通过代理服务器提供，确保资源安全。
           </p>
           <div>
-            <h3 className="mb-2 font-semibold">API 端点</h3>
-            <code className="bg-muted block rounded-md p-3">GET /api/css?family=字体名称</code>
+            <h3 className="mb-3 font-semibold">API 端点</h3>
+            <code className="bg-muted block rounded-md p-4">{`GET /api/css?family=字体名称`}</code>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="my-8 border-t" />
 
       {/* Basic Usage */}
-      <Card>
-        <CardHeader>
-          <CardTitle>基础用法</CardTitle>
-          <CardDescription>在 HTML 中引入字体</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <div className="mb-2 flex items-center justify-between">
+      <div id="basic-usage" className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">基础用法</h2>
+          <p className="text-muted-foreground mt-2">在 HTML 中引入字体</p>
+        </div>
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
               <h4 className="text-sm font-semibold">1. 在 HTML 头部引入字体</h4>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() =>
-                  copyToClipboard('<link rel="stylesheet" href="/api/css?family=WF-Qtxtt">', 0)
+                  copyToClipboard('<link rel="stylesheet" href="/api/css?family=qtxtt">', 0)
                 }
               >
                 {copiedIndex === 0 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
             <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
-              {`<link rel="stylesheet" href="/api/css?family=WF-Qtxtt">`}
+              {`<link rel="stylesheet" href="/api/css?family=qtxtt">`}
             </pre>
           </div>
 
-          <div>
-            <div className="mb-2 flex items-center justify-between">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
               <h4 className="text-sm font-semibold">2. 在 CSS 中使用字体</h4>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() =>
-                  copyToClipboard('body {\n  font-family: "WF-Qtxtt", sans-serif;\n}', 1)
+                  copyToClipboard('body {\n  font-family: "qtxtt", sans-serif;\n}', 1)
                 }
               >
                 {copiedIndex === 1 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -76,31 +73,33 @@ export function CssApiGuide() {
             </div>
             <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
               {`body {
-  font-family: "WF-Qtxtt", sans-serif;
+  font-family: "qtxtt", sans-serif;
 }`}
             </pre>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="my-8 border-t" />
 
       {/* Advanced Usage */}
-      <Card>
-        <CardHeader>
-          <CardTitle>高级用法</CardTitle>
-          <CardDescription>使用多个字体</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">加载多个字体</h4>
-            <p className="text-muted-foreground mb-2 text-sm">使用 | 符号分隔多个字体名称</p>
-            <div className="mb-2 flex items-center justify-between">
+      <div id="advanced-usage" className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">高级用法</h2>
+          <p className="text-muted-foreground mt-2">使用多个字体</p>
+        </div>
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">加载多个字体</h4>
+            <p className="text-muted-foreground text-sm">使用 | 符号分隔多个字体名称</p>
+            <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground text-xs">示例</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() =>
                   copyToClipboard(
-                    '<link rel="stylesheet" href="/api/css?family=WF-Qtxtt|WF-Hxbsb">',
+                    '<link rel="stylesheet" href="/api/css?family=qtxtt|hxbsb">',
                     2
                   )
                 }
@@ -108,22 +107,22 @@ export function CssApiGuide() {
                 {copiedIndex === 2 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
-              {`<link rel="stylesheet" href="/api/css?family=WF-Qtxtt|WF-Hxbsb">`}
+            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm mt-2">
+              {`<link rel="stylesheet" href="/api/css?family=qtxtt|hxbsb">`}
             </pre>
           </div>
 
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">在 CSS 中使用多个字体</h4>
-            <p className="text-muted-foreground mb-2 text-sm">可以为不同元素应用不同字体</p>
-            <div className="mb-2 flex items-center justify-between">
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">在 CSS 中使用多个字体</h4>
+            <p className="text-muted-foreground text-sm">可以为不同元素应用不同字体</p>
+            <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground text-xs">示例</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() =>
                   copyToClipboard(
-                    'body {\n  font-family: "WF-Qtxtt", sans-serif;\n}\n\nh1 {\n  font-family: "WF-Hxbsb", sans-serif;\n}',
+                    'body {\n  font-family: "qtxtt", sans-serif;\n}\n\nh1 {\n  font-family: "hxbsb", sans-serif;\n}',
                     3
                   )
                 }
@@ -131,78 +130,82 @@ export function CssApiGuide() {
                 {copiedIndex === 3 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
+            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm mt-2">
               {`body {
-  font-family: "WF-Qtxtt", sans-serif;
+  font-family: "qtxtt", sans-serif;
 }
 
 h1 {
-  font-family: "WF-Hxbsb", sans-serif;
+  font-family: "hxbsb", sans-serif;
 }`}
             </pre>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="my-8 border-t" />
 
       {/* Performance Tips */}
-      <Card>
-        <CardHeader>
-          <CardTitle>性能优化</CardTitle>
-          <CardDescription>提高字体加载性能的建议</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-3 text-sm">
-            <li className="flex gap-2">
-              <span className="text-primary font-semibold">•</span>
-              <div>
-                <strong>使用 font-display</strong>
-                <p className="text-muted-foreground">
+      <div id="performance-tips" className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">性能优化</h2>
+          <p className="text-muted-foreground mt-2">提高字体加载性能的建议</p>
+        </div>
+        <div className="space-y-4">
+          <ul className="space-y-6">
+            <li className="flex gap-3">
+              <span className="text-primary font-bold text-lg">•</span>
+              <div className="space-y-1">
+                <strong className="text-sm font-semibold block">使用 font-display</strong>
+                <p className="text-muted-foreground text-sm">
                   CSS API 默认使用 font-display: swap，确保文本在字体加载期间可见
                 </p>
               </div>
             </li>
-            <li className="flex gap-2">
-              <span className="text-primary font-semibold">•</span>
-              <div>
-                <strong>只加载需要的字重</strong>
-                <p className="text-muted-foreground">
+            <li className="flex gap-3">
+              <span className="text-primary font-bold text-lg">•</span>
+              <div className="space-y-1">
+                <strong className="text-sm font-semibold block">只加载需要的字重</strong>
+                <p className="text-muted-foreground text-sm">
                   避免加载所有字重，只选择实际使用的字重以减少加载时间
                 </p>
               </div>
             </li>
-            <li className="flex gap-2">
-              <span className="text-primary font-semibold">•</span>
-              <div>
-                <strong>利用浏览器缓存</strong>
-                <p className="text-muted-foreground">
+            <li className="flex gap-3">
+              <span className="text-primary font-bold text-lg">•</span>
+              <div className="space-y-1">
+                <strong className="text-sm font-semibold block">利用浏览器缓存</strong>
+                <p className="text-muted-foreground text-sm">
                   CSS API 响应包含缓存头，浏览器会自动缓存字体文件
                 </p>
               </div>
             </li>
-            <li className="flex gap-2">
-              <span className="text-primary font-semibold">•</span>
-              <div>
-                <strong>使用 preconnect</strong>
-                <p className="text-muted-foreground">
+            <li className="flex gap-3">
+              <span className="text-primary font-bold text-lg">•</span>
+              <div className="space-y-1 w-full">
+                <strong className="text-sm font-semibold block">使用 preconnect</strong>
+                <p className="text-muted-foreground text-sm">
                   在 HTML 头部添加 preconnect 提示以加快连接速度
                 </p>
-                <pre className="bg-muted mt-2 overflow-x-auto rounded-md p-2 text-xs">
+                <pre className="bg-muted mt-3 overflow-x-auto rounded-md p-3 text-xs w-full">
                   {`<link rel="preconnect" href="${baseUrl}">`}
                 </pre>
               </div>
             </li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="my-8 border-t" />
 
       {/* Complete Example */}
-      <Card>
-        <CardHeader>
-          <CardTitle>完整示例</CardTitle>
-          <CardDescription>一个完整的 HTML 页面示例</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-2 flex items-center justify-between">
+      <div id="complete-example" className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">完整示例</h2>
+          <p className="text-muted-foreground mt-2">一个完整的 HTML 页面示例</p>
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
             <span className="text-sm font-semibold">HTML 示例</span>
             <Button
               variant="ghost"
@@ -215,13 +218,13 @@ h1 {
   <meta charset="UTF-8">
   <title>字体示例</title>
   <link rel="preconnect" href="${baseUrl}">
-  <link rel="stylesheet" href="${baseUrl}/api/css?family=WF-Qtxtt|WF-Hxbsb">
+  <link rel="stylesheet" href="${baseUrl}/api/css?family=qtxtt|hxbsb">
   <style>
     body {
-      font-family: "WF-Qtxtt", sans-serif;
+      font-family: "qtxtt", sans-serif;
     }
     h1 {
-      font-family: "WF-Hxbsb", sans-serif;
+      font-family: "hxbsb", sans-serif;
     }
   </style>
 </head>
@@ -244,13 +247,13 @@ h1 {
   <meta charset="UTF-8">
   <title>字体示例</title>
   <link rel="preconnect" href="${baseUrl}">
-  <link rel="stylesheet" href="${baseUrl}/api/css?family=WF-Qtxtt|WF-Hxbsb">
+  <link rel="stylesheet" href="${baseUrl}/api/css?family=qtxtt|hxbsb">
   <style>
     body {
-      font-family: "WF-Qtxtt", sans-serif;
+      font-family: "qtxtt", sans-serif;
     }
     h1 {
-      font-family: "WF-Hxbsb", sans-serif;
+      font-family: "hxbsb", sans-serif;
     }
   </style>
 </head>
@@ -260,19 +263,21 @@ h1 {
 </body>
 </html>`}
           </pre>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="my-8 border-t" />
 
       {/* NPM Package Usage */}
-      <Card>
-        <CardHeader>
-          <CardTitle>NPM 包使用方式</CardTitle>
-          <CardDescription>通过 NPM 包在 React、Vue 等现代前端项目中使用字体</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">1. 安装依赖</h4>
-            <div className="mb-2 flex items-center justify-between">
+      <div id="npm-usage" className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">NPM 包使用方式</h2>
+          <p className="text-muted-foreground mt-2">通过 NPM 包在 React、Vue 等现代前端项目中使用字体</p>
+        </div>
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">1. 安装依赖</h4>
+            <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground text-xs">使用 npm 安装</span>
               <Button
                 variant="ghost"
@@ -282,17 +287,17 @@ h1 {
                 {copiedIndex === 5 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
+            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm mt-2">
               {`npm install @windfonts/chinese-fonts`}
             </pre>
           </div>
 
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">2. 在项目中加载字体</h4>
-            <p className="text-muted-foreground mb-2 text-sm">
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">2. 在项目中加载字体</h4>
+            <p className="text-muted-foreground text-sm">
               使用 loadFont 函数加载字体，支持字符子集选择
             </p>
-            <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground text-xs">基础用法</span>
               <Button
                 variant="ghost"
@@ -302,16 +307,16 @@ h1 {
                     `import { loadFont } from '@windfonts/chinese-fonts';
 
 // 加载完整字符集
-loadFont('WF-Qtxtt');
+loadFont('qtxtt');
 
 // 加载常用中文字符（推荐，文件更小）
-loadFont('WF-Qtxtt', { subset: 'zh-common' });
+loadFont('qtxtt', { subset: 'zh-common' });
 
 // 加载中文字符集
-loadFont('WF-Qtxtt', { subset: 'zh' });
+loadFont('qtxtt', { subset: 'zh' });
 
 // 加载英文字符集
-loadFont('WF-Qtxtt', { subset: 'en' });`,
+loadFont('qtxtt', { subset: 'en' });`,
                     6
                   )
                 }
@@ -319,26 +324,26 @@ loadFont('WF-Qtxtt', { subset: 'en' });`,
                 {copiedIndex === 6 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
+            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm mt-2">
               {`import { loadFont } from '@windfonts/chinese-fonts';
 
 // 加载完整字符集
-loadFont('WF-Qtxtt');
+loadFont('qtxtt');
 
 // 加载常用中文字符（推荐，文件更小）
-loadFont('WF-Qtxtt', { subset: 'zh-common' });
+loadFont('qtxtt', { subset: 'zh-common' });
 
 // 加载中文字符集
-loadFont('WF-Qtxtt', { subset: 'zh' });
+loadFont('qtxtt', { subset: 'zh' });
 
 // 加载英文字符集
-loadFont('WF-Qtxtt', { subset: 'en' });`}
+loadFont('qtxtt', { subset: 'en' });`}
             </pre>
           </div>
 
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">3. 在组件中使用</h4>
-            <div className="mb-2 flex items-center justify-between">
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">3. 在组件中使用</h4>
+            <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground text-xs">Next.js App Router 示例</span>
               <Button
                 variant="ghost"
@@ -349,12 +354,12 @@ loadFont('WF-Qtxtt', { subset: 'en' });`}
 import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载字体
-loadFont('WF-Qtxtt', { subset: 'zh-common' });
+loadFont('qtxtt', { subset: 'zh-common' });
 
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN">
-      <body style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
+      <body style={{ fontFamily: 'qtxtt, sans-serif' }}>
         {children}
       </body>
     </html>
@@ -367,17 +372,17 @@ export default function RootLayout({ children }) {
                 {copiedIndex === 7 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
+            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm mt-2">
               {`// app/layout.tsx
 import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载字体
-loadFont('WF-Qtxtt', { subset: 'zh-common' });
+loadFont('qtxtt', { subset: 'zh-common' });
 
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN">
-      <body style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
+      <body style={{ fontFamily: 'qtxtt, sans-serif' }}>
         {children}
       </body>
     </html>
@@ -386,9 +391,9 @@ export default function RootLayout({ children }) {
             </pre>
           </div>
 
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">React 组件示例</h4>
-            <div className="mb-2 flex items-center justify-between">
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">React 组件示例</h4>
+            <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground text-xs">在组件中使用</span>
               <Button
                 variant="ghost"
@@ -398,11 +403,11 @@ export default function RootLayout({ children }) {
                     `import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载
-loadFont('WF-Qtxtt', { subset: 'zh-common' });
+loadFont('qtxtt', { subset: 'zh-common' });
 
 function MyComponent() {
   return (
-    <div style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
+    <div style={{ fontFamily: 'qtxtt, sans-serif' }}>
       <h1>欢迎使用文风字库</h1>
       <p>这是使用 NPM 包加载的字体</p>
     </div>
@@ -415,15 +420,15 @@ function MyComponent() {
                 {copiedIndex === 8 ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm">
+            <pre className="bg-muted overflow-x-auto rounded-md p-4 text-sm mt-2">
               {`import { loadFont } from '@windfonts/chinese-fonts';
 
 // 在组件外部加载
-loadFont('WF-Qtxtt', { subset: 'zh-common' });
+loadFont('qtxtt', { subset: 'zh-common' });
 
 function MyComponent() {
   return (
-    <div style={{ fontFamily: 'WF-Qtxtt, sans-serif' }}>
+    <div style={{ fontFamily: 'qtxtt, sans-serif' }}>
       <h1>欢迎使用文风字库</h1>
       <p>这是使用 NPM 包加载的字体</p>
     </div>
@@ -438,9 +443,9 @@ function MyComponent() {
             </div>
             <ul className="list-inside list-disc space-y-1 text-sm text-blue-800 dark:text-blue-200">
               <li>
-                <strong>格式</strong>：使用字体的 font_family 字段，如 <code>WF-Qtxtt</code>
+                <strong>格式</strong>：使用字体的 font_family 字段，如 <code>qtxtt</code>
                 （千图小兔体）、
-                <code>WF-Hxbsb</code>（胡晓波骚包体）
+                <code>hxbsb</code>（胡晓波骚包体）
               </li>
               <li>
                 <strong>字符子集</strong>：
@@ -460,29 +465,29 @@ function MyComponent() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="mb-2 text-sm font-semibold">常用字体加载示例</h4>
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold">常用字体加载示例</h4>
             <div className="bg-muted space-y-2 rounded-md p-4 text-xs">
               <div>
                 <strong>千图小兔体：</strong>
-                <code className="ml-2">loadFont('WF-Qtxtt', {"{ subset: 'zh-common' }"})</code>
+                <code className="ml-2">{`loadFont('qtxtt', { subset: 'zh-common' })`}</code>
               </div>
               <div>
                 <strong>胡晓波骚包体：</strong>
-                <code className="ml-2">loadFont('WF-Hxbsb', {"{ subset: 'zh-common' }"})</code>
+                <code className="ml-2">{`loadFont('hxbsb', { subset: 'zh-common' })`}</code>
               </div>
               <div>
                 <strong>霞鹜马克哥特体：</strong>
-                <code className="ml-2">loadFont('WF-Xwmh', {"{ subset: 'zh-common' }"})</code>
+                <code className="ml-2">{`loadFont('xwmh', { subset: 'zh-common' })`}</code>
               </div>
               <div>
                 <strong>寒蝉手拙体：</strong>
-                <code className="ml-2">loadFont('WF-Hcszt', {"{ subset: 'zh-common' }"})</code>
+                <code className="ml-2">{`loadFont('hcszt', { subset: 'zh-common' })`}</code>
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

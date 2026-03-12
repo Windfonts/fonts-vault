@@ -44,8 +44,7 @@ export default async function FontManagementPage({ searchParams }: PageProps) {
   const search = params.search || '';
   const categoryId = params.categoryId || undefined;
   const brandId = params.brandId || undefined;
-  const sort =
-    (params.sort as 'name' | 'viewCount' | 'downloadCount' | 'createdAt') || 'createdAt';
+  const sort = (params.sort as 'name' | 'viewCount' | 'downloadCount' | 'createdAt') || 'createdAt';
   const order = (params.order as 'asc' | 'desc') || 'desc';
 
   // 获取字体列表

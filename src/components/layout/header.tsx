@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Github, Menu } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -27,10 +28,10 @@ export function Header() {
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center space-x-2">
-            <img src="/icon.webp" alt="Logo" className="h-8 w-8 rounded" />
+            <Image src="/icon.webp" alt="Logo" width={32} height={32} className="h-8 w-8 rounded" />
             <span
-              className="text-lg font-bold sm:text-xl"
-              style={{ fontFamily: 'WF-Hclcks, sans-serif' }}
+              className="text-xl font-bold sm:text-xl"
+              style={{ fontFamily: 'windfonts-prsxt' }}
             >
               文风字库
             </span>
@@ -74,7 +75,13 @@ export function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
-                  <img src="/icon.webp" alt="Logo" className="h-6 w-6 rounded" />
+                  <Image
+                    src="/icon.webp"
+                    alt="Logo"
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 rounded"
+                  />
                   导航菜单
                 </SheetTitle>
               </SheetHeader>

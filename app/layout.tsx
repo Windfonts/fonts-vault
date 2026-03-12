@@ -1,9 +1,8 @@
 import { Toaster } from '@/components/ui/sonner';
-import { loadFont } from '@windfonts/chinese-fonts';
 import type { Metadata, Viewport } from 'next';
 import { SessionProvider } from 'next-auth/react';
+import { FontLoader } from './font-loader';
 import './globals.css';
-loadFont('Hclcks-Regular', { subset: 'zh-common' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://fonts.wptea.com'),
@@ -63,7 +62,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className="overscroll-none">
-      <body className="touch-pan-y overscroll-none antialiased">
+      <body className="touch-pan-y overscroll-none antialiased font-['windfonts-hclcks',_sans-serif]">
+        <FontLoader />
         <SessionProvider>{children}</SessionProvider>
         <Toaster />
       </body>

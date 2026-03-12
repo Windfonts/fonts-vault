@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function GlobalError({
   error,
@@ -23,146 +24,42 @@ export default function GlobalError({
 
   return (
     <html lang="zh-CN">
-      <body>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '100vh',
-            padding: '1rem',
-            fontFamily: 'system-ui, sans-serif',
-          }}
-        >
-          <div style={{ maxWidth: '32rem', textAlign: 'center' }}>
-            {/* Error Icon */}
-            <div
-              style={{
-                marginBottom: '2rem',
-                fontSize: '4rem',
-              }}
-            >
-              ⚠️
-            </div>
-
-            {/* Error Code */}
-            <h1
-              style={{
-                fontSize: '3rem',
-                fontWeight: 'bold',
-                marginBottom: '1rem',
-                color: '#dc2626',
-              }}
-            >
-              500
-            </h1>
-
-            {/* Title */}
-            <h2
-              style={{
-                fontSize: '1.5rem',
-                fontWeight: '600',
-                marginBottom: '1rem',
-              }}
-            >
-              应用程序错误
-            </h2>
-
-            {/* Description */}
-            <p
-              style={{
-                marginBottom: '2rem',
-                color: '#6b7280',
-              }}
-            >
+      <body className="bg-background text-foreground min-h-screen">
+        <div className="flex min-h-screen flex-col items-center justify-center px-4 font-sans">
+          <div className="w-full max-w-xl text-center">
+            <div className="mb-8 text-5xl">⚠️</div>
+            <h1 className="mb-4 text-4xl font-bold text-red-600">500</h1>
+            <h2 className="mb-4 text-xl font-semibold">应用程序错误</h2>
+            <p className="text-muted-foreground mb-8">
               抱歉，应用程序遇到了一个严重错误。
               <br />
               请刷新页面重试。
             </p>
 
-            {/* Error details in development */}
             {process.env.NODE_ENV === 'development' && (
-              <div
-                style={{
-                  marginBottom: '2rem',
-                  padding: '1rem',
-                  backgroundColor: '#f3f4f6',
-                  borderRadius: '0.5rem',
-                  textAlign: 'left',
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: '0.875rem',
-                    fontWeight: '600',
-                    marginBottom: '0.5rem',
-                    color: '#dc2626',
-                  }}
-                >
-                  开发模式错误信息：
-                </p>
-                <p
-                  style={{
-                    fontSize: '0.75rem',
-                    color: '#6b7280',
-                  }}
-                >
-                  {error.message}
-                </p>
+              <div className="bg-muted mb-8 rounded-lg p-4 text-left">
+                <p className="mb-2 text-sm font-semibold text-red-600">开发模式错误信息：</p>
+                <p className="text-muted-foreground text-xs">{error.message}</p>
                 {error.digest && (
-                  <p
-                    style={{
-                      fontSize: '0.75rem',
-                      marginTop: '0.5rem',
-                      color: '#6b7280',
-                    }}
-                  >
-                    错误ID: {error.digest}
-                  </p>
+                  <p className="text-muted-foreground mt-2 text-xs">错误ID: {error.digest}</p>
                 )}
               </div>
             )}
 
-            {/* Actions */}
-            <div
-              style={{
-                display: 'flex',
-                gap: '1rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-              }}
-            >
+            <div className="flex flex-wrap justify-center gap-4">
               <button
+                type="button"
                 onClick={reset}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: '#3b82f6',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '0.5rem',
-                  fontSize: '1rem',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                }}
+                className="rounded-lg bg-blue-500 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-blue-600"
               >
                 🔄 重试
               </button>
-              <a
+              <Link
                 href="/"
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: 'white',
-                  color: '#3b82f6',
-                  border: '1px solid #3b82f6',
-                  borderRadius: '0.5rem',
-                  fontSize: '1rem',
-                  textDecoration: 'none',
-                  fontWeight: '500',
-                }}
+                className="border-primary text-primary hover:bg-primary/10 rounded-lg border px-6 py-3 text-base font-medium transition-colors"
               >
                 🏠 返回首页
-              </a>
+              </Link>
             </div>
           </div>
         </div>

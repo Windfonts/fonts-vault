@@ -62,7 +62,7 @@ export function SyncManagementContent() {
         fontWeight: number;
         versions: Array<{ name: string; file: string; charCount: number; glyphCount: number }>;
       }>;
-      analysis?: any;
+      analysis?: unknown;
     }>
   >([]);
 
@@ -357,7 +357,7 @@ export function SyncManagementContent() {
                         </div>
                       ))}
                     </div>
-                    {item.analysis && (
+                    {Boolean(item.analysis) && (
                       <div className="text-muted-foreground mt-2 text-xs">已加载分析数据</div>
                     )}
                   </div>

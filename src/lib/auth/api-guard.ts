@@ -84,13 +84,17 @@ export function withAuth(
  *   // session is guaranteed to exist and user is admin
  * });
  */
-export function withAdmin(
-  handler: (req: NextRequest, session: AuthenticatedSession) => Promise<NextResponse>
+export function withAdmin<TContext = unknown>(
+  handler: (
+    req: NextRequest,
+    session: AuthenticatedSession,
+    context?: TContext
+  ) => Promise<NextResponse>
 ) {
-  return async (req: NextRequest) => {
+  return async (req: NextRequest, context?: TContext) => {
     try {
       const session = await verifyAdmin();
-      return await handler(req, session);
+      return await handler(req, session, context);
     } catch (error) {
       return handleApiError(error);
     }

@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { requireAuth } from '@/lib/auth/session';
+import { requireAdmin } from '@/lib/auth/session';
 import { brandService } from '@/lib/services/brand.service';
 import { categoryService } from '@/lib/services/category.service';
 import { fontService } from '@/lib/services/font.service';
@@ -28,84 +28,95 @@ import {
 import Link from 'next/link';
 
 export default async function AdminPage() {
-  const session = await requireAuth();
+  const session = await requireAdmin();
 
-  // 获取统计信息
-  const stats = await fontService.getStats();
+  type CategoryItem = Awaited<ReturnType<typeof categoryService.findAll>>[number];
+  type BrandItem = Awaited<ReturnType<typeof brandService.findAll>>[number];
+  let stats = {
+    totalFonts: 0,
+    totalBrands: 0,
+    totalCategories: 0,
+    totalViews: 0,
+    totalDownloads: 0,
+  };
+  let recentFonts: Awaited<ReturnType<typeof fontService.getLatestFontsWithRelations>> = [];
+  let popularFonts: Awaited<ReturnType<typeof fontService.getPopularFontsWithRelations>> = [];
+  let categoriesWithCount: Array<CategoryItem & { fontCount: number }> = [];
+  let brandsWithCount: Array<BrandItem & { fontCount: number }> = [];
+  let dashboardError: string | null = null;
 
-  // 获取最近更新的字体
-  const recentFonts = await fontService.getLatestFontsWithRelations(5);
+  try {
+    stats = await fontService.getStats();
+    recentFonts = await fontService.getLatestFontsWithRelations(5);
+    popularFonts = await fontService.getPopularFontsWithRelations(5);
+    const allCategories = await categoryService.findAll();
+    const allBrands = await brandService.findAll();
+    const { db } = await import('@/lib/db/client');
+    const { fonts } = await import('@/lib/db/schema');
+    const { sql } = await import('drizzle-orm');
 
-  // 获取热门字体
-  const popularFonts = await fontService.getPopularFontsWithRelations(5);
+    const categoryCountsQuery = await db
+      .select({
+        categoryId: fonts.categoryId,
+        count: sql<number>`count(*)`.as('count'),
+      })
+      .from(fonts)
+      .where(sql`${fonts.categoryId} IS NOT NULL`)
+      .groupBy(fonts.categoryId);
 
-  // 获取所有分类和品牌用于统计
-  const allCategories = await categoryService.findAll();
-  const allBrands = await brandService.findAll();
+    const categoryFontCounts = categoryCountsQuery.reduce(
+      (acc, row) => {
+        if (row.categoryId) {
+          acc[row.categoryId] = Number(row.count);
+        }
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-  // 直接从数据库查询每个分类和品牌的字体数量
-  const { db } = await import('@/lib/db/client');
-  const { fonts } = await import('@/lib/db/schema');
-  const { eq, sql } = await import('drizzle-orm');
+    const brandCountsQuery = await db
+      .select({
+        brandId: fonts.brandId,
+        count: sql<number>`count(*)`.as('count'),
+      })
+      .from(fonts)
+      .where(sql`${fonts.brandId} IS NOT NULL`)
+      .groupBy(fonts.brandId);
 
-  // 查询每个分类的字体数量
-  const categoryCountsQuery = await db
-    .select({
-      categoryId: fonts.categoryId,
-      count: sql<number>`count(*)`.as('count'),
-    })
-    .from(fonts)
-    .where(sql`${fonts.categoryId} IS NOT NULL`)
-    .groupBy(fonts.categoryId);
+    const brandFontCounts = brandCountsQuery.reduce(
+      (acc, row) => {
+        if (row.brandId) {
+          acc[row.brandId] = Number(row.count);
+        }
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-  const categoryFontCounts = categoryCountsQuery.reduce(
-    (acc, row) => {
-      if (row.categoryId) {
-        acc[row.categoryId] = Number(row.count);
-      }
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+    categoriesWithCount = allCategories.map((cat) => ({
+      ...cat,
+      fontCount: categoryFontCounts[cat.id] || 0,
+    }));
 
-  // 查询每个品牌的字体数量
-  const brandCountsQuery = await db
-    .select({
-      brandId: fonts.brandId,
-      count: sql<number>`count(*)`.as('count'),
-    })
-    .from(fonts)
-    .where(sql`${fonts.brandId} IS NOT NULL`)
-    .groupBy(fonts.brandId);
+    brandsWithCount = allBrands.map((brand) => ({
+      ...brand,
+      fontCount: brandFontCounts[brand.id] || 0,
+    }));
+  } catch (error) {
+    dashboardError = error instanceof Error ? error.message : '数据加载失败';
+  }
 
-  const brandFontCounts = brandCountsQuery.reduce(
-    (acc, row) => {
-      if (row.brandId) {
-        acc[row.brandId] = Number(row.count);
-      }
-      return acc;
-    },
-    {} as Record<string, number>
-  );
-
-  // 为分类和品牌添加字体数量
-  const categoriesWithCount = allCategories.map((cat) => ({
-    ...cat,
-    fontCount: categoryFontCounts[cat.id] || 0,
-  }));
-
-  const brandsWithCount = allBrands.map((brand) => ({
-    ...brand,
-    fontCount: brandFontCounts[brand.id] || 0,
-  }));
-
-  // 计算平均浏览量和下载量
   const avgViews = stats.totalFonts > 0 ? Math.round(stats.totalViews / stats.totalFonts) : 0;
   const avgDownloads =
     stats.totalFonts > 0 ? Math.round(stats.totalDownloads / stats.totalFonts) : 0;
 
   return (
     <AdminLayout>
+      {dashboardError ? (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          数据加载失败：{dashboardError}
+        </div>
+      ) : null}
       {/* 欢迎区域 */}
       <div className="mb-8">
         <h2 className="text-3xl font-bold">管理后台</h2>

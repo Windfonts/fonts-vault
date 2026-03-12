@@ -1,3 +1,4 @@
+import { withFontApiAuth } from '@/lib/api/font-api-auth';
 import { handleApiError } from '@/lib/auth/api-guard';
 import { fontService } from '@/lib/services/font.service';
 import { fontUpdateSchema } from '@/lib/services/validation';
@@ -5,16 +6,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
 /**
- * GET /api/fonts/[id]
+ * GET /api/fonts/[family]
  * 获取字体详情
  * 公开访问
  * 支持通过 ID 或 normalizedName 查询
  */
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+const handleGet = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const { id } = await params;
 
-    // 尝试通过 normalizedName 查询，如果失败则通过 ID 查询
+    // 优先通过 normalizedName 查询（匹配 route 参数设计），如果失败则通过 ID 查询
     let font = await fontService.findByNormalizedName(id);
     if (!font) {
       font = await fontService.findById(id);
@@ -42,10 +43,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   } catch (error) {
     return handleApiError(error);
   }
-}
+};
+
+export const GET = async (req: NextRequest, ctx: { params: Promise<{ id: string }> }) => {
+  const wrapped = withFontApiAuth((request) => handleGet(request as NextRequest, ctx));
+  return wrapped(req);
+};
 
 /**
- * PUT /api/fonts/[id]
+ * PUT /api/fonts/[family]
  * 更新字体
  * 需要管理员认证
  * 支持通过 ID 或 normalizedName 查询
@@ -119,7 +125,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 /**
- * DELETE /api/fonts/[id]
+ * DELETE /api/fonts/[family]
  * 删除字体
  * 需要管理员认证
  * 支持通过 ID 或 normalizedName 查询

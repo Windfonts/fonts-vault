@@ -1,3 +1,4 @@
+import { withFontApiAuth } from '@/lib/api/font-api-auth';
 import { logger } from '@/lib/logger';
 import { cssService } from '@/lib/services/css.service';
 import { NextRequest, NextResponse } from 'next/server';
@@ -20,10 +21,11 @@ import { ZodError } from 'zod';
  * 支持条件请求:
  * - If-None-Match: 如果ETag匹配，返回304
  */
-export async function GET(request: NextRequest) {
+export const GET = withFontApiAuth(async (request) => {
+  const nextRequest = request as NextRequest;
   try {
     // 获取查询参数
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = nextRequest.nextUrl.searchParams;
     const family = searchParams.get('family');
     const subset = searchParams.get('subset') || undefined;
     const lang = searchParams.get('lang') || undefined;
@@ -42,8 +44,12 @@ export async function GET(request: NextRequest) {
 
     // 生成CSS
     // 将 subset/lang 参数映射到 version
-    const version = (subset || lang || 'full') as 'en' | 'zh' | 'zh-common' | 'full';
-    const weight = searchParams.get('weight') || 'Regular';
+    const version = ((subset || lang || 'full').toLowerCase() || 'full') as
+      | 'en'
+      | 'zh'
+      | 'zh-common'
+      | 'full';
+    const weight = (searchParams.get('weight') || 'regular').toLowerCase();
     const { css, etag } = await cssService.generateCSS({
       family,
       version,
@@ -51,7 +57,7 @@ export async function GET(request: NextRequest) {
     });
 
     // 检查条件请求（If-None-Match）
-    const ifNoneMatch = request.headers.get('if-none-match');
+    const ifNoneMatch = nextRequest.headers.get('if-none-match');
     if (ifNoneMatch === etag) {
       // 内容未变化，返回304
       return new NextResponse(null, {
@@ -120,4 +126,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

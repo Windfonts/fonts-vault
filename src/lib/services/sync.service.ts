@@ -1,8 +1,10 @@
+import type { Font } from '@/lib/db/schema';
 import { logger } from '@/lib/logger';
 import { brandService } from './brand.service';
 import { categoryService } from './category.service';
 import { fontService } from './font.service';
-import type { FontCreateDto } from './validation';
+import { styleService } from './style.service';
+import type { FontCreateDto, FontUpdateDto } from './validation';
 
 // JSON映射文件结构
 interface FontMappingJSON {
@@ -32,7 +34,7 @@ interface FontMappingJSON {
     foundry: string | 'null';
     release_year: number | 'null';
     category: string | null;
-    font_category: string;
+    font_category: string | null;
     style: string | null;
     copyright: string | 'null';
     license: string | 'null';
@@ -85,6 +87,7 @@ export class SyncService {
   private ossFolder: string;
   private mappingUrl: string;
   private analysisUrl?: string;
+  private excludedStyleNames = new Set(['简体中文', '繁体中文']);
 
   constructor() {
     this.ossEndpoint =
@@ -101,10 +104,24 @@ export class SyncService {
       : undefined;
   }
 
-  private parseNull(value: any): any {
+  private parseString(value: unknown): string | undefined {
     if (value === undefined || value === null) return undefined;
-    if (typeof value === 'string' && value.trim().toLowerCase() === 'null') return undefined;
-    return value;
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.trim();
+    if (!trimmed || trimmed.toLowerCase() === 'null') return undefined;
+    return trimmed;
+  }
+
+  private parseNumber(value: unknown): number | undefined {
+    if (value === undefined || value === null) return undefined;
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? value : undefined;
+    }
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.trim();
+    if (!trimmed || trimmed.toLowerCase() === 'null') return undefined;
+    const parsed = Number(trimmed);
+    return Number.isFinite(parsed) ? parsed : undefined;
   }
 
   /**
@@ -126,7 +143,12 @@ export class SyncService {
       // 1. 获取JSON文件
       logger.debug('[SyncService] 正在获取JSON映射文件...' + this.mappingUrl);
       const response = await fetch(this.mappingUrl);
-      console.log(response);
+      logger.debug('[SyncService] JSON映射文件响应', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+      });
       if (!response.ok) {
         const error = `Failed to fetch JSON mapping: ${response.statusText}`;
         logger.error('[SyncService] 获取JSON映射文件失败', {
@@ -138,28 +160,22 @@ export class SyncService {
 
       const jsonData: FontMappingJSON = await response.json();
 
-      let analysisData: any | undefined;
-      if (this.analysisUrl) {
-        try {
-          logger.debug('[SyncService] 正在获取分析文件...');
-          const ar = await fetch(this.analysisUrl);
-          if (ar.ok) {
-            analysisData = await ar.json();
-            logger.info('[SyncService] 分析文件获取成功');
-          } else {
-            logger.warn('[SyncService] 分析文件获取失败', {
-              status: ar.status,
-              statusText: ar.statusText,
-            });
-          }
-        } catch {
-          logger.warn('[SyncService] 读取分析文件异常');
-        }
-      }
       const totalFonts = Object.keys(jsonData).length;
       logger.info('[SyncService] JSON映射文件获取成功', {
         totalFonts,
       });
+
+      const allTags = new Set<string>();
+      for (const fontData of Object.values(jsonData)) {
+        if (!Array.isArray(fontData.font_tags)) continue;
+        for (const tag of fontData.font_tags) {
+          if (typeof tag !== 'string') continue;
+          const trimmed = tag.trim();
+          if (trimmed && !this.excludedStyleNames.has(trimmed)) allTags.add(trimmed);
+        }
+      }
+      await this.removeExcludedStyles();
+      await this.ensureStylesFromTags(Array.from(allTags));
 
       // 2. 遍历每个字体
       let processed = 0;
@@ -215,11 +231,51 @@ export class SyncService {
     return result;
   }
 
+  private async ensureStylesFromTags(tags: string[]) {
+    if (!tags.length) return;
+    const existing = await styleService.findAll();
+    const existingNames = new Set(existing.map((s) => s.name));
+    let order = existing.length;
+    const sorted = Array.from(new Set(tags.map((t) => t.trim()).filter(Boolean))).sort();
+    for (const name of sorted) {
+      if (existingNames.has(name)) continue;
+      const slug = this.slugify(name);
+      if (!slug) continue;
+      try {
+        await styleService.create({ name, slug, order });
+        order += 1;
+        existingNames.add(name);
+      } catch (error) {
+        logger.warn('[SyncService] 创建风格失败', {
+          name,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+  }
+
+  private async removeExcludedStyles() {
+    const excluded = Array.from(this.excludedStyleNames);
+    if (!excluded.length) return;
+    for (const name of excluded) {
+      const existing = await styleService.findByName(name);
+      if (!existing) continue;
+      try {
+        await styleService.delete(existing.id);
+      } catch (error) {
+        logger.warn('[SyncService] 删除风格失败', {
+          name,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+  }
+
   /**
    * 智能合并策略：保留用户手动修改的字段
    * 只更新来自OSS的"源数据"字段，保留用户自定义的字段
    */
-  private mergeWithExisting(existing: any, ossData: FontCreateDto): any {
+  private mergeWithExisting(existing: Font, ossData: FontCreateDto): Partial<FontUpdateDto> {
     // 始终从OSS更新的字段（这些是"源数据"）
     const alwaysUpdateFields = [
       'weights', // 字重信息
@@ -235,7 +291,7 @@ export class SyncService {
       'license', // 许可证
       'licenseType', // 许可证类型
       'ossPath', // OSS路径
-    ];
+    ] as const satisfies Array<keyof FontCreateDto & keyof FontUpdateDto & keyof Font>;
 
     // 只在用户未修改时更新的字段（保留用户的自定义内容）
     const conditionalUpdateFields = [
@@ -250,14 +306,21 @@ export class SyncService {
       'style', // 风格
       'categoryId', // 分类ID
       'brandId', // 品牌ID
-    ];
+    ] as const satisfies Array<keyof FontCreateDto & keyof FontUpdateDto & keyof Font>;
 
-    const merged: any = { ...existing };
+    const merged: Partial<FontUpdateDto> = {};
+    const setMergedField = <K extends keyof FontUpdateDto>(
+      key: K,
+      value: FontUpdateDto[K]
+    ) => {
+      merged[key] = value;
+    };
 
     // 始终更新的字段
     for (const field of alwaysUpdateFields) {
-      if (ossData[field as keyof FontCreateDto] !== undefined) {
-        merged[field] = ossData[field as keyof FontCreateDto];
+      const value = ossData[field];
+      if (value !== undefined) {
+        setMergedField(field, value as FontUpdateDto[typeof field]);
       }
     }
 
@@ -265,7 +328,7 @@ export class SyncService {
     // 判断逻辑：如果现有值为空或与默认值相同，则认为用户未修改
     for (const field of conditionalUpdateFields) {
       const existingValue = existing[field];
-      const ossValue = ossData[field as keyof FontCreateDto];
+      const ossValue = ossData[field];
 
       // 如果现有值为空，使用OSS的值
       if (
@@ -274,7 +337,9 @@ export class SyncService {
         existingValue === '' ||
         (Array.isArray(existingValue) && existingValue.length === 0)
       ) {
-        merged[field] = ossValue;
+        if (ossValue !== undefined) {
+          setMergedField(field, ossValue as FontUpdateDto[typeof field]);
+        }
       }
       // 否则保留现有值（用户可能已修改）
     }
@@ -282,7 +347,7 @@ export class SyncService {
     logger.debug('[SyncService] 字段合并完成', {
       normalizedName: existing.normalizedName,
       updatedFields: alwaysUpdateFields.filter(
-        (f) => ossData[f as keyof FontCreateDto] !== undefined
+        (f) => ossData[f] !== undefined
       ),
       preservedFields: conditionalUpdateFields.filter(
         (f) => existing[f] !== null && existing[f] !== undefined && existing[f] !== ''
@@ -299,14 +364,15 @@ export class SyncService {
     normalizedName: string,
     data: FontMappingJSON[string]
   ): Promise<FontCreateDto> {
-    const parseNull = this.parseNull.bind(this);
+    const parseString = this.parseString.bind(this);
+    const parseNumber = this.parseNumber.bind(this);
 
-    const chineseName = parseNull(data.chinese_name);
+    const chineseName = parseString(data.chinese_name);
     const displayName =
       chineseName ||
-      parseNull(data.english_name) ||
-      parseNull(data.original_name) ||
-      parseNull(data.font_family) ||
+      parseString(data.english_name) ||
+      parseString(data.original_name) ||
+      parseString(data.font_family) ||
       normalizedName;
 
     // 自动映射分类
@@ -339,7 +405,7 @@ export class SyncService {
 
     // 自动映射品牌
     let brandId: string | undefined;
-    const foundry = parseNull(data.foundry)?.toString().trim();
+    const foundry = parseString(data.foundry);
     if (foundry) {
       const brandSlug = brandMapping[foundry] || this.slugify(foundry);
       if (!brandSlug) {
@@ -368,28 +434,28 @@ export class SyncService {
     return {
       normalizedName,
       name: displayName,
-      englishName: parseNull(data.english_name),
+      englishName: parseString(data.english_name),
       chineseName,
       fontFamily: data.font_family,
-      originalName: parseNull(data.original_name),
+      originalName: parseString(data.original_name),
       weights: data.weights,
       version: data.version,
-      copyright: parseNull(data.copyright),
-      description: parseNull(data.description),
-      designer: parseNull(data.designer),
+      copyright: parseString(data.copyright),
+      description: parseString(data.description),
+      designer: parseString(data.designer),
       foundry,
-      releaseYear: parseNull(data.release_year) as number | undefined,
-      category: parseNull(data.category),
+      releaseYear: parseNumber(data.release_year),
+      category: parseString(data.category),
       fontCategory: data.font_category,
-      style: parseNull(data.style),
+      style: parseString(data.style),
       categoryId,
       brandId,
       tags: data.tags || [],
       fontTags: data.font_tags || [],
       languages: data.languages || [],
       useCases: data.use_cases || [],
-      license: parseNull(data.license),
-      licenseType: parseNull(data.license_type),
+      license: parseString(data.license),
+      licenseType: parseString(data.license_type),
       ossPath: `/font-packages/${normalizedName}`,
     };
   }
@@ -480,7 +546,7 @@ export class SyncService {
     if (!res.ok) throw new Error('无法获取映射文件');
     const mapping: FontMappingJSON = await res.json();
 
-    let analysis: any | undefined;
+    let analysis: Record<string, unknown> | undefined;
     if (this.analysisUrl) {
       try {
         const ar = await fetch(this.analysisUrl);
@@ -489,7 +555,7 @@ export class SyncService {
     }
 
     const entries = Object.entries(mapping).slice(0, limit);
-    const parseNull = this.parseNull.bind(this);
+    const parseString = this.parseString.bind(this);
     return entries.map(([normalizedName, data]) => {
       const weightsSummary = Object.values(data.weights).map((w) => ({
         weightName: w.weight_name,
@@ -501,30 +567,48 @@ export class SyncService {
           glyphCount: v.glyph_count,
         })),
       }));
-      const preview: any = {
+      const preview: {
+        normalizedName: string;
+        name: string;
+        fontFamily: string;
+        version: string;
+        fontCategory?: string;
+        foundry?: string;
+        licenseType?: string;
+        tags?: string[];
+        languages?: string[];
+        weightsSummary: Array<{
+          weightName: string;
+          fontWeight: number;
+          versions: Array<{ name: string; file: string; charCount: number; glyphCount: number }>;
+        }>;
+        analysis?: unknown;
+      } = {
         normalizedName,
-        name: (parseNull(data.chinese_name) ||
-          parseNull(data.english_name) ||
-          parseNull(data.original_name) ||
-          parseNull(data.font_family) ||
-          normalizedName) as string,
+        name:
+          parseString(data.chinese_name) ||
+          parseString(data.english_name) ||
+          parseString(data.original_name) ||
+          parseString(data.font_family) ||
+          normalizedName,
         fontFamily: data.font_family,
         version: data.version,
-        fontCategory: data.font_category,
-        foundry: parseNull(data.foundry),
-        licenseType: parseNull(data.license_type),
+        fontCategory: data.font_category || undefined,
+        foundry: parseString(data.foundry),
+        licenseType:
+          parseString(data.license_type),
         tags: data.tags || [],
         languages: data.languages || [],
         weightsSummary,
       };
-      if (analysis && (analysis as Record<string, unknown>)[normalizedName]) {
-        preview.analysis = (analysis as Record<string, unknown>)[normalizedName];
+      if (analysis && analysis[normalizedName]) {
+        preview.analysis = analysis[normalizedName];
       }
       return preview;
     });
   }
 
-  async fetchFontAnalysis(normalizedName: string): Promise<any | undefined> {
+  async fetchFontAnalysis(normalizedName: string): Promise<Record<string, unknown> | undefined> {
     if (!this.analysisUrl) {
       return undefined;
     }
@@ -536,7 +620,7 @@ export class SyncService {
         return undefined;
       }
 
-      const json = await res.json();
+      const json = (await res.json()) as { fonts?: Array<Record<string, unknown>> };
 
       // JSON 结构是 { summary: {...}, fonts: [{name: '...', children: [...]}] }
       if (!json.fonts || !Array.isArray(json.fonts)) {
@@ -544,12 +628,17 @@ export class SyncService {
       }
 
       // 在 fonts 数组中查找 name 等于 normalizedName 的对象
-      const fontData = json.fonts.find((font: any) => font.name === normalizedName);
+      const fontData = json.fonts.find(
+        (font) => typeof font.name === 'string' && font.name === normalizedName
+      );
 
       if (fontData) {
         // 返回第一个 child（通常是 Regular 或默认字重）
-        if (fontData.children && fontData.children.length > 0) {
-          return fontData.children[0];
+        if (Array.isArray(fontData.children) && fontData.children.length > 0) {
+          const firstChild = fontData.children[0];
+          return typeof firstChild === 'object' && firstChild !== null
+            ? (firstChild as Record<string, unknown>)
+            : undefined;
         } else {
           return fontData;
         }
@@ -557,7 +646,11 @@ export class SyncService {
 
       return undefined;
     } catch (error) {
-      console.error('[SyncService] Error fetching font analysis:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('[SyncService] 获取字体分析数据失败', {
+        normalizedName,
+        error: errorMessage,
+      });
       return undefined;
     }
   }

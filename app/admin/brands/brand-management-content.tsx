@@ -30,6 +30,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Edit, ExternalLink, Plus, Search, Trash2, X } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -231,10 +232,13 @@ export function BrandManagementContent({ initialBrands }: BrandManagementContent
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
                           {brand.logoUrl && (
-                            <img
+                            <Image
                               src={brand.logoUrl}
                               alt={brand.name}
+                              width={32}
+                              height={32}
                               className="h-8 w-8 flex-shrink-0 rounded object-cover"
+                              unoptimized
                             />
                           )}
                           <span className="whitespace-nowrap">{brand.name}</span>

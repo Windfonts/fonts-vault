@@ -1,10 +1,11 @@
 import { auth } from '@/lib/auth/config';
+import type { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 
 export async function getSession() {
   const disableAuth = process.env.DISABLE_AUTH === 'true';
   if (disableAuth) {
-    return {
+    const devSession: Session = {
       user: {
         id: 'dev-admin',
         name: process.env.ADMIN_USERNAME || 'admin',
@@ -12,7 +13,8 @@ export async function getSession() {
         role: 'admin',
       },
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    } as any;
+    };
+    return devSession;
   }
   return await auth();
 }
@@ -28,5 +30,13 @@ export async function requireAuth() {
     redirect('/login');
   }
 
+  return session;
+}
+
+export async function requireAdmin() {
+  const session = await requireAuth();
+  if (session.user.role !== 'admin') {
+    redirect('/');
+  }
   return session;
 }

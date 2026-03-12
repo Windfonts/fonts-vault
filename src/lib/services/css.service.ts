@@ -1,4 +1,5 @@
 import type { Font } from '@/lib/db/schema';
+import { logger } from '@/lib/logger';
 import { fontService } from './font.service';
 import { cssApiSchema, type CssApiDto } from './validation';
 
@@ -30,9 +31,12 @@ export class CSSService {
     // 验证参数
     const validated = cssApiSchema.parse(params);
     const { family, weight, version } = validated;
+    const normalizedFamily = family.trim();
+    const normalizedWeight = weight.trim().toLowerCase();
+    const normalizedVersion = version.toLowerCase() as 'en' | 'zh' | 'zh-common' | 'full';
 
     // 生成缓存键
-    const cacheKey = this.getCacheKey(family, weight, version);
+    const cacheKey = this.getCacheKey(normalizedFamily, normalizedWeight, normalizedVersion);
 
     // 检查缓存
     const cached = this.getFromCache(cacheKey);
@@ -42,11 +46,11 @@ export class CSSService {
 
     // 查找字体：先尝试通过 fontFamily 查找，再尝试 normalizedName
     let font: Font | undefined;
-    const fontsByFamily = await fontService.findByFontFamily(family);
+    const fontsByFamily = await fontService.findByFontFamily(normalizedFamily);
     if (fontsByFamily && fontsByFamily.length > 0) {
       font = fontsByFamily[0]; // 使用第一个匹配的字体
     } else {
-      font = await fontService.findByNormalizedName(family);
+      font = await fontService.findByNormalizedName(normalizedFamily);
     }
 
     if (!font) {
@@ -57,7 +61,7 @@ export class CSSService {
     await fontService.incrementApiCallCount(font.id);
 
     // 获取CSS
-    const css = await this.fetchOSSCSS(font, weight, version);
+    const css = await this.fetchOSSCSS(font, normalizedWeight, normalizedVersion);
 
     if (!css) {
       throw new Error(`字体 ${family} 的 ${weight} 字重 ${version} 版本不存在`);
@@ -80,21 +84,35 @@ export class CSSService {
     weightName: string,
     version: string
   ): Promise<string | null> {
+    const normalizedWeightName = weightName.trim().toLowerCase();
+    const availableWeights = Object.keys(font.weights);
+    const matchedWeightName = availableWeights.find(
+      (name) => name.toLowerCase() === normalizedWeightName
+    );
+
     // 查找对应的字重
-    let weightData = font.weights[weightName];
-    let actualWeightName = weightName;
+    let weightData = matchedWeightName ? font.weights[matchedWeightName] : font.weights[weightName];
+    let actualWeightName = matchedWeightName || weightName;
 
     // 如果指定的字重不存在，使用第一个可用字重
     if (!weightData) {
-      console.warn(`[CSSService] 字重 ${weightName} 不存在，尝试使用第一个可用字重`);
-      const availableWeights = Object.keys(font.weights);
+      logger.warn('[CSSService] 字重不存在，尝试回退到第一个可用字重', {
+        normalizedName: font.normalizedName,
+        weightName,
+        availableWeightsCount: availableWeights.length,
+      });
       if (availableWeights.length === 0) {
-        console.error(`[CSSService] 字体 ${font.normalizedName} 没有任何字重`);
+        logger.error('[CSSService] 字体没有任何字重', {
+          normalizedName: font.normalizedName,
+        });
         return null;
       }
       actualWeightName = availableWeights[0];
       weightData = font.weights[actualWeightName];
-      console.log(`[CSSService] 使用字重: ${actualWeightName}`);
+      logger.debug('[CSSService] 使用回退字重', {
+        normalizedName: font.normalizedName,
+        actualWeightName,
+      });
     }
 
     const ossEndpoint =
@@ -102,16 +120,32 @@ export class CSSService {
     const cssUrl = `${ossEndpoint}/fonts-packages/${font.normalizedName}/${actualWeightName}/${version}/result.css`;
 
     try {
-      console.log(`[CSSService] 正在获取CSS: ${cssUrl}`);
+      logger.debug('[CSSService] 正在获取CSS', {
+        normalizedName: font.normalizedName,
+        weightName: actualWeightName,
+        version,
+        cssUrl,
+      });
       const response = await fetch(cssUrl);
 
       if (!response.ok) {
-        console.warn(`[CSSService] CSS文件不存在: ${cssUrl}, status: ${response.status}`);
+        logger.debug('[CSSService] CSS文件不存在', {
+          normalizedName: font.normalizedName,
+          weightName: actualWeightName,
+          version,
+          status: response.status,
+          cssUrl,
+        });
         return null;
       }
 
       let css = await response.text();
-      console.log(`[CSSService] CSS获取成功，长度: ${css.length}`);
+      logger.debug('[CSSService] CSS获取成功', {
+        normalizedName: font.normalizedName,
+        weightName: actualWeightName,
+        version,
+        length: css.length,
+      });
 
       // 基础路径
       const basePath = `fonts-packages/${font.normalizedName}/${actualWeightName}/${version}`;
@@ -135,7 +169,14 @@ export class CSSService {
 
       return `/* ${font.name} - ${actualWeightName} (${version}) */\n${css}`;
     } catch (error) {
-      console.error(`[CSSService] 获取CSS失败: ${cssUrl}`, error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('[CSSService] 获取CSS失败', {
+        normalizedName: font.normalizedName,
+        weightName: actualWeightName,
+        version,
+        cssUrl,
+        error: errorMessage,
+      });
       return null;
     }
   }
@@ -144,7 +185,10 @@ export class CSSService {
    * 生成缓存键
    */
   private getCacheKey(family: string, weight?: string, version?: string): string {
-    return `${family}|${weight || 'Regular'}|${version || 'full'}`;
+    const normalizedFamily = family.toLowerCase();
+    const normalizedWeight = (weight || 'regular').toLowerCase();
+    const normalizedVersion = (version || 'full').toLowerCase();
+    return `${normalizedFamily}|${normalizedWeight}|${normalizedVersion}`;
   }
 
   /**

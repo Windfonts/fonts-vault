@@ -5,10 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import { useFontCSS } from '@/hooks/use-font-css';
 import { Brand, Category, Font } from '@/lib/db/schema';
 import { Check, Code, Copy, Search } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -60,7 +62,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 
   // Generate CSS API URL - 使用当前系统的 origin
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const cssApiUrl = `${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily)}&weight=${firstWeightName}&version=full`;
+  const cssApiUrl = `${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=${firstWeightName.toLowerCase()}&version=full`;
 
   // Copy CSS URL to clipboard
   const handleCopyUrl = async () => {
@@ -69,7 +71,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
       setCopied(true);
       toast.success('CSS 链接已复制到剪贴板');
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch {
       toast.error('复制失败，请手动复制');
     }
   };
@@ -133,14 +135,16 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
     let charArray: string[] = [];
 
     if (currentAnalysis?.characters || currentAnalysis?.chars) {
-      const characters = (currentAnalysis?.characters || currentAnalysis?.chars) as any;
+      const characters = currentAnalysis?.characters ?? currentAnalysis?.chars;
 
       if (typeof characters === 'string') {
         charArray = Array.from(characters);
       } else if (Array.isArray(characters)) {
-        charArray = characters.map((ch) =>
-          typeof ch === 'string' ? ch : String.fromCodePoint(ch)
-        );
+        charArray = characters.map((ch) => {
+          if (typeof ch === 'string') return ch;
+          if (typeof ch === 'number') return String.fromCodePoint(ch);
+          return String(ch);
+        });
       }
     }
 
@@ -173,17 +177,53 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
     }
   };
 
+  const htmlUsage = `<!-- 使用完整字符集 -->
+<link rel="stylesheet" href="${cssApiUrl}" />
+
+<!-- 使用轻量中文字符集 -->
+<link rel="stylesheet" href="${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=regular&version=zh-common" />
+
+<style>
+  body {
+    font-family: '${font.fontFamily}', sans-serif;
+  }
+</style>`;
+
+  const cssUsage = `/* 使用完整字符集 */
+@import url('${cssApiUrl}');
+
+/* 使用轻量中文字符集 */
+@import url('${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=regular&version=zh-common');
+
+.my-text {
+  font-family: '${font.fontFamily.toLowerCase()}', sans-serif;
+}`;
+
+  const npmInstallCode = `npm install @windfonts/chinese-fonts`;
+
+  const npmImportCode = `import { loadFont } from '@windfonts/chinese-fonts';
+
+// 加载当前选择的字重（推荐使用 zh-common 子集）
+loadFont('${getNormalizedFontName()}-${selectedWeight}', { subset: 'zh-common' });
+
+// 在组件中使用
+const MyComponent = () => (
+  <div style={{ fontFamily: '${font.fontFamily}' }}>
+    你的文本内容
+  </div>
+);`;
+
   return (
     <div className="container py-8">
       {/* Breadcrumb */}
       <nav className="text-muted-foreground mb-6 text-sm">
-        <a href="/" className="hover:text-foreground">
+        <Link href="/" className="hover:text-foreground">
           首页
-        </a>
+        </Link>
         {' / '}
-        <a href="/fonts" className="hover:text-foreground">
+        <Link href="/fonts" className="hover:text-foreground">
           字体列表
-        </a>
+        </Link>
         {' / '}
         <span className="text-foreground">{font.name}</span>
       </nav>
@@ -323,42 +363,58 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
               {/* API Parameters */}
               <div>
                 <label className="mb-3 block text-sm font-medium">API 参数说明</label>
-                <div className="space-y-3 text-sm">
-                  <div className="bg-muted rounded-md p-3">
-                    <div className="mb-1 font-medium">family（必需）</div>
-                    <div className="text-muted-foreground">
-                      字体族名称，如：
-                      <code className="bg-background rounded px-1.5 py-0.5">{font.fontFamily}</code>
+                <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                  <div className="flex flex-col">
+                    {/* Parameter: family */}
+                    <div className="grid grid-cols-[100px_1fr] gap-4 p-4">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground">family</span>
+                        <span className="text-[10px] text-red-500 font-medium">必需</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground flex items-center">
+                        {font.fontFamily.toLowerCase()}
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-muted rounded-md p-3">
-                    <div className="mb-1 font-medium">weight（可选，默认 Regular）</div>
-                    <div className="text-muted-foreground">
-                      字重名称，可选值：{availableWeights.map((w) => w.name).join('、')}
+
+                    {/* Parameter: weight */}
+                    <div className="grid grid-cols-[100px_1fr] gap-4 p-4 bg-muted/30">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground">weight</span>
+                        <span className="text-[10px] text-muted-foreground">可选</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2 items-center">
+                        {availableWeights.map((w) => (
+                          <span key={w.name} className="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground ring-1 ring-inset ring-gray-500/10">
+                            {w.name.toLowerCase()}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-muted rounded-md p-3">
-                    <div className="mb-1 font-medium">version（可选，默认 full）</div>
-                    <div className="text-muted-foreground space-y-1">
-                      <div>字符集版本，可选值：</div>
-                      <ul className="ml-2 list-inside list-disc space-y-0.5">
-                        <li>
-                          <code className="bg-background rounded px-1.5 py-0.5">full</code> -
-                          完整字符集（推荐）
-                        </li>
-                        <li>
-                          <code className="bg-background rounded px-1.5 py-0.5">zh-common</code> -
-                          常用中文字符（轻量）
-                        </li>
-                        <li>
-                          <code className="bg-background rounded px-1.5 py-0.5">zh</code> -
-                          中文字符集
-                        </li>
-                        <li>
-                          <code className="bg-background rounded px-1.5 py-0.5">en</code> -
-                          英文字符集
-                        </li>
-                      </ul>
+
+                    {/* Parameter: version */}
+                    <div className="grid grid-cols-[100px_1fr] gap-4 p-4">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground">version</span>
+                        <span className="text-[10px] text-muted-foreground">可选</span>
+                      </div>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-start gap-2">
+                          <span className="font-medium text-foreground min-w-[80px]">full</span>
+                          <span className="text-muted-foreground text-xs leading-5">完整字符集（推荐）</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="font-medium text-foreground min-w-[80px]">zh-common</span>
+                          <span className="text-muted-foreground text-xs leading-5">常用中文字符（轻量）</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="font-medium text-foreground min-w-[80px]">zh</span>
+                          <span className="text-muted-foreground text-xs leading-5">中文字符集</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="font-medium text-foreground min-w-[80px]">en</span>
+                          <span className="text-muted-foreground text-xs leading-5">英文字符集</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -383,35 +439,37 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
               {/* HTML Usage Example */}
               <div>
                 <label className="mb-2 block text-sm font-medium">HTML 使用示例</label>
-                <pre className="bg-muted max-w-full overflow-x-auto rounded-md p-4 text-sm">
-                  <code className="text-xs">{`<!-- 使用完整字符集 -->
-<link rel="stylesheet" href="${cssApiUrl}" />
-
-<!-- 使用轻量中文字符集 -->
-<link rel="stylesheet" href="${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily)}&weight=Regular&version=zh-common" />
-
-<style>
-  body {
-    font-family: '${font.fontFamily}', sans-serif;
-  }
-</style>`}</code>
-                </pre>
+                <div className="relative group">
+                  <pre className="bg-muted text-foreground max-w-full overflow-x-auto rounded-md p-4 text-sm pr-12">
+                    <code className="text-xs font-mono">{htmlUsage}</code>
+                  </pre>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-background opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleCopyNpm(htmlUsage)}
+                  >
+                    {copiedNpm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
 
               {/* CSS Usage Example */}
               <div>
                 <label className="mb-2 block text-sm font-medium">CSS 使用示例</label>
-                <pre className="bg-muted max-w-full overflow-x-auto rounded-md p-4 text-sm">
-                  <code className="text-xs">{`/* 使用完整字符集 */
-@import url('${cssApiUrl}');
-
-/* 使用轻量中文字符集 */
-@import url('${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily)}&weight=Regular&version=zh-common');
-
-.my-text {
-  font-family: '${font.fontFamily}', sans-serif;
-}`}</code>
-                </pre>
+                <div className="relative group">
+                  <pre className="bg-muted text-foreground max-w-full overflow-x-auto rounded-md p-4 text-sm pr-12">
+                    <code className="text-xs font-mono">{cssUsage}</code>
+                  </pre>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-background opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleCopyNpm(cssUsage)}
+                  >
+                    {copiedNpm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
 
               {/* NPM Package Usage */}
@@ -421,14 +479,15 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
                   {/* Installation */}
                   <div>
                     <div className="text-muted-foreground mb-2 text-xs">1. 安装依赖</div>
-                    <div className="flex min-w-0 gap-2">
-                      <pre className="bg-muted flex-1 overflow-x-auto rounded-md p-4 text-sm">
-                        <code className="text-xs">{`npm install @windfonts/chinese-fonts`}</code>
+                    <div className="relative group">
+                      <pre className="bg-muted text-foreground max-w-full overflow-x-auto rounded-md p-4 text-sm pr-12 ">
+                        <code className="text-xs font-mono">{npmInstallCode}</code>
                       </pre>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
-                        onClick={() => handleCopyNpm('npm install @windfonts/chinese-fonts')}
+                        className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-background opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => handleCopyNpm(npmInstallCode)}
                       >
                         {copiedNpm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
@@ -440,91 +499,19 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
                     <div className="text-muted-foreground mb-2 text-xs">
                       2. 使用 loadFont 函数加载字体（当前选择：{selectedWeight}）
                     </div>
-                    <div className="flex min-w-0 gap-2">
-                      <pre className="bg-muted flex-1 overflow-x-auto rounded-md p-4 text-sm">
-                        <code className="text-xs">{`import { loadFont } from '@windfonts/chinese-fonts';
-
-// 加载当前选择的字重（推荐使用 zh-common 子集）
-loadFont('${getNormalizedFontName()}-${selectedWeight}', { subset: 'zh-common' });
-
-// 在组件中使用
-const MyComponent = () => (
-  <div style={{ fontFamily: '${font.fontFamily}' }}>
-    你的文本内容
-  </div>
-);`}</code>
+                    <div className="relative group">
+                      <pre className="bg-muted text-foreground max-w-full overflow-x-auto rounded-md p-4 text-sm pr-12 ">
+                        <code className="text-xs font-mono">{npmImportCode}</code>
                       </pre>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
-                        onClick={() =>
-                          handleCopyNpm(`import { loadFont } from '@windfonts/chinese-fonts';
-
-// 加载当前选择的字重（推荐使用 zh-common 子集）
-loadFont('${getNormalizedFontName()}-${selectedWeight}', { subset: 'zh-common' });
-
-// 在组件中使用
-const MyComponent = () => (
-  <div style={{ fontFamily: '${font.fontFamily}' }}>
-    你的文本内容
-  </div>
-);`)
-                        }
+                        className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-background opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => handleCopyNpm(npmImportCode)}
                       >
                         {copiedNpm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
-                  </div>
-
-                  {/* Available Weights */}
-                  {availableWeights.length > 0 && (
-                    <div className="bg-muted rounded-md p-3">
-                      <div className="mb-2 text-xs font-medium">可用字重加载方式：</div>
-                      <div className="space-y-2 text-xs">
-                        {availableWeights.map((weight) => (
-                          <div
-                            key={weight.name}
-                            className="flex items-center justify-between gap-2"
-                          >
-                            <code className="bg-background text-muted-foreground flex-1 rounded px-1.5 py-0.5">
-                              loadFont('{getNormalizedFontName()}-{weight.name}',{' '}
-                              {"{ subset: 'zh-common' }"})
-                            </code>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 px-2"
-                              onClick={() =>
-                                handleCopyNpm(
-                                  `loadFont('${getNormalizedFontName()}-${weight.name}', { subset: 'zh-common' })`
-                                )
-                              }
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Subset Options */}
-                  <div className="bg-muted rounded-md p-3">
-                    <div className="mb-2 text-xs font-medium">字符子集选项：</div>
-                    <ul className="text-muted-foreground list-inside list-disc space-y-1 text-xs">
-                      <li>
-                        <code className="bg-background rounded px-1.5 py-0.5">zh-common</code> -
-                        常用中文（推荐，文件小）
-                      </li>
-                      <li>
-                        <code className="bg-background rounded px-1.5 py-0.5">zh</code> -
-                        完整中文字符集
-                      </li>
-                      <li>
-                        <code className="bg-background rounded px-1.5 py-0.5">en</code> - 英文字符集
-                      </li>
-                      <li>不指定 - 完整字符集</li>
-                    </ul>
                   </div>
                 </div>
               </div>
@@ -553,331 +540,208 @@ const MyComponent = () => (
           </Card>
 
           {/* Detailed Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>详细信息</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="info">
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="info">基本信息</TabsTrigger>
-                  <TabsTrigger value="license">授权信息</TabsTrigger>
-                  <TabsTrigger value="technical">技术信息</TabsTrigger>
-                  <TabsTrigger value="coverage">字符信息</TabsTrigger>
-                </TabsList>
+          {/* Character Coverage */}
+          <div className="space-y-6">
+            <h3 className="text-lg font-medium">字符覆盖</h3>
 
-                <TabsContent value="info" className="mt-4 space-y-4">
-                  {font.description && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">描述</h4>
-                      <p className="text-muted-foreground text-sm">{font.description}</p>
-                    </div>
+            {/* 字符查询功能 */}
+            <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Search className="h-5 w-5" />
+                  字符查询
+                </CardTitle>
+                <CardDescription>
+                  输入字符，查询该字体是否包含此字符
+                  {!localAnalysis && !analysis && (
+                    <span className="ml-2 text-orange-600 dark:text-orange-400">
+                      • 需要先加载字体分析数据
+                    </span>
                   )}
-                  {font.designer && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">设计师</h4>
-                      <p className="text-muted-foreground text-sm">{font.designer}</p>
-                    </div>
-                  )}
-                  {font.releaseYear && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">发布年份</h4>
-                      <p className="text-muted-foreground text-sm">{font.releaseYear}</p>
-                    </div>
-                  )}
-                  {font.fontCategory && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">字体类型</h4>
-                      <p className="text-muted-foreground text-sm">{font.fontCategory}</p>
-                    </div>
-                  )}
-                  {font.style && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">风格</h4>
-                      <p className="text-muted-foreground text-sm">{font.style}</p>
-                    </div>
-                  )}
-                  {font.languages && font.languages.length > 0 && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">支持语言</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {font.languages.map((lang) => (
-                          <Badge key={lang} variant="outline">
-                            {lang}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="license" className="mt-4 space-y-4">
-                  {font.license && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">授权协议</h4>
-                      <p className="text-muted-foreground text-sm">{font.license}</p>
-                    </div>
-                  )}
-                  {font.licenseType && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">授权类型</h4>
-                      <Badge variant="secondary">{font.licenseType}</Badge>
-                    </div>
-                  )}
-                  {font.licenseDescription && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">授权说明</h4>
-                      <p className="text-muted-foreground text-sm">{font.licenseDescription}</p>
-                    </div>
-                  )}
-                  {font.price && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">价格</h4>
-                      <p className="text-muted-foreground text-sm">¥{font.price}</p>
-                    </div>
-                  )}
-                  {font.purchaseUrl && (
-                    <div>
-                      <Button asChild>
-                        <a href={font.purchaseUrl} target="_blank" rel="noopener noreferrer">
-                          购买授权
-                        </a>
-                      </Button>
-                    </div>
-                  )}
-                  {font.copyright && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">版权信息</h4>
-                      <p className="text-muted-foreground text-sm">{font.copyright}</p>
-                    </div>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="technical" className="mt-4 space-y-4">
-                  <div>
-                    <h4 className="mb-2 text-sm font-medium">字体族名称</h4>
-                    <code className="bg-muted rounded px-2 py-1 text-sm">{font.fontFamily}</code>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {!localAnalysis && !analysis ? (
+                  <div className="py-4 text-center">
+                    <p className="text-muted-foreground mb-4 text-sm">
+                      字体分析数据未加载，请点击下方按钮加载
+                    </p>
+                    <Button onClick={loadAnalysisData} disabled={isLoadingAnalysis}>
+                      {isLoadingAnalysis ? '加载中...' : '加载字体分析数据'}
+                    </Button>
                   </div>
-                  {font.version && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">版本号</h4>
-                      <code className="bg-muted rounded px-2 py-1 text-sm">{font.version}</code>
-                    </div>
-                  )}
-                  {availableWeights.length > 0 && (
-                    <div>
-                      <h4 className="mb-2 text-sm font-medium">可用字重</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {availableWeights.map((weight) => (
-                          <Badge key={weight.value} variant="outline">
-                            {weight.name} ({weight.value})
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="coverage" className="mt-4 space-y-4">
-                  {/* 字符查询功能 */}
-                  <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <Search className="h-5 w-5" />
-                        字符查询
-                      </CardTitle>
-                      <CardDescription>
-                        输入字符，查询该字体是否包含此字符
-                        {!localAnalysis && !analysis && (
-                          <span className="ml-2 text-orange-600 dark:text-orange-400">
-                            • 需要先加载字体分析数据
-                          </span>
-                        )}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {!localAnalysis && !analysis ? (
-                        <div className="py-4 text-center">
-                          <p className="text-muted-foreground mb-4 text-sm">
-                            字体分析数据未加载，请点击下方按钮加载
-                          </p>
-                          <Button onClick={loadAnalysisData} disabled={isLoadingAnalysis}>
-                            {isLoadingAnalysis ? '加载中...' : '加载字体分析数据'}
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="输入要查询的字符，支持多个，例如：中文字体"
-                            value={charSearchQuery}
-                            onChange={(e) => setCharSearchQuery(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                handleCharSearch();
-                              }
-                            }}
-                            className="flex-1"
-                            maxLength={50}
-                          />
-                          <Button onClick={handleCharSearch}>
-                            <Search className="mr-2 h-4 w-4" />
-                            查询
-                          </Button>
-                        </div>
-                      )}
-
-                      {charSearchResult && (
-                        <div className="space-y-4">
-                          {/* 统计信息 */}
-                          <div className="flex items-center gap-4 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="text-muted-foreground">查询字符数:</span>
-                              <span className="font-medium">{charSearchResult.totalSearched}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-green-600 dark:text-green-400">✓ 存在:</span>
-                              <span className="font-medium">
-                                {charSearchResult.foundChars.length}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-red-600 dark:text-red-400">✗ 不存在:</span>
-                              <span className="font-medium">
-                                {charSearchResult.notFoundChars.length}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* 存在的字符 */}
-                          {charSearchResult.foundChars.length > 0 && (
-                            <div className="rounded-md border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950">
-                              <div className="mb-3 font-medium text-green-900 dark:text-green-100">
-                                ✓ 存在的字符 ({charSearchResult.foundChars.length})
-                              </div>
-                              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                                {charSearchResult.foundChars.map(({ char, codepoint }, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex items-center gap-3 rounded-md border border-green-200 bg-white p-3 dark:border-green-700 dark:bg-green-900"
-                                  >
-                                    <div
-                                      className="text-3xl text-green-700 dark:text-green-300"
-                                      style={{ fontFamily: font.fontFamily }}
-                                    >
-                                      {char}
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                      <div className="truncate font-mono text-xs text-green-800 dark:text-green-200">
-                                        {codepoint}
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* 不存在的字符 */}
-                          {charSearchResult.notFoundChars.length > 0 && (
-                            <div className="rounded-md border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
-                              <div className="mb-3 font-medium text-red-900 dark:text-red-100">
-                                ✗ 不存在的字符 ({charSearchResult.notFoundChars.length})
-                              </div>
-                              <div className="flex flex-wrap gap-2">
-                                {charSearchResult.notFoundChars.map((char, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex h-12 w-12 items-center justify-center rounded-md border border-red-200 bg-white text-2xl text-red-700 dark:border-red-700 dark:bg-red-900 dark:text-red-300"
-                                  >
-                                    {char}
-                                  </div>
-                                ))}
-                              </div>
-                              <div className="mt-2 text-xs text-red-800 dark:text-red-200">
-                                这些字符可能无法使用该字体正常显示
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <div className="rounded-lg border p-4">
-                      <div className="text-muted-foreground text-sm">字符总数</div>
-                      <div className="mt-1 text-2xl font-bold">
-                        {
-                          ((localAnalysis || analysis)?.total_char_count ??
-                            (localAnalysis || analysis)?.char_count ??
-                            ((localAnalysis || analysis)?.chars as string[] | undefined)?.length ??
-                            ((localAnalysis || analysis)?.characters as string[] | undefined)
-                              ?.length ??
-                            '-') as string | number
+                ) : (
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="输入要查询的字符，支持多个，例如：中文字体"
+                      value={charSearchQuery}
+                      onChange={(e) => setCharSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleCharSearch();
                         }
+                      }}
+                      className="flex-1"
+                      maxLength={50}
+                    />
+                    <Button onClick={handleCharSearch}>
+                      <Search className="mr-2 h-4 w-4" />
+                      查询
+                    </Button>
+                  </div>
+                )}
+
+                {charSearchResult && (
+                  <div className="space-y-4">
+                    {/* 统计信息 */}
+                    <div className="flex items-center gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground">查询字符数:</span>
+                        <span className="font-medium">{charSearchResult.totalSearched}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground">✓ 存在:</span>
+                        <span className="font-medium">
+                          {charSearchResult.foundChars.length}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-destructive">✗ 不存在:</span>
+                        <span className="font-medium">
+                          {charSearchResult.notFoundChars.length}
+                        </span>
                       </div>
                     </div>
-                    <div className="rounded-lg border p-4">
-                      <div className="text-muted-foreground text-sm">字形总数</div>
-                      <div className="mt-1 text-2xl font-bold">
-                        {
-                          ((localAnalysis || analysis)?.total_glyph_count ??
-                            (localAnalysis || analysis)?.glyph_count ??
-                            '-') as any
-                        }
-                      </div>
-                    </div>
-                    <div className="rounded-lg border p-4">
-                      <div className="text-muted-foreground text-sm">版本统计</div>
-                      <div className="mt-2 text-sm">
-                        {Object.values(font.weights || {})
-                          .slice(0, 1)
-                          .map((w) => (
-                            <div key={w.weight_name} className="space-y-1">
-                              {Object.entries(w.versions || {}).map(([vName, v]) => (
-                                <div key={vName} className="flex items-center justify-between">
-                                  <span>{vName}</span>
-                                  <span className="text-muted-foreground">
-                                    chars {v.char_count} • glyphs {v.glyph_count}
-                                  </span>
+
+                    {/* 存在的字符 */}
+                    {charSearchResult.foundChars.length > 0 && (
+                      <div className="rounded-md border border-border/50 bg-muted/30 p-4">
+                        <div className="mb-3 font-medium text-foreground">
+                          ✓ 存在的字符 ({charSearchResult.foundChars.length})
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                          {charSearchResult.foundChars.map(({ char, codepoint }, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
+                            >
+                              <div
+                                className="text-3xl text-foreground"
+                                style={{ fontFamily: font.fontFamily }}
+                              >
+                                {char}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="truncate font-mono text-xs text-muted-foreground">
+                                  {codepoint}
                                 </div>
-                              ))}
+                              </div>
                             </div>
                           ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* 不存在的字符 */}
+                    {charSearchResult.notFoundChars.length > 0 && (
+                      <div className="rounded-md border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
+                        <div className="mb-3 font-medium text-red-900 dark:text-red-100">
+                          ✗ 不存在的字符 ({charSearchResult.notFoundChars.length})
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {charSearchResult.notFoundChars.map((char, idx) => (
+                            <div
+                              key={idx}
+                              className="flex h-12 w-12 items-center justify-center rounded-md border border-red-200 bg-white text-2xl text-red-700 dark:border-red-700 dark:bg-red-900 dark:text-red-300"
+                            >
+                              {char}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-2 text-xs text-red-800 dark:text-red-200">
+                          这些字符可能无法使用该字体正常显示
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+                )}
+              </CardContent>
+            </Card>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-lg border p-4">
+                <div className="text-muted-foreground text-sm">字符总数</div>
+                <div className="mt-1 text-2xl font-bold">
+                  {
+                    ((localAnalysis || analysis)?.total_char_count ??
+                      (localAnalysis || analysis)?.char_count ??
+                      ((localAnalysis || analysis)?.chars as string[] | undefined)?.length ??
+                      ((localAnalysis || analysis)?.characters as string[] | undefined)
+                        ?.length ??
+                      '-') as string | number
+                  }
+                </div>
+              </div>
+              <div className="rounded-lg border p-4">
+                <div className="text-muted-foreground text-sm">字形总数</div>
+                <div className="mt-1 text-2xl font-bold">
+                  {
+                    ((localAnalysis || analysis)?.total_glyph_count ??
+                      (localAnalysis || analysis)?.glyph_count ??
+                      '-') as string | number
+                  }
+                </div>
+              </div>
+              <div className="rounded-lg border p-4">
+                <div className="text-muted-foreground text-sm">版本统计</div>
+                <div className="mt-2 text-sm">
+                  {Object.values(font.weights || {})
+                    .slice(0, 1)
+                    .map((w) => (
+                      <div key={w.weight_name} className="space-y-1">
+                        {Object.entries(w.versions || {}).map(([vName, v]) => (
+                          <div key={vName} className="flex items-center justify-between">
+                            <span>{vName}</span>
+                            <span className="text-muted-foreground">
+                              chars {v.char_count} • glyphs {v.glyph_count}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Sidebar */}
         <aside className="space-y-6">
-          {/* Brand Info */}
+          {/* Brand Info & License */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">厂商信息</CardTitle>
+              <CardTitle className="text-base">品牌与授权</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
+              {/* Brand Section */}
               {font.brand ? (
-                <>
+                <div className="space-y-3">
                   {font.brand.logoUrl && (
                     <div className="bg-muted flex justify-center rounded-md p-4">
-                      <img
+                      <Image
                         src={font.brand.logoUrl}
                         alt={font.brand.name}
+                        width={128}
+                        height={64}
                         className="max-h-16 object-contain"
+                        unoptimized
                       />
                     </div>
                   )}
                   <div>
                     <h4 className="text-sm font-medium">{font.brand.name}</h4>
                     {font.brand.description && (
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        {font.brand.description}
-                      </p>
+                      <p className="text-muted-foreground mt-1 text-sm">{font.brand.description}</p>
                     )}
                   </div>
                   {font.brand.website && (
@@ -887,10 +751,85 @@ const MyComponent = () => (
                       </a>
                     </Button>
                   )}
-                </>
+                </div>
               ) : (
-                <div className="text-muted-foreground text-sm">暂无品牌</div>
+                <div className="text-muted-foreground text-sm">暂无品牌信息</div>
               )}
+
+              <Separator />
+
+              {/* Version & License Section */}
+              <div className="space-y-4 text-sm">
+                <div className="grid grid-cols-[80px_1fr] gap-2 items-center">
+                  <span className="text-muted-foreground">当前版本</span>
+                  <span className="font-medium text-foreground text-right">{font.version}</span>
+                </div>
+
+                <div className="grid grid-cols-[80px_1fr] gap-2 items-center">
+                  <span className="text-muted-foreground">授权类型</span>
+                  <div className="flex justify-end">
+                    <Badge variant="secondary" className="h-5">{font.licenseType || '未知'}</Badge>
+                  </div>
+                </div>
+
+                {(font.copyright || font.license) && (
+                  <div className="space-y-3 pt-2">
+                    {font.copyright && (
+                      <div className="space-y-1.5">
+                        <div className="text-xs font-medium text-muted-foreground">版权声明</div>
+                        <div className="text-xs text-foreground bg-muted/50 p-2.5 rounded-md border border-border/50 break-words leading-relaxed">
+                          {font.copyright}
+                        </div>
+                      </div>
+                    )}
+                    {font.license && (
+                      <div className="space-y-1.5">
+                        <div className="text-xs font-medium text-muted-foreground">授权协议</div>
+                        <div className="text-xs text-foreground bg-muted/50 p-2.5 rounded-md border border-border/50 break-words line-clamp-4 leading-relaxed">
+                          {font.license}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Font Information */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">字体属性</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
+              <div className="grid grid-cols-2 gap-y-3 gap-x-2">
+                <div className="text-muted-foreground">字重数量</div>
+                <div className="text-right font-medium">{Object.keys(font.weights || {}).length}</div>
+
+                {font.category && (
+                  <>
+                    <div className="text-muted-foreground">分类</div>
+                    <div className="text-right font-medium">{font.category.name}</div>
+                  </>
+                )}
+
+                {font.style && (
+                  <>
+                    <div className="text-muted-foreground">风格</div>
+                    <div className="text-right font-medium">{font.style}</div>
+                  </>
+                )}
+
+                <div className="col-span-2 my-1">
+                  <Separator />
+                </div>
+
+                <div className="text-muted-foreground">文件格式</div>
+                <div className="text-right font-medium">WOFF2</div>
+
+                <div className="text-muted-foreground">字符编码</div>
+                <div className="text-right font-medium">Unicode</div>
+              </div>
             </CardContent>
           </Card>
 

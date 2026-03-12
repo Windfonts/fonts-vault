@@ -11,9 +11,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function FontDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const normalizedId = id.toLowerCase();
 
   // 使用 normalizedName 查询
-  const font = await fontService.findByNormalizedNameWithRelations(id);
+  const font = await fontService.findByNormalizedNameWithRelations(normalizedId);
 
   if (!font) {
     notFound();
@@ -45,7 +46,9 @@ export default async function FontDetailPage({ params }: { params: Promise<{ id:
       <Suspense fallback={<FontDetailSkeleton />}>
         <FontDetailContent
           font={font}
-          relatedFonts={filteredRelatedFonts as Parameters<typeof FontDetailContent>[0]['relatedFonts']}
+          relatedFonts={
+            filteredRelatedFonts as Parameters<typeof FontDetailContent>[0]['relatedFonts']
+          }
           analysis={analysis}
         />
       </Suspense>

@@ -61,7 +61,7 @@ export const fontCreateSchema = z.object({
   foundry: z.string().optional(),
   releaseYear: z.number().int().min(1900).max(2100).optional(),
   category: z.string().optional(),
-  fontCategory: z.string().optional(),
+  fontCategory: z.string().nullable().optional(),
   style: z.string().optional(),
   categoryId: z.string().uuid().optional(),
   brandId: z.string().uuid().optional(),
@@ -98,7 +98,7 @@ export const fontFilterSchema = z.object({
 // CSS API validation
 export const cssApiSchema = z.object({
   family: z.string().min(1, 'family参数不能为空'), // fontFamily 或 normalizedName 都可以
-  weight: z.string().optional().default('Regular'),
+  weight: z.string().optional().default('regular'),
   version: z.enum(['en', 'zh', 'zh-common', 'full']).optional().default('full'),
 });
 

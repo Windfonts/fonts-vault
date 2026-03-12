@@ -3,20 +3,64 @@
  * Provides structured logging with different transports for development and production
  */
 
-import winston from 'winston';
 import path from 'path';
+import winston from 'winston';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isTest = process.env.NODE_ENV === 'test';
+const configuredLogLevel = process.env.LOG_LEVEL;
+const defaultLogLevel = isDevelopment ? 'debug' : 'info';
+const logLevel = (configuredLogLevel && configuredLogLevel.trim()) || defaultLogLevel;
+
+const safeStringify = (value: unknown): string => {
+  const seen = new WeakSet<object>();
+  return JSON.stringify(value, (_key, val) => {
+    if (val instanceof Error) {
+      return {
+        name: val.name,
+        message: val.message,
+        stack: val.stack,
+      };
+    }
+    if (typeof val === 'bigint') {
+      return val.toString();
+    }
+    if (typeof val === 'string') {
+      return val.replace(/\n/g, '\\n');
+    }
+    if (typeof val === 'object' && val !== null) {
+      if (seen.has(val)) return '[Circular]';
+      seen.add(val);
+    }
+    return val;
+  });
+};
+
+const normalizeMeta = winston.format((info) => {
+  const anyInfo = info as unknown as winston.Logform.TransformableInfo & {
+    metadata?: Record<string, unknown>;
+  };
+  if (anyInfo.metadata && typeof anyInfo.metadata === 'object') {
+    Object.assign(anyInfo, anyInfo.metadata);
+    delete anyInfo.metadata;
+  }
+  return anyInfo;
+});
 
 // Custom format for console output
 const consoleFormat = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
   winston.format.errors({ stack: true }),
-  winston.format.colorize(),
-  winston.format.printf(({ timestamp, level, message, ...meta }) => {
-    const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta, null, 2)}` : '';
-    return `[${timestamp}] ${level}: ${message}${metaStr}`;
+  normalizeMeta(),
+  isDevelopment ? winston.format.colorize({ all: true }) : winston.format.uncolorize(),
+  winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
+    const upperLevel = typeof level === 'string' ? level.toUpperCase() : String(level);
+    const metaObj: Record<string, unknown> = { ...meta };
+    if (stack && (upperLevel === 'ERROR' || isDevelopment)) {
+      metaObj.stack = stack;
+    }
+    const metaStr = Object.keys(metaObj).length ? ` ${safeStringify(metaObj)}` : '';
+    return `[${timestamp}] ${upperLevel} ${message}${metaStr}`;
   })
 );
 
@@ -46,7 +90,7 @@ if (isTest) {
   // In development, log to console with colors
   transports.push(
     new winston.transports.Console({
-      level: 'debug',
+      level: logLevel,
       format: consoleFormat,
     })
   );
@@ -54,7 +98,7 @@ if (isTest) {
   // In production, log to console and files
   transports.push(
     new winston.transports.Console({
-      level: 'info',
+      level: logLevel,
       format: consoleFormat,
     }),
     new winston.transports.File({
@@ -75,7 +119,7 @@ if (isTest) {
 
 // Create the Winston logger instance
 const winstonLogger = winston.createLogger({
-  level: isDevelopment ? 'debug' : 'info',
+  level: logLevel,
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),

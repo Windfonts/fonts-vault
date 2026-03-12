@@ -3,7 +3,8 @@
 import { UserNav } from '@/components/auth/user-nav';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { FileText, Home, Layers, Menu, RefreshCw, Tag } from 'lucide-react';
+import { FileText, Home, Layers, Menu, RefreshCw, ShieldCheck, Tag } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -16,6 +17,7 @@ export function AdminHeader() {
     { href: '/admin/brands', label: '厂商管理', icon: Tag },
     { href: '/admin/categories', label: '分类管理', icon: Layers },
     { href: '/admin/sync', label: '同步管理', icon: RefreshCw },
+    { href: '/admin/security-switches', label: '安全中心', icon: ShieldCheck },
   ];
 
   return (
@@ -23,7 +25,7 @@ export function AdminHeader() {
       <div className="max-w-8xl mx-auto flex h-16 w-full items-center justify-between px-6">
         <div className="flex items-center gap-4">
           <Link href="/admin" className="flex items-center space-x-2">
-            <img src="/icon.webp" alt="Logo" className="h-8 w-8 rounded" />
+            <Image src="/icon.webp" alt="Logo" width={32} height={32} className="h-8 w-8 rounded" />
             <span className="text-base font-bold sm:text-xl">
               <span className="hidden sm:inline">文风字库 - </span>
               管理后台
@@ -51,7 +53,13 @@ export function AdminHeader() {
             <SheetContent side="right" className="w-[300px]">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
-                  <img src="/icon.webp" alt="Logo" className="h-6 w-6 rounded" />
+                  <Image
+                    src="/icon.webp"
+                    alt="Logo"
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 rounded"
+                  />
                   管理菜单
                 </SheetTitle>
               </SheetHeader>
