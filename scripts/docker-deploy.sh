@@ -14,6 +14,7 @@ IMAGE_NAME="windfonts-vault"
 CONTAINER_NAME="windfonts-vault"
 REGISTRY="${DOCKER_REGISTRY:-}"
 VERSION="${VERSION:-latest}"
+HOST_PORT="${HOST_PORT:-3000}"
 
 echo -e "${BLUE}开始部署 ${IMAGE_NAME}...${NC}"
 
@@ -38,7 +39,7 @@ echo -e "${GREEN}启动新容器...${NC}"
 docker run -d \
   --name ${CONTAINER_NAME} \
   --restart unless-stopped \
-  -p 4000:4000 \
+  -p ${HOST_PORT}:4000 \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   --env-file .env.production \

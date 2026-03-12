@@ -8,6 +8,24 @@ const loginSchema = z.object({
   password: z.string().min(1, '密码不能为空'),
 });
 
+const normalizeCredential = (value: string | undefined | null): string => {
+  if (!value) {
+    return '';
+  }
+
+  const withoutCarriageReturn = value.replace(/\r/g, '').trim();
+  const isWrappedByDoubleQuotes =
+    withoutCarriageReturn.startsWith('"') && withoutCarriageReturn.endsWith('"');
+  const isWrappedBySingleQuotes =
+    withoutCarriageReturn.startsWith("'") && withoutCarriageReturn.endsWith("'");
+
+  if (isWrappedByDoubleQuotes || isWrappedBySingleQuotes) {
+    return withoutCarriageReturn.slice(1, -1).trim();
+  }
+
+  return withoutCarriageReturn;
+};
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -18,17 +36,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         try {
           const { username, password } = loginSchema.parse(credentials);
+          const normalizedUsername = normalizeCredential(username);
+          const normalizedPassword = normalizeCredential(password);
 
-          // 验证环境变量中的管理员凭证
-          const adminUsername = process.env.ADMIN_USERNAME;
-          const adminPassword = process.env.ADMIN_PASSWORD;
-          const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+          const adminUsername = normalizeCredential(process.env.ADMIN_USERNAME);
+          const adminPassword = normalizeCredential(process.env.ADMIN_PASSWORD);
+          const adminEmail =
+            normalizeCredential(process.env.ADMIN_EMAIL) || 'admin@example.com';
 
           if (!adminUsername || !adminPassword) {
             throw new Error('管理员凭证未配置');
           }
 
-          if (username === adminUsername && password === adminPassword) {
+          if (normalizedUsername === adminUsername && normalizedPassword === adminPassword) {
             return {
               id: '1',
               name: adminUsername,
@@ -49,6 +69,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             logger.debug('认证失败', {
               name: err.name,
               message: err.message,
+              hasAdminUsername: Boolean(normalizeCredential(process.env.ADMIN_USERNAME)),
+              hasAdminPassword: Boolean(normalizeCredential(process.env.ADMIN_PASSWORD)),
             });
           }
           return null;
