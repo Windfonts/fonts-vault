@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/lib/auth/actions';
+import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,19 +19,30 @@ export default function LoginPage() {
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
+    const username = String(formData.get('username') || '');
+    const password = String(formData.get('password') || '');
 
     try {
-      const result = await login(formData);
+      const result = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
+      });
 
-      if (result.success) {
-        router.push('/admin');
-        router.refresh();
-      } else {
-        setError(result.error || '登录失败');
+      if (!result) {
+        setError('登录失败，请稍后重试');
+        return;
       }
-    } catch (err) {
+
+      if (result.error) {
+        setError('用户名或密码错误');
+        return;
+      }
+
+      router.push('/admin');
+      router.refresh();
+    } catch {
       setError('登录失败，请稍后重试');
-      console.error('登录错误:', err);
     } finally {
       setLoading(false);
     }
