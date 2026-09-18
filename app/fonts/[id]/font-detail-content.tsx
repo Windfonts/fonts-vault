@@ -2,6 +2,7 @@
 
 import { FontCard } from '@/components/font/font-card';
 import { Badge } from '@/components/ui/badge';
+import { evaluateLicense } from '@/lib/license-gate';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -260,11 +261,14 @@ const MyComponent = () => (
             </div>
           )}
 
-          {font.licenseType && (
-            <Badge variant="outline" className="text-sm">
-              {font.licenseType}
-            </Badge>
-          )}
+          {(() => {
+            const gate = evaluateLicense({ license: font.license, licenseType: font.licenseType });
+            return (
+              <Badge variant="outline" className="text-sm">
+                {gate.displayLabel}
+              </Badge>
+            );
+          })()}
         </div>
       </div>
 
@@ -768,7 +772,9 @@ const MyComponent = () => (
                 <div className="grid grid-cols-[80px_1fr] gap-2 items-center">
                   <span className="text-muted-foreground">授权类型</span>
                   <div className="flex justify-end">
-                    <Badge variant="secondary" className="h-5">{font.licenseType || '未知'}</Badge>
+                    <Badge variant="secondary" className="h-5">
+                      {evaluateLicense({ license: font.license, licenseType: font.licenseType }).displayLabel}
+                    </Badge>
                   </div>
                 </div>
 

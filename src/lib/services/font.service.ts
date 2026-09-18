@@ -298,6 +298,17 @@ export class FontService {
       .where(sql`lower(${fonts.fontFamily}) = ${normalizedFamily}`);
   }
 
+  async findByEnglishName(englishName: string): Promise<Font | undefined> {
+    const normalized = englishName.trim().toLowerCase();
+    const rows = await db
+      .select()
+      .from(fonts)
+      .where(sql`lower(${fonts.englishName}) = ${normalized}`)
+      .limit(1);
+    return rows[0];
+  }
+
+
   /**
    * 搜索字体（名称、品牌、标签）
    */

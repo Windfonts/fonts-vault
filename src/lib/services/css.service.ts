@@ -1,4 +1,5 @@
 import type { Font } from '@/lib/db/schema';
+import { evaluateLicense } from '@/lib/license-gate';
 import { logger } from '@/lib/logger';
 import { fontService } from './font.service';
 import { cssApiSchema, type CssApiDto } from './validation';
@@ -44,17 +45,39 @@ export class CSSService {
       return cached;
     }
 
-    // 查找字体：先尝试通过 fontFamily 查找，再尝试 normalizedName
+    // Resolve family: fontFamily → normalizedName → englishName (P0-3)
     let font: Font | undefined;
     const fontsByFamily = await fontService.findByFontFamily(normalizedFamily);
     if (fontsByFamily && fontsByFamily.length > 0) {
-      font = fontsByFamily[0]; // 使用第一个匹配的字体
+      font = fontsByFamily[0];
     } else {
       font = await fontService.findByNormalizedName(normalizedFamily);
     }
-
+    if (!font && typeof (fontService as any).findByEnglishName === 'function') {
+      font = await (fontService as any).findByEnglishName(normalizedFamily);
+    }
     if (!font) {
-      throw new Error(`字体 ${family} 不存在`);
+      // Soft scan englishName / normalizedName contains
+      const hinted = await fontService.search(normalizedFamily).catch(() => [] as Font[]);
+      if (hinted && hinted.length === 1) {
+        font = hinted[0];
+      } else {
+        const keys = (hinted || [])
+          .slice(0, 8)
+          .map((f) => f.normalizedName || f.fontFamily)
+          .filter(Boolean);
+        const hint = keys.length
+          ? `可用 family 示例：${keys.join(', ')}（请用 normalizedName / fontFamily，不是展示名空格形式）`
+          : '请使用字体的 normalizedName（如 wenfeng-ibmps）或 fontFamily';
+        throw new Error(`字体 ${family} 不存在。${hint}`);
+      }
+    }
+
+    const gate = evaluateLicense({ license: font.license, licenseType: font.licenseType });
+    if (!gate.cssAllowed) {
+      throw new Error(
+        `字体 ${font.normalizedName || family} 当前不可通过公共 CSS/CDN 分发（${gate.displayLabel}）。请查看详情页授权说明。`
+      );
     }
 
     // 增加API调用次数

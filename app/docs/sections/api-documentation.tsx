@@ -127,7 +127,7 @@ export function ApiDocumentation() {
                   <code>brand</code> - 品牌 ID
                 </li>
                 <li>
-                  <code>search</code> - 搜索关键词
+                  <code>search</code> / <code>q</code> - 搜索关键词（<code>q</code> 为 <code>search</code> 别名）
                 </li>
                 <li>
                   <code>sort</code> - 排序方式（name, createdAt, viewCount）
