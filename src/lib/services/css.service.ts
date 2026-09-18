@@ -73,7 +73,7 @@ export class CSSService {
       }
     }
 
-    const gate = evaluateLicense({ license: font.license, licenseType: font.licenseType });
+    const gate = evaluateLicense({ normalizedName: font.normalizedName, license: font.license, licenseType: font.licenseType });
     if (!gate.cssAllowed) {
       throw new Error(
         `字体 ${font.normalizedName || family} 当前不可通过公共 CSS/CDN 分发（${gate.displayLabel}）。请查看详情页授权说明。`

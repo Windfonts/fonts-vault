@@ -262,7 +262,7 @@ const MyComponent = () => (
           )}
 
           {(() => {
-            const gate = evaluateLicense({ license: font.license, licenseType: font.licenseType });
+            const gate = evaluateLicense({ normalizedName: font.normalizedName, license: font.license, licenseType: font.licenseType });
             return (
               <Badge variant="outline" className="text-sm">
                 {gate.displayLabel}
@@ -772,9 +772,24 @@ const MyComponent = () => (
                 <div className="grid grid-cols-[80px_1fr] gap-2 items-center">
                   <span className="text-muted-foreground">授权类型</span>
                   <div className="flex justify-end">
-                    <Badge variant="secondary" className="h-5">
-                      {evaluateLicense({ license: font.license, licenseType: font.licenseType }).displayLabel}
-                    </Badge>
+                    {(() => {
+                      const gate = evaluateLicense({
+                        normalizedName: font.normalizedName,
+                        license: font.license,
+                        licenseType: font.licenseType,
+                      })
+                      return (
+                        <div className="flex flex-col items-end gap-1">
+                          <Badge variant="secondary" className="h-5">{gate.displayLabel}</Badge>
+                          {gate.licenseSpdx && (
+                            <span className="text-[10px] text-muted-foreground">SPDX: {gate.licenseSpdx}</span>
+                          )}
+                          {!gate.licenseVerified && (
+                            <span className="text-[10px] text-amber-600">许可尚未人工核实</span>
+                          )}
+                        </div>
+                      )
+                    })()}
                   </div>
                 </div>
 
