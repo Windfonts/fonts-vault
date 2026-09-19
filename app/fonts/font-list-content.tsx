@@ -195,6 +195,8 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
       const nextSearch = query || undefined;
 
       if (nextSearch === currentSearch) return;
+      // 禁止空串冲掉 URL 上已有的 search=（点作者链后的 FontSearch 竞态）
+      if (!nextSearch && currentSearch) return;
 
       updateURL({
         search: nextSearch,
@@ -203,6 +205,10 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
     },
     [updateURL, searchParamsHook]
   );
+
+  const handleClearSearch = useCallback(() => {
+    updateURL({ search: undefined, page: '1' });
+  }, [updateURL]);
 
   const handleSortChange = useCallback(
     (value: string) => {
@@ -244,7 +250,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
 
           {/* Search and Controls */}
           <div className="flex flex-col gap-4">
-            <FontSearch onSearch={handleSearch} initialValue={search} className="w-full" placeholder="搜索字体名称、品牌…" />
+            <FontSearch onSearch={handleSearch} onClear={handleClearSearch} initialValue={search} className="w-full" placeholder="搜索字体名称、品牌…" />
 
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
               {/* Sort Selector */}
