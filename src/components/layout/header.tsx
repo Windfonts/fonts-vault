@@ -13,6 +13,7 @@ import { Github, Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { HeaderPicksLink } from './header-picks-link';
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -52,6 +53,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          <HeaderPicksLink />
           {/* GitHub Link */}
           <Button variant="outline" size="icon" asChild className="hidden sm:flex">
             <a
@@ -96,6 +98,13 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
+                <Link
+                  href="/fonts/picks"
+                  onClick={() => setOpen(false)}
+                  className="hover:text-primary text-lg font-medium transition-colors"
+                >
+                  我的选字
+                </Link>
                 <div className="border-t pt-4">
                   <a
                     href="https://github.com/Windfonts/font-packages.git"
