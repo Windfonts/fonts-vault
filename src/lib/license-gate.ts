@@ -101,36 +101,76 @@ function labelFromOverlay(o: Overlay): LicenseLabel {
   return 'review'
 }
 
-function displayFor(label: LicenseLabel, fallback?: string | null): string {
+/** Foundry LICENSE-TIER-DICTIONARY.md 中文短标 */
+function displayFor(label: LicenseLabel, _fallback?: string | null): string {
   switch (label) {
     case 'ofl_ok':
-      return 'OFL（可商用）'
+      return '开源可商用'
     case 'apache_ok':
-      return 'Apache-2.0（可商用）'
+      return 'Apache 可商用'
     case 'free_commercial':
-      return '免费商用'
+      return '可嵌入使用' // verified free-embed; 禁止「免费商用」绿标
     case 'free_commercial_unverified':
-      return '免费商用（未核实）'
+      return '待核实'
     case 'brand_terms':
-      return '品牌条款'
+      return '品牌协议'
     case 'needs_auth':
-      return '联系授权'
+      return '需授权'
     case 'restricted':
-      return '受限授权'
+      return '限制较多'
     case 'gpl_review':
-      return 'GPL（需复核）'
+      return '待核实'
     case 'ipa':
-      return 'IPA（衍生命名受限）'
+      return '限制较多'
     case 'sharealike':
       return '相同方式共享'
     case 'high_risk':
-      return '高风险'
+      return '不宜主推'
     case 'missing':
-      return '授权缺失'
+      return '待核实'
     default:
-      return fallback || '待复核'
+      return '待核实'
   }
 }
+
+/** 详情页「你能做什么」一句 */
+export function licenseWhatYouCanDo(label: LicenseLabel): string {
+  switch (label) {
+    case 'ofl_ok':
+      return '可免费用于网站与产品；保留许可声明；勿单独售卖字体文件。'
+    case 'apache_ok':
+      return '可免费用于网站与产品；遵循 Apache-2.0 声明要求。'
+    case 'free_commercial':
+      return '可按作者声明嵌入使用；再分发/改字前请读原文。'
+    case 'free_commercial_unverified':
+    case 'missing':
+    case 'gpl_review':
+    case 'review':
+      return '条款尚未人工核实，上线嵌入前请先确认原文。'
+    case 'brand_terms':
+      return '须遵守品牌方专项协议，通常不可当开源字体再分发。'
+    case 'needs_auth':
+      return '需向权利方取得授权或购买后再用。'
+    case 'restricted':
+    case 'ipa':
+      return '可用但限制较多（如禁止衍生），请读原文。'
+    case 'sharealike':
+      return '衍生作品须以相同协议共享，请读原文。'
+    case 'high_risk':
+      return '平台/来源条款风险高，不建议作为文风主推嵌入。'
+    default:
+      return '条款尚未人工核实，上线嵌入前请先确认原文。'
+  }
+}
+
+/** 色点 token：ok | accent | warn | danger */
+export function licenseDotToken(label: LicenseLabel): 'ok' | 'accent' | 'warn' | 'danger' {
+  if (label === 'ofl_ok' || label === 'apache_ok') return 'ok'
+  if (label === 'free_commercial') return 'accent'
+  if (label === 'high_risk') return 'danger'
+  return 'warn'
+}
+
 
 /** Heuristic when font-licenses overlay missing */
 function heuristicLabel(license: string, licenseType: string): LicenseLabel {
@@ -196,9 +236,8 @@ export function evaluateLicense(input: {
     const modification =
       overlay.modification != null ? Boolean(overlay.modification) : label === 'ofl_ok'
 
-    const freeCommercialBadge =
-      (label === 'ofl_ok' || label === 'apache_ok')
-      || (label === 'free_commercial' && verified && commercial)
+    // Foundry: only ofl_ok/apache_ok get strong ok chip; free_embed never 「免费商用」绿标
+    const freeCommercialBadge = label === 'ofl_ok' || label === 'apache_ok'
 
     const cssAllowed =
       label === 'ofl_ok'

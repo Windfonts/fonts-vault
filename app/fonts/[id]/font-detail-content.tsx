@@ -2,7 +2,7 @@
 
 import { FontCard } from '@/components/font/font-card';
 import { Badge } from '@/components/ui/badge';
-import { evaluateLicense } from '@/lib/license-gate';
+import { evaluateLicense, licenseWhatYouCanDo } from '@/lib/license-gate';
 import { isPicked, togglePick } from '@/lib/font-picks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -814,6 +814,9 @@ const MyComponent = () => (
                           {!gate.licenseVerified && (
                             <span className="text-[10px] text-amber-600">许可尚未人工核实</span>
                           )}
+                          <p className="text-muted-foreground max-w-md text-[11px] leading-snug">
+                            {licenseWhatYouCanDo(gate.licenseLabel)}
+                          </p>
                         </div>
                       )
                     })()}
