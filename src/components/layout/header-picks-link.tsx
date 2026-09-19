@@ -21,7 +21,7 @@ export function HeaderPicksLink({ tone = 'default' }: { tone?: 'default' | 'ligh
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-sm font-medium transition-colors',
         tone === 'light'
-          ? 'border-white/40 text-white hover:bg-white/10'
+          ? 'border-border/70 text-foreground hover:bg-accent dark:border-white/40 dark:text-white dark:hover:bg-white/10'
           : 'hover:bg-muted border-border'
       )}
       title="我的选字"
@@ -30,7 +30,9 @@ export function HeaderPicksLink({ tone = 'default' }: { tone?: 'default' | 'ligh
       <span
         className={cn(
           'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] tabular-nums',
-          tone === 'light' ? 'bg-white text-black' : 'bg-foreground text-background'
+          tone === 'light'
+            ? 'bg-foreground text-background dark:bg-white dark:text-black'
+            : 'bg-foreground text-background'
         )}
         data-count={n}
       >

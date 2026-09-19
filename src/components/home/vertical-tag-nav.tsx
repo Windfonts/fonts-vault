@@ -25,7 +25,7 @@ export function VerticalTagNav({
       className={cn(
         'tags-nav flex items-center justify-center',
         isHome
-          ? 'mt-8 h-[7.25rem] rounded-xl bg-background/75 px-2 shadow-[inset_0_0_0_1px_var(--border)] backdrop-blur-md sm:px-3 dark:bg-black/55 dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+          ? 'mt-8 h-[7.25rem] rounded-xl bg-background/85 px-2 shadow-[inset_0_0_0_1px_var(--border)] backdrop-blur-md sm:px-3 dark:bg-black/55 dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
           : 'h-[9rem] w-full bg-muted/40 py-6'
       )}
     >
