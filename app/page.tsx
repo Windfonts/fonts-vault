@@ -24,8 +24,8 @@ export default async function Home() {
           alt=""
           priority
         />
-        <div className="absolute inset-0 z-0 bg-black/72" />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
+        <div className="absolute inset-0 z-0 bg-[#F7F7F5]/88 dark:bg-black/72" />
+        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background/70 via-transparent to-background/90 dark:from-black/50 dark:to-black/80" />
 
         <article className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-10">
           <div className="flex w-full max-w-[45rem] flex-col items-center">
@@ -45,7 +45,7 @@ export default async function Home() {
           </div>
         </article>
 
-        <footer className="relative z-10 mt-auto border-t border-white/10 bg-black/85 px-4 py-3 text-center text-xs text-white/45 backdrop-blur-md">
+        <footer className="relative z-10 mt-auto border-t border-border/60 bg-background/90 px-4 py-3 text-center text-xs text-muted-foreground backdrop-blur-md dark:border-white/10 dark:bg-black/85 dark:text-white/45">
           <div className="mb-1.5 flex flex-wrap justify-center gap-x-4 gap-y-1">
             {EXTRA_LINKS.map((link) => (
               <a
@@ -53,13 +53,13 @@ export default async function Home() {
                 href={link.path.trim()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white/80"
+                className="hover:text-foreground dark:hover:text-white/80"
               >
                 {link.label.replace(/\s*头像$/, '')}
               </a>
             ))}
           </div>
-          <p className="text-[10px] leading-relaxed text-white/35 sm:text-xs">{SAFE_CODE}</p>
+          <p className="text-[10px] leading-relaxed text-muted-foreground/80 sm:text-xs dark:text-white/35">{SAFE_CODE}</p>
         </footer>
       </div>
     </PublicLayout>

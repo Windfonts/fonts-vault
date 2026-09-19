@@ -25,7 +25,7 @@ export function VerticalTagNav({
       className={cn(
         'tags-nav flex items-center justify-center',
         isHome
-          ? 'mt-8 h-[7.25rem] rounded-xl bg-black/55 px-2 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md sm:px-3'
+          ? 'mt-8 h-[7.25rem] rounded-xl bg-background/75 px-2 shadow-[inset_0_0_0_1px_var(--border)] backdrop-blur-md sm:px-3 dark:bg-black/55 dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
           : 'h-[9rem] w-full bg-muted/40 py-6'
       )}
     >
@@ -34,14 +34,14 @@ export function VerticalTagNav({
         return (
           <Fragment key={item.href + item.label}>
             {index !== 0 && (
-              <span className={cn('h-full w-px shrink-0', isHome ? 'bg-white/35' : 'bg-foreground/15')} />
+              <span className={cn('h-full w-px shrink-0', isHome ? 'bg-border dark:bg-white/35' : 'bg-foreground/15')} />
             )}
             <Link
               href={item.href}
               className={cn(
                 'relative flex h-full cursor-pointer items-center justify-center transition-colors',
                 isHome
-                  ? 'w-14 text-white/85 hover:text-white sm:w-16'
+                  ? 'w-14 text-foreground/80 hover:text-foreground sm:w-16 dark:text-white/85 dark:hover:text-white'
                   : 'w-[4.5rem] text-foreground/55 hover:text-foreground sm:w-[5.5rem]',
                 latin
                   ? 'flex-col justify-center px-0.5 text-center text-[11px] leading-tight tracking-wide'

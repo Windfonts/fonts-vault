@@ -32,7 +32,7 @@ export function HomeHeroSearch({ variant = 'default' }: { variant?: 'default' | 
         <Search
           className={cn(
             'absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2',
-            isHome ? 'text-white/60' : 'text-muted-foreground'
+            isHome ? 'text-muted-foreground dark:text-white/60' : 'text-muted-foreground'
           )}
         />
         <Input
@@ -43,7 +43,7 @@ export function HomeHeroSearch({ variant = 'default' }: { variant?: 'default' | 
           className={cn(
             'pl-9',
             isHome &&
-              'h-12 rounded-full border-white/50 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-white/40'
+              'h-12 rounded-full border-border bg-background/70 text-foreground placeholder:text-muted-foreground focus-visible:ring-ring dark:border-white/50 dark:bg-transparent dark:text-white dark:placeholder:text-white/50 dark:focus-visible:ring-white/40'
           )}
           aria-label="搜索字体"
         />

@@ -11,6 +11,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { Github, Menu } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -31,7 +32,7 @@ export function Header({ variant = 'default' }: { variant?: 'default' | 'home' }
       className={cn(
         'sticky top-0 z-50 w-full border-b backdrop-blur',
         isHome
-          ? 'border-white/10 bg-white/10 text-white'
+          ? 'border-border/40 bg-background/55 text-foreground dark:border-white/10 dark:bg-white/10 dark:text-white'
           : 'bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border'
       )}
     >
@@ -52,7 +53,8 @@ export function Header({ variant = 'default' }: { variant?: 'default' | 'home' }
                     asChild
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      isHome && 'bg-transparent text-white/90 hover:bg-white/10 hover:text-white'
+                      isHome &&
+                        'bg-transparent hover:bg-accent dark:text-white/90 dark:hover:bg-white/10 dark:hover:text-white'
                     )}
                   >
                     <Link href={item.href}>{item.label}</Link>
@@ -64,12 +66,16 @@ export function Header({ variant = 'default' }: { variant?: 'default' | 'home' }
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle tone={isHome ? 'home' : 'default'} />
           <HeaderPicksLink tone={isHome ? 'light' : 'default'} />
           <Button
             variant="outline"
             size="icon"
             asChild
-            className={cn('hidden sm:flex', isHome && 'border-white/30 bg-transparent text-white hover:bg-white/10')}
+            className={cn(
+              'hidden sm:flex',
+              isHome && 'border-border/50 dark:border-white/30 dark:bg-transparent dark:text-white dark:hover:bg-white/10'
+            )}
           >
             <a
               href="https://github.com/Windfonts/font-packages.git"
@@ -83,7 +89,7 @@ export function Header({ variant = 'default' }: { variant?: 'default' | 'home' }
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className={cn(isHome && 'text-white hover:bg-white/10')}>
+              <Button variant="ghost" size="icon" className={cn(isHome && 'dark:text-white dark:hover:bg-white/10')}>
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">打开菜单</span>
               </Button>
