@@ -288,7 +288,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
             <div
               className={cn(
                 'grid gap-6',
-                viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
+                viewMode === 'list' ? 'grid-cols-1' : 'sm:grid-cols-2 lg:grid-cols-3'
               )}
             >
               {Array.from({ length: 6 }).map((_, i) => (
@@ -304,7 +304,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
             <div
               className={cn(
                 'grid gap-6',
-                viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
+                viewMode === 'list' ? 'grid-cols-1' : 'sm:grid-cols-2 lg:grid-cols-3'
               )}
             >
               {fonts.map((font) => (

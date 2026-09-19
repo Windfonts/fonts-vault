@@ -5,7 +5,7 @@
 const KEY = 'windfonts.picks.v1';
 
 export type FontPick = {
-  id: number;
+  id: string;
   normalizedName: string;
   name: string;
   fontFamily: string;
@@ -34,7 +34,7 @@ export function getPicks(): FontPick[] {
   return read();
 }
 
-export function isPicked(id: number): boolean {
+export function isPicked(id: string): boolean {
   return read().some((p) => p.id === id);
 }
 
@@ -44,7 +44,7 @@ export function addPick(pick: FontPick) {
   write(list.slice(0, 48));
 }
 
-export function removePick(id: number) {
+export function removePick(id: string) {
   write(read().filter((p) => p.id !== id));
 }
 
