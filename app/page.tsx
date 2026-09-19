@@ -24,14 +24,14 @@ export default async function Home() {
           alt=""
           priority
         />
-        <div className="absolute inset-0 z-0 bg-[#F7F7F5]/88 dark:bg-black/72" />
+        <div className="absolute inset-0 z-0 bg-[#F7F7F5]/62 dark:bg-black/72" />
         <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background/70 via-transparent to-background/90 dark:from-black/50 dark:to-black/80" />
 
         <article className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-10">
           <div className="flex w-full max-w-[45rem] flex-col items-center">
             <div className="relative mb-10 h-12 w-56 sm:h-[3.25rem] sm:w-[15.375rem]">
               <Image
-                className="object-contain brightness-0 dark:brightness-100"
+                className="object-contain invert mix-blend-multiply dark:invert-0 dark:mix-blend-normal"
                 src="/images/logo-bar.webp"
                 fill
                 alt="文风字体"
