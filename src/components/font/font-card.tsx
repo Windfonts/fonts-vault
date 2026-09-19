@@ -86,7 +86,20 @@ export function FontCard({
               </Badge>
             </div>
             <p className="truncate text-xs text-muted-foreground">
-              {font.brand?.name ? `作者/品牌：${font.brand.name}` : font.englishName || font.fontFamily}
+              {font.brand?.name ? (
+                <>
+                  作者/品牌：
+                  <Link
+                    href={`/fonts?brand=${font.brand.id}`}
+                    className="hover:text-foreground hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {font.brand.name}
+                  </Link>
+                </>
+              ) : (
+                font.englishName || font.fontFamily
+              )}
               {weightsCount > 0 ? ` · ${weightsCount} 字重` : ''}
             </p>
           </div>

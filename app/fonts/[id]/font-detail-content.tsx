@@ -785,7 +785,11 @@ const MyComponent = () => (
                     </div>
                   )}
                   <div>
-                    <h4 className="text-sm font-medium">{font.brand.name}</h4>
+                    <h4 className="text-sm font-medium">
+                      <Link href={`/fonts?brand=${font.brand.id}`} className="hover:underline">
+                        {font.brand.name}
+                      </Link>
+                    </h4>
                     {font.brand.description && (
                       <p className="text-muted-foreground mt-1 text-sm">{font.brand.description}</p>
                     )}
