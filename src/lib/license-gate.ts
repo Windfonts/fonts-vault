@@ -101,7 +101,7 @@ function labelFromOverlay(o: Overlay): LicenseLabel {
   return 'review'
 }
 
-/** Foundry LICENSE-TIER-DICTIONARY.md 中文短标 */
+/** Foundry LICENSE-TIER-DICTIONARY.md (v1.1) 中文短标 */
 function displayFor(label: LicenseLabel, _fallback?: string | null): string {
   switch (label) {
     case 'ofl_ok':
@@ -109,7 +109,7 @@ function displayFor(label: LicenseLabel, _fallback?: string | null): string {
     case 'apache_ok':
       return 'Apache 可商用'
     case 'free_commercial':
-      return '可嵌入使用' // verified free-embed; 禁止「免费商用」绿标
+      return '免费可商用' // v1.1 Foundry: verified free commercial
     case 'free_commercial_unverified':
       return '待核实'
     case 'brand_terms':
@@ -141,7 +141,7 @@ export function licenseWhatYouCanDo(label: LicenseLabel): string {
     case 'apache_ok':
       return '可免费用于网站与产品；遵循 Apache-2.0 声明要求。'
     case 'free_commercial':
-      return '可按作者声明嵌入使用；再分发/改字前请读原文。'
+      return '可按声明免费用于商业项目；再分发或改字前请读原文。'
     case 'free_commercial_unverified':
     case 'missing':
     case 'gpl_review':
@@ -166,7 +166,7 @@ export function licenseWhatYouCanDo(label: LicenseLabel): string {
 /** 色点 token：ok | accent | warn | danger */
 export function licenseDotToken(label: LicenseLabel): 'ok' | 'accent' | 'warn' | 'danger' {
   if (label === 'ofl_ok' || label === 'apache_ok') return 'ok'
-  if (label === 'free_commercial') return 'accent'
+  if (label === 'free_commercial') return 'ok'
   if (label === 'high_risk') return 'danger'
   return 'warn'
 }
@@ -237,7 +237,8 @@ export function evaluateLicense(input: {
       overlay.modification != null ? Boolean(overlay.modification) : label === 'ofl_ok'
 
     // Foundry: only ofl_ok/apache_ok get strong ok chip; free_embed never 「免费商用」绿标
-    const freeCommercialBadge = label === 'ofl_ok' || label === 'apache_ok'
+    const freeCommercialBadge =
+      label === 'ofl_ok' || label === 'apache_ok' || label === 'free_commercial'
 
     const cssAllowed =
       label === 'ofl_ok'
@@ -266,7 +267,8 @@ export function evaluateLicense(input: {
   }
 
   const label = heuristicLabel(license, licenseType)
-  const freeCommercialBadge = label === 'ofl_ok' || label === 'apache_ok'
+  const freeCommercialBadge =
+      label === 'ofl_ok' || label === 'apache_ok' || label === 'free_commercial'
   const cssBlocked = ['needs_auth', 'restricted', 'high_risk', 'missing', 'brand_terms'].includes(label)
 
   return {
