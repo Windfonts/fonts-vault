@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -21,20 +21,28 @@ export function FontSearch({
   initialValue = '',
   className,
 }: FontSearchProps) {
-  const [query, setQuery] = useState(initialValue);
-  const [debouncedQuery, setDebouncedQuery] = useState(initialValue);
+  const [query, setQuery] = useState(initialValue || '');
+  const [debouncedQuery, setDebouncedQuery] = useState(initialValue || '');
+  const lastEmitted = useRef<string | undefined>(initialValue || '');
 
-  // Debounce search query
+  // URL / 外链改 search 时同步输入框，勿把外链刚写入的 search 用空串冲掉
+  useEffect(() => {
+    const v = initialValue || '';
+    setQuery(v);
+    setDebouncedQuery(v);
+    lastEmitted.current = v;
+  }, [initialValue]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
     }, debounceMs);
-
     return () => clearTimeout(timer);
   }, [query, debounceMs]);
 
-  // Trigger search when debounced query changes
   useEffect(() => {
+    if (debouncedQuery === lastEmitted.current) return;
+    lastEmitted.current = debouncedQuery;
     onSearch(debouncedQuery);
   }, [debouncedQuery, onSearch]);
 
