@@ -88,13 +88,24 @@ export function FontCard({
             <p className="truncate text-xs text-muted-foreground">
               {font.brand?.name ? (
                 <>
-                  作者/品牌：
+                  品牌：
                   <Link
                     href={`/fonts?brand=${font.brand.id}`}
                     className="hover:text-foreground hover:underline"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {font.brand.name}
+                  </Link>
+                </>
+              ) : font.designer ? (
+                <>
+                  作者：
+                  <Link
+                    href={`/fonts?search=${encodeURIComponent(font.designer)}`}
+                    className="hover:text-foreground hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {font.designer}
                   </Link>
                 </>
               ) : (
