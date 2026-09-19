@@ -10,6 +10,7 @@ import { isPicked, togglePick } from '@/lib/font-picks';
 import { Brand, Category, Font } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, type MouseEvent } from 'react';
 
 export interface FontCardProps {
@@ -28,6 +29,7 @@ export function FontCard({
   showPreview = true,
   previewText,
 }: FontCardProps) {
+  const router = useRouter();
   const isGrid = variant === 'grid';
   const { sampleText, sampleSize } = useFontSample();
   const text = previewText || sampleText || DEFAULT_SAMPLE;
@@ -92,7 +94,12 @@ export function FontCard({
                   <Link
                     href={`/fonts?brand=${font.brand.id}`}
                     className="hover:text-foreground hover:underline"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                      e.preventDefault();
+                      router.push(`/fonts?brand=${font.brand!.id}`);
+                    }}
                   >
                     {font.brand.name}
                   </Link>
@@ -103,7 +110,12 @@ export function FontCard({
                   <Link
                     href={`/fonts?search=${encodeURIComponent(font.designer)}`}
                     className="hover:text-foreground hover:underline"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                      e.preventDefault();
+                      router.push(`/fonts?search=${encodeURIComponent(font.designer!)}`);
+                    }}
                   >
                     {font.designer}
                   </Link>
