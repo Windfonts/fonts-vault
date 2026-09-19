@@ -244,7 +244,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
 
           {/* Search and Controls */}
           <div className="flex flex-col gap-4">
-            <FontSearch onSearch={handleSearch} initialValue={search} className="w-full" placeholder="搜索字体名称、品牌…（参数 search=）" />
+            <FontSearch onSearch={handleSearch} initialValue={search} className="w-full" placeholder="搜索字体名称、品牌…" />
 
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
               {/* Sort Selector */}

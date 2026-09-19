@@ -90,22 +90,19 @@ export function FontCard({
               {weightsCount > 0 ? ` · ${weightsCount} 字重` : ''}
             </p>
           </div>
-          <div className="flex shrink-0 gap-2">
-            <Button type="button" size="sm" variant={picked ? 'default' : 'outline'} onClick={onTogglePick}>
-              {picked ? '已在选字' : '加入选字'}
-            </Button>
-            <Button type="button" size="sm" variant="ghost" asChild>
-              <Link href={`/fonts/${normalizedRoute}`}>详情</Link>
+          <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+            <Button type="button" size="sm" variant="ghost" className="h-8 px-2 text-xs text-muted-foreground" onClick={onTogglePick}>
+              {picked ? '已选' : '选字'}
             </Button>
           </div>
         </div>
         {showPreview && (
           <Link href={`/fonts/${normalizedRoute}`} className="block">
             <div
-              className="min-h-[3.5rem] break-words leading-tight text-foreground"
+              className="min-h-[5.5rem] break-words leading-[1.15] text-foreground sm:min-h-[6.5rem]"
               style={{
                 fontFamily: font.fontFamily,
-                fontSize: `${sampleSize}px`,
+                fontSize: `${Math.max(sampleSize, 42)}px`,
               }}
             >
               {text}

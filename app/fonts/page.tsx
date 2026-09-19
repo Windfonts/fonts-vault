@@ -4,6 +4,8 @@ import { brandService } from '@/lib/services/brand.service';
 import { categoryService } from '@/lib/services/category.service';
 import { Suspense } from 'react';
 import { FontListContent } from './font-list-content';
+import { VerticalTagNav } from '@/components/home/vertical-tag-nav';
+import { resolveNextHomeTags } from '@/lib/next-home-tags';
 
 // 动态渲染，避免构建时查询数据库
 export const dynamic = 'force-dynamic';
@@ -19,12 +21,16 @@ export default async function FontsPage() {
   const { styleService } = await import('@/lib/services/style.service');
   const availableTags = await styleService.getStyleNames();
 
+  const homeTags = resolveNextHomeTags(categories);
+
   return (
     <PublicLayout>
       <div className="container py-8">
-        <div className="mb-8">
+        <div className="-mx-4 mb-2 sm:-mx-6 lg:-mx-8">
+          <VerticalTagNav tags={homeTags} tone="list" />
+        </div>
+        <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight">字体库</h1>
-          <p className="text-muted-foreground mt-2">大字预览 · 共用样句 · 我的选字</p>
         </div>
 
         <Suspense fallback={<FontListSkeleton />}>

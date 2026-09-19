@@ -231,7 +231,7 @@ const MyComponent = () => (
         </Link>
         {' / '}
         <Link href="/fonts" className="hover:text-foreground">
-          字体列表
+          字体库
         </Link>
         {' / '}
         <span className="text-foreground">{font.name}</span>
