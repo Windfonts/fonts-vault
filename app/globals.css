@@ -79,12 +79,8 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* theme-toggle-fix: do NOT let OS prefers-color-scheme paint :root black
+   when next-themes class strategy is light — that made Feng see moon+all-black. */
 
 body {
   background: var(--background);
@@ -168,3 +164,21 @@ body {
 .license-dot-accent { background:#4A8F7A; }
 .license-dot-warn { background:#D4A574; }
 .license-dot-danger { background:#C45C5C; }
+
+/* theme-toggle-fix: brief switch feedback */
+html {
+  color-scheme: light dark;
+}
+html,
+body {
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* light paper guard */
+html.light,
+:root:not(.dark) {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}

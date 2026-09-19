@@ -371,7 +371,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
       </div>
     <Link
       href="/fonts/picks"
-      className="pick-fab fixed bottom-8 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-black text-sm text-white shadow-lg hover:bg-zinc-800"
+      className="pick-fab fixed bottom-8 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-sm text-background shadow-lg hover:opacity-90"
       title="我的选字"
     >
       选字{pickN ? `·${pickN}` : ''}

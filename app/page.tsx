@@ -31,7 +31,7 @@ export default async function Home() {
           <div className="flex w-full max-w-[45rem] flex-col items-center">
             <div className="relative mb-10 h-12 w-56 sm:h-[3.25rem] sm:w-[15.375rem]">
               <Image
-                className="object-contain"
+                className="object-contain brightness-0 dark:brightness-100"
                 src="/images/logo-bar.webp"
                 fill
                 alt="文风字体"

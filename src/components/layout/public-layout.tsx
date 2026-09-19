@@ -12,7 +12,7 @@ interface PublicLayoutProps {
 export function PublicLayout({ children, variant = 'default' }: PublicLayoutProps) {
   const isHome = variant === 'home';
   return (
-    <div className={cn('flex min-h-screen flex-col bg-background text-foreground', isHome && 'relative')}>
+    <div className={cn('flex min-h-screen flex-col bg-background text-foreground transition-colors duration-150', isHome && 'relative')}>
       <Header variant={isHome ? 'home' : 'default'} />
       <main className={cn('relative z-10 flex-1', !isHome && 'bg-background')}>
         {isHome ? (
