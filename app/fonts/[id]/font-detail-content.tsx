@@ -42,7 +42,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
   const firstWeightName = font.weights ? Object.keys(font.weights)[0] : 'Regular';
 
   const [copied, setCopied] = useState(false);
-  const [previewText, setPreviewText] = useState('字体预览 Font Preview 1234567890');
+  const [previewText, setPreviewText] = useState('春风又绿江南岸，明月何时照我还。Windfonts 123');
   const [picked, setPicked] = useState(false);
   useEffect(() => {
     setPicked(isPicked(font.id));
@@ -291,9 +291,24 @@ const MyComponent = () => (
           {(() => {
             const gate = evaluateLicense({ normalizedName: font.normalizedName, license: font.license, licenseType: font.licenseType });
             return (
-              <Badge variant="outline" className="text-sm">
-                {gate.displayLabel}
-              </Badge>
+              <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="text-sm">
+                      {gate.displayLabel}
+                    </Badge>
+                    {gate.licenseSpdx && (
+                      <span className="text-muted-foreground text-xs">条款：{gate.licenseSpdx}</span>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground max-w-xl text-xs leading-snug">
+                    你能做什么：{licenseWhatYouCanDo(gate.licenseLabel)}
+                  </p>
+                </div>
+                <Button type="button" size="sm" onClick={handleCopyUrl}>
+                  {copied ? '已复制 CSS' : '一键复制 CSS'}
+                </Button>
+              </div>
             );
           })()}
         </div>
@@ -305,8 +320,8 @@ const MyComponent = () => (
           {/* Preview Section */}
           <Card className="overflow-hidden">
             <CardHeader>
-              <CardTitle>字体预览</CardTitle>
-              <CardDescription>实时预览不同字号和样式</CardDescription>
+              <CardTitle>字帖舞台</CardTitle>
+              <CardDescription>改样句与字号，即时预览</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 overflow-x-hidden">
               {/* Editable Preview Text */}

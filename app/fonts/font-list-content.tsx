@@ -77,7 +77,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   // 读取当前 URL 参数用于渲染
   const categoryId = searchParamsHook.get('category') || undefined;
   const brandId = searchParamsHook.get('brand') || undefined;
-  const search = searchParamsHook.get('search') || undefined;
+  const search = searchParamsHook.get('search') || searchParamsHook.get('q') || undefined;
   const sort = (searchParamsHook.get('sort') as SortOption) || 'createdAt';
   const order = (searchParamsHook.get('order') as OrderOption) || 'desc';
   const licenseType = searchParamsHook.get('licenseType') || undefined;
@@ -90,7 +90,9 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
       // 从 searchParams 读取参数
       const categoryId = searchParamsHook.get('category') || undefined;
       const brandId = searchParamsHook.get('brand') || undefined;
-      const search = searchParamsHook.get('search') || undefined;
+      // q is alias of search — never silent-full-list while ?q= present
+      const search =
+        searchParamsHook.get('search') || searchParamsHook.get('q') || undefined;
       const sort = (searchParamsHook.get('sort') as SortOption) || 'createdAt';
       const order = (searchParamsHook.get('order') as OrderOption) || 'desc';
       const licenseType = searchParamsHook.get('licenseType') || undefined;
