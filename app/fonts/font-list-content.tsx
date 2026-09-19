@@ -242,7 +242,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
 
   return (
     <FontSampleProvider>
-    <div className="dark space-y-6 text-foreground">
+    <div className="space-y-6 text-foreground">
 <div className="space-y-6">
         {/* Main Content */}
         <main className="space-y-6">
