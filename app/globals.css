@@ -159,3 +159,11 @@ body {
     @apply bg-muted-foreground/30 hover:bg-muted-foreground/50 rounded-md;
   }
 }
+
+
+/* Foundry §6 dark-friendly license dots */
+.license-dot { display:inline-block; width:0.45rem; height:0.45rem; border-radius:999px; margin-right:0.35rem; vertical-align:middle; }
+.license-dot-ok { background:#5FA88A; }
+.license-dot-accent { background:#4A8F7A; }
+.license-dot-warn { background:#D4A574; }
+.license-dot-danger { background:#C45C5C; }

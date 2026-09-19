@@ -318,7 +318,7 @@ const MyComponent = () => (
         {/* Main Content */}
         <div className="min-w-0 space-y-8">
           {/* Preview Section */}
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden min-h-[40vh]">
             <CardHeader>
               <CardTitle>字帖舞台</CardTitle>
               <CardDescription>改样句与字号，即时预览</CardDescription>

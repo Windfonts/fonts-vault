@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFontCSS } from '@/hooks/use-font-css';
 import { useFontSample, DEFAULT_SAMPLE } from '@/hooks/use-font-sample';
-import { evaluateLicense } from '@/lib/license-gate';
+import { evaluateLicense, licenseDotToken } from '@/lib/license-gate';
 import { isPicked, togglePick } from '@/lib/font-picks';
 import { Brand, Category, Font } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
@@ -73,7 +73,7 @@ export function FontCard({
 
   if (!isGrid) {
     return (
-      <div className="group hover:bg-muted/40 w-full rounded-lg border p-4 transition-colors">
+      <div className="group w-full border-b border-border/50 py-6 transition-colors hover:bg-muted/20">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -81,6 +81,7 @@ export function FontCard({
                 {font.name}
               </Link>
               <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-normal">
+                <span className={`license-dot license-dot-${licenseDotToken(gate.licenseLabel)}`} />
                 {gate.displayLabel}
               </Badge>
             </div>

@@ -2,6 +2,7 @@
 
 import { FontCard } from '@/components/font/font-card';
 import { FontSampleBar } from '@/components/font/font-sample-bar';
+import { VerticalTagNav } from '@/components/home/vertical-tag-nav';
 import { FontSampleProvider } from '@/hooks/use-font-sample';
 import Link from 'next/link';
 import { picksCount } from '@/lib/font-picks';
@@ -18,7 +19,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Brand, Category, Font } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Grid3x3, List } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -37,7 +38,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   const searchParamsHook = useSearchParams();
 
   // State
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const viewMode: ViewMode = 'list';
   const [pickN, setPickN] = useState(0);
   const [fonts, setFonts] = useState<
     Array<
@@ -235,37 +236,10 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
 
   return (
     <FontSampleProvider>
-    <div className="space-y-6">
-      {/* Mobile Filter Button */}
-      <div className="lg:hidden">
-        <FontFilter
-          categories={categories}
-          brands={brands}
-          availableTags={availableTags}
-          onFilterChange={handleFilterChange}
-          initialFilters={initialFilters}
-        />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-        {/* Sidebar - Filters (Desktop) */}
-        <aside className="hidden space-y-4 lg:block">
-          <FontFilter
-            categories={categories}
-            brands={brands}
-            availableTags={availableTags}
-            onFilterChange={handleFilterChange}
-            initialFilters={initialFilters}
-          />
-        </aside>
-
+    <div className="dark space-y-6 text-foreground">
+<div className="space-y-6">
         {/* Main Content */}
         <main className="space-y-6">
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/fonts/picks">我的选字{pickN ? ` (${pickN})` : ''}</Link>
-            </Button>
-          </div>
           <FontSampleBar />
 
           {/* Search and Controls */}
@@ -288,33 +262,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
                 </SelectContent>
               </Select>
 
-              {/* View Mode Toggle */}
-              <div className="flex rounded-md border">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'flex-1 rounded-r-none sm:flex-none',
-                    viewMode === 'grid' && 'bg-muted'
-                  )}
-                  onClick={() => setViewMode('grid')}
-                >
-                  <Grid3x3 className="h-4 w-4" />
-                  <span className="ml-2 sm:sr-only">网格</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'flex-1 rounded-l-none border-l sm:flex-none',
-                    viewMode === 'list' && 'bg-muted'
-                  )}
-                  onClick={() => setViewMode('list')}
-                >
-                  <List className="h-4 w-4" />
-                  <span className="ml-2 sm:sr-only">列表</span>
-                </Button>
-              </div>
+
             </div>
           </div>
 
@@ -415,6 +363,13 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
           )}
         </main>
       </div>
+    <Link
+      href="/fonts/picks"
+      className="pick-fab fixed bottom-8 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-black text-sm text-white shadow-lg hover:bg-zinc-800"
+      title="我的选字"
+    >
+      选字{pickN ? `·${pickN}` : ''}
+    </Link>
     </div>
     </FontSampleProvider>
   );

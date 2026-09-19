@@ -15,7 +15,7 @@ export const DEFAULT_SAMPLE = '春风又绿江南岸，明月何时照我还。W
 
 export function FontSampleProvider({ children }: { children: ReactNode }) {
   const [sampleText, setSampleText] = useState(DEFAULT_SAMPLE);
-  const [sampleSize, setSampleSize] = useState(36);
+  const [sampleSize, setSampleSize] = useState(64);
   const value = useMemo(
     () => ({ sampleText, setSampleText, sampleSize, setSampleSize }),
     [sampleText, sampleSize]
