@@ -132,7 +132,7 @@ export default async function Home() {
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <h2 className="text-3xl font-bold">热门字体</h2>
-                <p className="text-muted-foreground mt-2">探索最受欢迎的字体，为您的项目增添魅力</p>
+                <p className="text-muted-foreground mt-2">真字精选，点进列表可改共用样句</p>
               </div>
               <Button variant="ghost" asChild className="hidden sm:flex">
                 <Link href="/fonts">
@@ -148,7 +148,7 @@ export default async function Home() {
                   font={font}
                   variant="grid"
                   showPreview={true}
-                  previewText="字体预览 Font Preview"
+                  previewText="春风又绿江南岸"
                 />
               ))}
             </div>

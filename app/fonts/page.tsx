@@ -24,7 +24,7 @@ export default async function FontsPage() {
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold tracking-tight">字体列表</h1>
-          <p className="text-muted-foreground mt-2">浏览和探索所有可用的字体资源</p>
+          <p className="text-muted-foreground mt-2">字帖行预览 · 共用样句 · 我的选字</p>
         </div>
 
         <Suspense fallback={<FontListSkeleton />}>

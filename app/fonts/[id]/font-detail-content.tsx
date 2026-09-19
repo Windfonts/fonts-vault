@@ -3,6 +3,7 @@
 import { FontCard } from '@/components/font/font-card';
 import { Badge } from '@/components/ui/badge';
 import { evaluateLicense } from '@/lib/license-gate';
+import { isPicked, togglePick } from '@/lib/font-picks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,7 +13,7 @@ import { Brand, Category, Font } from '@/lib/db/schema';
 import { Check, Code, Copy, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface FontDetailContentProps {
@@ -42,6 +43,13 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 
   const [copied, setCopied] = useState(false);
   const [previewText, setPreviewText] = useState('字体预览 Font Preview 1234567890');
+  const [picked, setPicked] = useState(false);
+  useEffect(() => {
+    setPicked(isPicked(font.id));
+    const sync = () => setPicked(isPicked(font.id));
+    window.addEventListener('windfonts-picks-changed', sync);
+    return () => window.removeEventListener('windfonts-picks-changed', sync);
+  }, [font.id]);
   const [fontSize, setFontSize] = useState(48);
   const [selectedWeight, setSelectedWeight] = useState(firstWeightName);
   const [charSearchQuery, setCharSearchQuery] = useState('');
@@ -63,7 +71,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 
   // Generate CSS API URL - 使用当前系统的 origin
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const cssApiUrl = `${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=${firstWeightName.toLowerCase()}&version=full`;
+  const cssApiUrl = `${baseUrl}/api/css?family=${encodeURIComponent((font.normalizedName || font.fontFamily).toLowerCase())}&weight=${firstWeightName.toLowerCase()}&version=full`;
 
   // Copy CSS URL to clipboard
   const handleCopyUrl = async () => {
@@ -182,7 +190,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 <link rel="stylesheet" href="${cssApiUrl}" />
 
 <!-- 使用轻量中文字符集 -->
-<link rel="stylesheet" href="${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=regular&version=zh-common" />
+<link rel="stylesheet" href="${baseUrl}/api/css?family=${encodeURIComponent((font.normalizedName || font.fontFamily).toLowerCase())}&weight=regular&version=zh-common" />
 
 <style>
   body {
@@ -194,7 +202,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 @import url('${cssApiUrl}');
 
 /* 使用轻量中文字符集 */
-@import url('${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=regular&version=zh-common');
+@import url('${baseUrl}/api/css?family=${encodeURIComponent((font.normalizedName || font.fontFamily).toLowerCase())}&weight=regular&version=zh-common');
 
 .my-text {
   font-family: '${font.fontFamily.toLowerCase()}', sans-serif;
@@ -234,6 +242,25 @@ const MyComponent = () => (
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
             <h1 className="mb-2 text-4xl font-bold tracking-tight">{font.name}</h1>
+            <Button
+              type="button"
+              size="sm"
+              variant={picked ? "default" : "outline"}
+              className="mt-2"
+              onClick={() => {
+                const on = togglePick({
+                  id: font.id,
+                  normalizedName: font.normalizedName,
+                  name: font.name,
+                  fontFamily: font.fontFamily,
+                  englishName: font.englishName,
+                });
+                setPicked(on);
+                toast.success(on ? "已加入选字" : "已移出选字");
+              }}
+            >
+              {picked ? "已在选字" : "加入选字"}
+            </Button>
             {font.englishName && (
               <p className="text-muted-foreground text-xl">{font.englishName}</p>
             )}

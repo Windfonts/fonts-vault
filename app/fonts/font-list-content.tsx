@@ -1,6 +1,10 @@
 'use client';
 
 import { FontCard } from '@/components/font/font-card';
+import { FontSampleBar } from '@/components/font/font-sample-bar';
+import { FontSampleProvider } from '@/hooks/use-font-sample';
+import Link from 'next/link';
+import { picksCount } from '@/lib/font-picks';
 import { FilterState, FontFilter } from '@/components/font/font-filter';
 import { FontSearch } from '@/components/font/font-search';
 import { Button } from '@/components/ui/button';
@@ -33,7 +37,8 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   const searchParamsHook = useSearchParams();
 
   // State
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [pickN, setPickN] = useState(0);
   const [fonts, setFonts] = useState<
     Array<
       Omit<Font, 'brand' | 'category'> & {
@@ -49,6 +54,25 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
 
   // 使用 searchParams 的字符串表示作为依赖，确保只在 URL 真正变化时触发
   const searchParamsString = searchParamsHook.toString();
+
+  // P0: unify q → search (API already aliases; UI must not leave silent full list)
+  useEffect(() => {
+    const q = searchParamsHook.get('q');
+    const s = searchParamsHook.get('search');
+    if (q && !s) {
+      const p = new URLSearchParams(searchParamsHook.toString());
+      p.set('search', q);
+      p.delete('q');
+      router.replace(`/fonts?${p.toString()}`);
+    }
+  }, [searchParamsString, router, searchParamsHook]);
+
+  useEffect(() => {
+    const sync = () => setPickN(picksCount());
+    sync();
+    window.addEventListener('windfonts-picks-changed', sync);
+    return () => window.removeEventListener('windfonts-picks-changed', sync);
+  }, []);
 
   // 读取当前 URL 参数用于渲染
   const categoryId = searchParamsHook.get('category') || undefined;
@@ -208,6 +232,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   };
 
   return (
+    <FontSampleProvider>
     <div className="space-y-6">
       {/* Mobile Filter Button */}
       <div className="lg:hidden">
@@ -234,9 +259,16 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
 
         {/* Main Content */}
         <main className="space-y-6">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/fonts/picks">我的选字{pickN ? ` (${pickN})` : ''}</Link>
+            </Button>
+          </div>
+          <FontSampleBar />
+
           {/* Search and Controls */}
           <div className="flex flex-col gap-4">
-            <FontSearch onSearch={handleSearch} initialValue={search} className="w-full" />
+            <FontSearch onSearch={handleSearch} initialValue={search} className="w-full" placeholder="搜索字体名称、品牌…（参数 search=）" />
 
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
               {/* Sort Selector */}
@@ -309,9 +341,8 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
             </div>
           ) : fonts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-4 text-6xl">🔍</div>
-              <h3 className="mb-2 text-xl font-semibold">未找到字体</h3>
-              <p className="text-muted-foreground">尝试调整筛选条件或搜索关键词</p>
+              <h3 className="mb-2 text-xl font-semibold">没有匹配的字体</h3>
+              <p className="text-muted-foreground">试试别的关键词，或清掉筛选。空结果不是「全库」。</p>
             </div>
           ) : (
             <div
@@ -383,5 +414,6 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
         </main>
       </div>
     </div>
+    </FontSampleProvider>
   );
 }
