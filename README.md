@@ -1,5 +1,9 @@
 # 文风字库 (WindFonts)
 
+> **生产真源：本仓 `fonts-vault`（Next 16）→ https://app.windfonts.com**  
+> `next-windfonts` 为遗留归档，请勿双线演进。
+
+
 > 🎨 专业的在线字体 CDN 平台，海量字体资源，一行代码即可集成
 
 ## ✨ 核心特性

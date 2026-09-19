@@ -42,7 +42,9 @@ export class FontService {
           like(fonts.name, `%${search}%`),
           like(fonts.englishName, `%${search}%`),
           like(fonts.chineseName, `%${search}%`),
-          like(fonts.fontFamily, `%${search}%`)
+          like(fonts.fontFamily, `%${search}%`),
+          like(fonts.designer, `%${search}%`),
+          like(fonts.foundry, `%${search}%`)
         )
       );
     }
@@ -121,7 +123,9 @@ export class FontService {
           like(fonts.name, `%${search}%`),
           like(fonts.englishName, `%${search}%`),
           like(fonts.chineseName, `%${search}%`),
-          like(fonts.fontFamily, `%${search}%`)
+          like(fonts.fontFamily, `%${search}%`),
+          like(fonts.designer, `%${search}%`),
+          like(fonts.foundry, `%${search}%`)
         )
       );
     }
@@ -298,6 +302,17 @@ export class FontService {
       .where(sql`lower(${fonts.fontFamily}) = ${normalizedFamily}`);
   }
 
+  async findByEnglishName(englishName: string): Promise<Font | undefined> {
+    const normalized = englishName.trim().toLowerCase();
+    const rows = await db
+      .select()
+      .from(fonts)
+      .where(sql`lower(${fonts.englishName}) = ${normalized}`)
+      .limit(1);
+    return rows[0];
+  }
+
+
   /**
    * 搜索字体（名称、品牌、标签）
    */
@@ -311,6 +326,8 @@ export class FontService {
           like(fonts.englishName, `%${query}%`),
           like(fonts.chineseName, `%${query}%`),
           like(fonts.fontFamily, `%${query}%`),
+          like(fonts.designer, `%${query}%`),
+          like(fonts.foundry, `%${query}%`),
           like(fonts.tags, `%${query}%`),
           like(fonts.fontTags, `%${query}%`)
         )

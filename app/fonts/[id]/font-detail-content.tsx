@@ -2,6 +2,8 @@
 
 import { FontCard } from '@/components/font/font-card';
 import { Badge } from '@/components/ui/badge';
+import { evaluateLicense, licenseWhatYouCanDo } from '@/lib/license-gate';
+import { isPicked, togglePick } from '@/lib/font-picks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,7 +13,7 @@ import { Brand, Category, Font } from '@/lib/db/schema';
 import { Check, Code, Copy, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface FontDetailContentProps {
@@ -40,7 +42,14 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
   const firstWeightName = font.weights ? Object.keys(font.weights)[0] : 'Regular';
 
   const [copied, setCopied] = useState(false);
-  const [previewText, setPreviewText] = useState('字体预览 Font Preview 1234567890');
+  const [previewText, setPreviewText] = useState('春风又绿江南岸，明月何时照我还。Windfonts 123');
+  const [picked, setPicked] = useState(false);
+  useEffect(() => {
+    setPicked(isPicked(font.id));
+    const sync = () => setPicked(isPicked(font.id));
+    window.addEventListener('windfonts-picks-changed', sync);
+    return () => window.removeEventListener('windfonts-picks-changed', sync);
+  }, [font.id]);
   const [fontSize, setFontSize] = useState(48);
   const [selectedWeight, setSelectedWeight] = useState(firstWeightName);
   const [charSearchQuery, setCharSearchQuery] = useState('');
@@ -62,7 +71,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 
   // Generate CSS API URL - 使用当前系统的 origin
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const cssApiUrl = `${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=${firstWeightName.toLowerCase()}&version=full`;
+  const cssApiUrl = `${baseUrl}/api/css?family=${encodeURIComponent((font.normalizedName || font.fontFamily).toLowerCase())}&weight=${firstWeightName.toLowerCase()}&version=full`;
 
   // Copy CSS URL to clipboard
   const handleCopyUrl = async () => {
@@ -181,7 +190,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 <link rel="stylesheet" href="${cssApiUrl}" />
 
 <!-- 使用轻量中文字符集 -->
-<link rel="stylesheet" href="${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=regular&version=zh-common" />
+<link rel="stylesheet" href="${baseUrl}/api/css?family=${encodeURIComponent((font.normalizedName || font.fontFamily).toLowerCase())}&weight=regular&version=zh-common" />
 
 <style>
   body {
@@ -193,7 +202,7 @@ export function FontDetailContent({ font, relatedFonts, analysis }: FontDetailCo
 @import url('${cssApiUrl}');
 
 /* 使用轻量中文字符集 */
-@import url('${baseUrl}/api/css?family=${encodeURIComponent(font.fontFamily.toLowerCase())}&weight=regular&version=zh-common');
+@import url('${baseUrl}/api/css?family=${encodeURIComponent((font.normalizedName || font.fontFamily).toLowerCase())}&weight=regular&version=zh-common');
 
 .my-text {
   font-family: '${font.fontFamily.toLowerCase()}', sans-serif;
@@ -222,7 +231,7 @@ const MyComponent = () => (
         </Link>
         {' / '}
         <Link href="/fonts" className="hover:text-foreground">
-          字体列表
+          字体库
         </Link>
         {' / '}
         <span className="text-foreground">{font.name}</span>
@@ -233,6 +242,25 @@ const MyComponent = () => (
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
             <h1 className="mb-2 text-4xl font-bold tracking-tight">{font.name}</h1>
+            <Button
+              type="button"
+              size="sm"
+              variant={picked ? "default" : "outline"}
+              className="mt-2"
+              onClick={() => {
+                const on = togglePick({
+                  id: font.id,
+                  normalizedName: font.normalizedName,
+                  name: font.name,
+                  fontFamily: font.fontFamily,
+                  englishName: font.englishName,
+                });
+                setPicked(on);
+                toast.success(on ? "已加入选字" : "已移出选字");
+              }}
+            >
+              {picked ? "已在选字" : "加入选字"}
+            </Button>
             {font.englishName && (
               <p className="text-muted-foreground text-xl">{font.englishName}</p>
             )}
@@ -260,11 +288,29 @@ const MyComponent = () => (
             </div>
           )}
 
-          {font.licenseType && (
-            <Badge variant="outline" className="text-sm">
-              {font.licenseType}
-            </Badge>
-          )}
+          {(() => {
+            const gate = evaluateLicense({ normalizedName: font.normalizedName, license: font.license, licenseType: font.licenseType });
+            return (
+              <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="text-sm">
+                      {gate.displayLabel}
+                    </Badge>
+                    {gate.licenseSpdx && (
+                      <span className="text-muted-foreground text-xs">条款：{gate.licenseSpdx}</span>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground max-w-xl text-xs leading-snug">
+                    你能做什么：{licenseWhatYouCanDo(gate.licenseLabel)}
+                  </p>
+                </div>
+                <Button type="button" size="sm" onClick={handleCopyUrl}>
+                  {copied ? '已复制 CSS' : '一键复制 CSS'}
+                </Button>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
@@ -272,10 +318,10 @@ const MyComponent = () => (
         {/* Main Content */}
         <div className="min-w-0 space-y-8">
           {/* Preview Section */}
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden min-h-[40vh]">
             <CardHeader>
-              <CardTitle>字体预览</CardTitle>
-              <CardDescription>实时预览不同字号和样式</CardDescription>
+              <CardTitle>字帖舞台</CardTitle>
+              <CardDescription>改样句与字号，即时预览</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 overflow-x-hidden">
               {/* Editable Preview Text */}
@@ -739,7 +785,11 @@ const MyComponent = () => (
                     </div>
                   )}
                   <div>
-                    <h4 className="text-sm font-medium">{font.brand.name}</h4>
+                    <h4 className="text-sm font-medium">
+                      <Link href={`/fonts?brand=${font.brand.id}`} className="hover:underline">
+                        {font.brand.name}
+                      </Link>
+                    </h4>
                     {font.brand.description && (
                       <p className="text-muted-foreground mt-1 text-sm">{font.brand.description}</p>
                     )}
@@ -768,7 +818,27 @@ const MyComponent = () => (
                 <div className="grid grid-cols-[80px_1fr] gap-2 items-center">
                   <span className="text-muted-foreground">授权类型</span>
                   <div className="flex justify-end">
-                    <Badge variant="secondary" className="h-5">{font.licenseType || '未知'}</Badge>
+                    {(() => {
+                      const gate = evaluateLicense({
+                        normalizedName: font.normalizedName,
+                        license: font.license,
+                        licenseType: font.licenseType,
+                      })
+                      return (
+                        <div className="flex flex-col items-end gap-1">
+                          <Badge variant="secondary" className="h-5">{gate.displayLabel}</Badge>
+                          {gate.licenseSpdx && (
+                            <span className="text-[10px] text-muted-foreground">SPDX: {gate.licenseSpdx}</span>
+                          )}
+                          {!gate.licenseVerified && (
+                            <span className="text-[10px] text-amber-600">许可尚未人工核实</span>
+                          )}
+                          <p className="text-muted-foreground max-w-md text-[11px] leading-snug">
+                            {licenseWhatYouCanDo(gate.licenseLabel)}
+                          </p>
+                        </div>
+                      )
+                    })()}
                   </div>
                 </div>
 

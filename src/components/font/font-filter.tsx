@@ -31,7 +31,7 @@ export interface FontFilterProps {
 }
 
 const LICENSE_TYPES = [
-  { value: 'free_commercial', label: '免费商用' },
+  { value: 'free_commercial', label: '免费可商用' },
   { value: 'free_personal', label: '个人免费' },
   { value: 'trial', label: '试用版' },
   { value: 'paid', label: '付费' },

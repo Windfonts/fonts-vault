@@ -1,6 +1,11 @@
 'use client';
 
 import { FontCard } from '@/components/font/font-card';
+import { FontSampleBar } from '@/components/font/font-sample-bar';
+import { VerticalTagNav } from '@/components/home/vertical-tag-nav';
+import { FontSampleProvider } from '@/hooks/use-font-sample';
+import Link from 'next/link';
+import { picksCount } from '@/lib/font-picks';
 import { FilterState, FontFilter } from '@/components/font/font-filter';
 import { FontSearch } from '@/components/font/font-search';
 import { Button } from '@/components/ui/button';
@@ -14,7 +19,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Brand, Category, Font } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Grid3x3, List } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -33,7 +38,8 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   const searchParamsHook = useSearchParams();
 
   // State
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const viewMode: ViewMode = 'list';
+  const [pickN, setPickN] = useState(0);
   const [fonts, setFonts] = useState<
     Array<
       Omit<Font, 'brand' | 'category'> & {
@@ -50,10 +56,29 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   // 使用 searchParams 的字符串表示作为依赖，确保只在 URL 真正变化时触发
   const searchParamsString = searchParamsHook.toString();
 
+  // P0: unify q → search (API already aliases; UI must not leave silent full list)
+  useEffect(() => {
+    const q = searchParamsHook.get('q');
+    const s = searchParamsHook.get('search');
+    if (q && !s) {
+      const p = new URLSearchParams(searchParamsHook.toString());
+      p.set('search', q);
+      p.delete('q');
+      router.replace(`/fonts?${p.toString()}`);
+    }
+  }, [searchParamsString, router, searchParamsHook]);
+
+  useEffect(() => {
+    const sync = () => setPickN(picksCount());
+    sync();
+    window.addEventListener('windfonts-picks-changed', sync);
+    return () => window.removeEventListener('windfonts-picks-changed', sync);
+  }, []);
+
   // 读取当前 URL 参数用于渲染
   const categoryId = searchParamsHook.get('category') || undefined;
   const brandId = searchParamsHook.get('brand') || undefined;
-  const search = searchParamsHook.get('search') || undefined;
+  const search = searchParamsHook.get('search') || searchParamsHook.get('q') || undefined;
   const sort = (searchParamsHook.get('sort') as SortOption) || 'createdAt';
   const order = (searchParamsHook.get('order') as OrderOption) || 'desc';
   const licenseType = searchParamsHook.get('licenseType') || undefined;
@@ -66,7 +91,9 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
       // 从 searchParams 读取参数
       const categoryId = searchParamsHook.get('category') || undefined;
       const brandId = searchParamsHook.get('brand') || undefined;
-      const search = searchParamsHook.get('search') || undefined;
+      // q is alias of search — never silent-full-list while ?q= present
+      const search =
+        searchParamsHook.get('search') || searchParamsHook.get('q') || undefined;
       const sort = (searchParamsHook.get('sort') as SortOption) || 'createdAt';
       const order = (searchParamsHook.get('order') as OrderOption) || 'desc';
       const licenseType = searchParamsHook.get('licenseType') || undefined;
@@ -168,6 +195,8 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
       const nextSearch = query || undefined;
 
       if (nextSearch === currentSearch) return;
+      // 禁止空串冲掉 URL 上已有的 search=（点作者链后的 FontSearch 竞态）
+      if (!nextSearch && currentSearch) return;
 
       updateURL({
         search: nextSearch,
@@ -176,6 +205,10 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
     },
     [updateURL, searchParamsHook]
   );
+
+  const handleClearSearch = useCallback(() => {
+    updateURL({ search: undefined, page: '1' });
+  }, [updateURL]);
 
   const handleSortChange = useCallback(
     (value: string) => {
@@ -208,35 +241,16 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
   };
 
   return (
-    <div className="space-y-6">
-      {/* Mobile Filter Button */}
-      <div className="lg:hidden">
-        <FontFilter
-          categories={categories}
-          brands={brands}
-          availableTags={availableTags}
-          onFilterChange={handleFilterChange}
-          initialFilters={initialFilters}
-        />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-        {/* Sidebar - Filters (Desktop) */}
-        <aside className="hidden space-y-4 lg:block">
-          <FontFilter
-            categories={categories}
-            brands={brands}
-            availableTags={availableTags}
-            onFilterChange={handleFilterChange}
-            initialFilters={initialFilters}
-          />
-        </aside>
-
+    <FontSampleProvider>
+    <div className="space-y-6 text-foreground">
+<div className="space-y-6">
         {/* Main Content */}
         <main className="space-y-6">
+          <FontSampleBar />
+
           {/* Search and Controls */}
           <div className="flex flex-col gap-4">
-            <FontSearch onSearch={handleSearch} initialValue={search} className="w-full" />
+            <FontSearch onSearch={handleSearch} onClear={handleClearSearch} initialValue={search} className="w-full" placeholder="搜索字体名称、品牌…" />
 
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
               {/* Sort Selector */}
@@ -254,33 +268,7 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
                 </SelectContent>
               </Select>
 
-              {/* View Mode Toggle */}
-              <div className="flex rounded-md border">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'flex-1 rounded-r-none sm:flex-none',
-                    viewMode === 'grid' && 'bg-muted'
-                  )}
-                  onClick={() => setViewMode('grid')}
-                >
-                  <Grid3x3 className="h-4 w-4" />
-                  <span className="ml-2 sm:sr-only">网格</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'flex-1 rounded-l-none border-l sm:flex-none',
-                    viewMode === 'list' && 'bg-muted'
-                  )}
-                  onClick={() => setViewMode('list')}
-                >
-                  <List className="h-4 w-4" />
-                  <span className="ml-2 sm:sr-only">列表</span>
-                </Button>
-              </div>
+
             </div>
           </div>
 
@@ -309,9 +297,8 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
             </div>
           ) : fonts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-4 text-6xl">🔍</div>
-              <h3 className="mb-2 text-xl font-semibold">未找到字体</h3>
-              <p className="text-muted-foreground">尝试调整筛选条件或搜索关键词</p>
+              <h3 className="mb-2 text-xl font-semibold">没有匹配的字体</h3>
+              <p className="text-muted-foreground">试试别的关键词，或清掉筛选。空结果不是「全库」。</p>
             </div>
           ) : (
             <div
@@ -382,6 +369,14 @@ export function FontListContent({ categories, brands, availableTags }: FontListC
           )}
         </main>
       </div>
+    <Link
+      href="/fonts/picks"
+      className="pick-fab fixed bottom-8 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-sm text-background shadow-lg hover:opacity-90"
+      title="我的选字"
+    >
+      选字{pickN ? `·${pickN}` : ''}
+    </Link>
     </div>
+    </FontSampleProvider>
   );
 }

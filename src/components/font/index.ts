@@ -12,3 +12,4 @@ export type { FontSearchProps } from './font-search';
 
 export { FontWeightSelector } from './font-weight-selector';
 export type { FontWeightSelectorProps, FontWeight } from './font-weight-selector';
+export { FontSampleBar } from './font-sample-bar';

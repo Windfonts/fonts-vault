@@ -53,7 +53,7 @@ export default function NotFound() {
           <p className="text-muted-foreground mb-4 text-sm">您可能想访问：</p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link href="/fonts" className="text-primary hover:underline">
-              字体列表
+              字体库
             </Link>
             <Link href="/docs" className="text-primary hover:underline">
               使用文档

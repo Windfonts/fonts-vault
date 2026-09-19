@@ -34,7 +34,7 @@ export function Footer() {
                   href="/fonts"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  字体列表
+                  字体库
                 </Link>
               </li>
               <li>

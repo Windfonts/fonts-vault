@@ -1,6 +1,7 @@
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata, Viewport } from 'next';
 import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from '@/components/theme-provider';
 import { FontLoader } from './font-loader';
 import './globals.css';
 
@@ -61,11 +62,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className="overscroll-none">
+    <html lang="zh-CN" className="overscroll-none" suppressHydrationWarning>
       <body className="touch-pan-y overscroll-none antialiased font-['windfonts-hclcks',_sans-serif]">
         <FontLoader />
-        <SessionProvider>{children}</SessionProvider>
-        <Toaster />
+        <ThemeProvider>
+          <SessionProvider>{children}</SessionProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

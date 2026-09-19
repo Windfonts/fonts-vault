@@ -4,8 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* 浅色审稿：纸感底，非旧营销白卡墙 */
+  --background: #F7F7F5;
+  --foreground: #1A1A1A;
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -16,7 +17,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: #5C5C5C;
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -78,12 +79,8 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* theme-toggle-fix: do NOT let OS prefers-color-scheme paint :root black
+   when next-themes class strategy is light — that made Feng see moon+all-black. */
 
 body {
   background: var(--background);
@@ -158,4 +155,56 @@ body {
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-muted-foreground/30 hover:bg-muted-foreground/50 rounded-md;
   }
+}
+
+
+/* Foundry §6 dark-friendly license dots */
+.license-dot { display:inline-block; width:0.45rem; height:0.45rem; border-radius:999px; margin-right:0.35rem; vertical-align:middle; }
+.license-dot-ok { background:#5FA88A; }
+.license-dot-accent { background:#4A8F7A; }
+.license-dot-warn { background:#D4A574; }
+.license-dot-danger { background:#C45C5C; }
+
+/* theme-toggle-fix: class theme wins over OS / Chrome Auto Dark */
+html,
+body {
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* 浅色：only light 禁止浏览器 Auto Dark 反色；token 与底色硬写在 .light */
+html.light {
+  color-scheme: only light;
+  background-color: #F7F7F5;
+  --background: #F7F7F5;
+  --foreground: #1A1A1A;
+  --muted-foreground: #5C5C5C;
+  --card: #ffffff;
+  --card-foreground: #1A1A1A;
+  --popover: #ffffff;
+  --popover-foreground: #1A1A1A;
+  --muted: #f0f0ee;
+  --accent: #f0f0ee;
+  --accent-foreground: #1A1A1A;
+  --secondary: #f0f0ee;
+  --secondary-foreground: #1A1A1A;
+  --border: #e5e5e2;
+  --input: #e5e5e2;
+}
+html.light body {
+  color-scheme: only light;
+  background-color: #F7F7F5 !important;
+  color: #1A1A1A !important;
+}
+
+html.dark {
+  color-scheme: only dark;
+  background-color: #0a0a0a;
+}
+html.dark body {
+  color-scheme: only dark;
+}
+
+/* 无 class 时（hydration 前）跟 defaultTheme=dark，避免 OS 浅色闪一下 */
+html:not(.light):not(.dark) {
+  color-scheme: only dark;
 }

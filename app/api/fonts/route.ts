@@ -38,7 +38,8 @@ export const GET = withFontApiAuth(async (req) => {
       filters.brandId = brandIdParam;
     }
 
-    const searchParam = searchParams.get('search');
+    // P0-1: `q` is an alias of `search` (docs/home often assume `q`)
+    const searchParam = searchParams.get('search') ?? searchParams.get('q');
     if (searchParam) {
       filters.search = searchParam;
     }

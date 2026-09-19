@@ -97,6 +97,16 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // P0-5: single Cache-Control for CSS (match route.ts; do not add no-store)
+      {
+        source: '/api/css',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, s-maxage=7200',
+          },
+        ],
+      },
     ];
   },
 };
