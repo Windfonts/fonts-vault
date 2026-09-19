@@ -1,7 +1,23 @@
 'use client';
 
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import type { ReactNode } from 'react';
+import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes';
+import { useEffect, type ReactNode } from 'react';
+
+function ColorSchemeMeta() {
+  const { resolvedTheme } = useTheme();
+  useEffect(() => {
+    const scheme = resolvedTheme === 'light' ? 'light' : 'dark';
+    let meta = document.querySelector('meta[name="color-scheme"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'color-scheme';
+      document.head.appendChild(meta);
+    }
+    meta.content = scheme;
+    document.documentElement.style.colorScheme = scheme === 'light' ? 'only light' : 'only dark';
+  }, [resolvedTheme]);
+  return null;
+}
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
@@ -12,6 +28,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       storageKey="wf-theme"
       disableTransitionOnChange={false}
     >
+      <ColorSchemeMeta />
       {children}
     </NextThemesProvider>
   );

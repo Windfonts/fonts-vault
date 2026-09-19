@@ -165,20 +165,46 @@ body {
 .license-dot-warn { background:#D4A574; }
 .license-dot-danger { background:#C45C5C; }
 
-/* theme-toggle-fix: brief switch feedback */
-html {
-  color-scheme: light dark;
-}
+/* theme-toggle-fix: class theme wins over OS / Chrome Auto Dark */
 html,
 body {
   transition: background-color 150ms ease, color 150ms ease;
 }
 
-/* light paper guard */
-html.light,
-:root:not(.dark) {
-  color-scheme: light;
+/* 浅色：only light 禁止浏览器 Auto Dark 反色；token 与底色硬写在 .light */
+html.light {
+  color-scheme: only light;
+  background-color: #F7F7F5;
+  --background: #F7F7F5;
+  --foreground: #1A1A1A;
+  --muted-foreground: #5C5C5C;
+  --card: #ffffff;
+  --card-foreground: #1A1A1A;
+  --popover: #ffffff;
+  --popover-foreground: #1A1A1A;
+  --muted: #f0f0ee;
+  --accent: #f0f0ee;
+  --accent-foreground: #1A1A1A;
+  --secondary: #f0f0ee;
+  --secondary-foreground: #1A1A1A;
+  --border: #e5e5e2;
+  --input: #e5e5e2;
 }
+html.light body {
+  color-scheme: only light;
+  background-color: #F7F7F5 !important;
+  color: #1A1A1A !important;
+}
+
 html.dark {
-  color-scheme: dark;
+  color-scheme: only dark;
+  background-color: #0a0a0a;
+}
+html.dark body {
+  color-scheme: only dark;
+}
+
+/* 无 class 时（hydration 前）跟 defaultTheme=dark，避免 OS 浅色闪一下 */
+html:not(.light):not(.dark) {
+  color-scheme: only dark;
 }
