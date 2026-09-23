@@ -647,23 +647,44 @@ export const authorizeFontApiRequest = async (
   };
 };
 
+const PUBLIC_CORS: Record<string, string> = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key',
+  'Access-Control-Max-Age': '86400',
+};
+
+const withPublicCors = (response: Response) => {
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(PUBLIC_CORS)) headers.set(key, value);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
 export const withFontApiAuth =
   (
     handler: (request: Request, ctx: FontApiAuthContext) => Promise<Response> | Response,
     options?: { requireKey?: boolean; allowWhitelist?: boolean; allowAnonymous?: boolean }
   ) =>
   async (request: Request) => {
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, { status: 204, headers: PUBLIC_CORS });
+    }
+
     const auth = await authorizeFontApiRequest(request, options);
 
     if (!auth.ok) {
-      return auth.response;
+      return withPublicCors(auth.response);
     }
 
     try {
       const response = await handler(request, auth.ctx);
-      return response;
+      return withPublicCors(response);
     } catch (error) {
-      return jsonError(500, 'internal_error', '服务器内部错误');
+      return withPublicCors(jsonError(500, 'internal_error', '服务器内部错误'));
     }
   };
 
