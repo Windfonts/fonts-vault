@@ -655,13 +655,10 @@ const PUBLIC_CORS: Record<string, string> = {
 };
 
 const withPublicCors = (response: Response) => {
-  const headers = new Headers(response.headers);
-  for (const [key, value] of Object.entries(PUBLIC_CORS)) headers.set(key, value);
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
+  for (const [key, value] of Object.entries(PUBLIC_CORS)) {
+    response.headers.set(key, value);
+  }
+  return response;
 };
 
 export const withFontApiAuth =
