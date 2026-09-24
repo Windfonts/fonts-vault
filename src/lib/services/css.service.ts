@@ -40,10 +40,20 @@ export class CSSService {
       | 'zh'
       | 'zh-common'
       | 'full';
-    const fallbackFamily = validated.fallback?.trim() || '';
+    const fallbackFamilyRaw = validated.fallback?.trim() || '';
     const fallbackWeightRaw = validated.fallbackWeight?.trim().toLowerCase() || '';
+    const localeFb = (validated.localeFallback || 'off').toLowerCase() as
+      | 'off'
+      | 'auto'
+      | 'sc'
+      | 'tc';
 
     const resolvedFamily = this.resolveFamilyAlias(normalizedFamily);
+    let fallbackFamily = fallbackFamilyRaw;
+    if (!fallbackFamily && localeFb && localeFb !== 'off') {
+      const peer = this.resolveLocalePeer(resolvedFamily, localeFb);
+      if (peer) fallbackFamily = peer;
+    }
     const resolvedFallback = fallbackFamily
       ? this.resolveFamilyAlias(fallbackFamily)
       : '';
@@ -52,7 +62,8 @@ export class CSSService {
       normalizedWeight,
       normalizedVersion,
       resolvedFallback,
-      fallbackWeightRaw
+      fallbackWeightRaw,
+      localeFb
     );
 
     const cached = this.getFromCache(cacheKey);
@@ -150,6 +161,41 @@ export class CSSService {
       /* ignore */
     }
     return family.trim();
+  }
+
+  /**
+   * 简繁兄弟：data/locale-fallback-pairs.json。
+   * auto → 配对表 peer；sc/tc → 要求主款角色匹配后再取 peer。
+   */
+  private resolveLocalePeer(
+    family: string,
+    mode: 'auto' | 'sc' | 'tc'
+  ): string | null {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fs = require('fs') as typeof import('fs');
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const path = require('path') as typeof import('path');
+      const file = path.join(process.cwd(), 'data', 'locale-fallback-pairs.json');
+      if (!fs.existsSync(file)) return null;
+      const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+        byFamily?: Record<
+          string,
+          {
+            peer?: string;
+            role?: string;
+            localeFallbackAllowed?: boolean;
+          }
+        >;
+      };
+      const hit = raw.byFamily?.[family] || raw.byFamily?.[family.toLowerCase()];
+      if (!hit || !hit.peer || hit.localeFallbackAllowed === false) return null;
+      if (mode === 'sc' && hit.role !== 'sc') return null;
+      if (mode === 'tc' && hit.role !== 'tc') return null;
+      return hit.peer;
+    } catch {
+      return null;
+    }
   }
 
   private async resolveFont(token: string): Promise<Font> {
@@ -305,14 +351,16 @@ export class CSSService {
     weight?: string,
     version?: string,
     fallback?: string,
-    fallbackWeight?: string
+    fallbackWeight?: string,
+    localeFallback?: string
   ): string {
     const normalizedFamily = family.toLowerCase();
     const normalizedWeight = (weight || 'regular').toLowerCase();
     const normalizedVersion = (version || 'full').toLowerCase();
     const fb = (fallback || '').toLowerCase();
     const fbw = (fallbackWeight || '').toLowerCase();
-    return `${normalizedFamily}|${normalizedWeight}|${normalizedVersion}|fb:${fb}|fbw:${fbw}`;
+    const lf = (localeFallback || 'off').toLowerCase();
+    return `${normalizedFamily}|${normalizedWeight}|${normalizedVersion}|fb:${fb}|fbw:${fbw}|lf:${lf}`;
   }
 
   private getFromCache(key: string): { css: string; etag: string } | null {

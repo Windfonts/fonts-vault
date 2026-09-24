@@ -1,0 +1,72 @@
+{
+  "$schema": "./locale-fallback-pairs.schema.json",
+  "note": "简繁兄弟配对。localeFallback=auto|sc|tc 由 vault 展开为第二 family；不做码点转换。",
+  "generatedAt": "2026-09-24",
+  "pairs": [
+    {
+      "scFamily": "wenfeng-syhtcn",
+      "tcFamily": "wenfeng-syhttw",
+      "productId": null,
+      "source": "family-suffix:wenfeng-syht",
+      "localeFallbackAllowed": true
+    },
+    {
+      "scFamily": "wenfeng-systcn",
+      "tcFamily": "wenfeng-systtc",
+      "productId": null,
+      "source": "family-suffix:wenfeng-syst",
+      "localeFallbackAllowed": true
+    },
+    {
+      "scFamily": "wenfeng-xwwkgb",
+      "tcFamily": "wenfeng-xwwktc",
+      "productId": "lxgw-wenkai",
+      "source": "font-products",
+      "localeFallbackAllowed": true
+    }
+  ],
+  "byFamily": {
+    "wenfeng-syhtcn": {
+      "peer": "wenfeng-syhttw",
+      "role": "sc",
+      "peerRole": "tc",
+      "localeFallbackAllowed": true,
+      "productId": null
+    },
+    "wenfeng-syhttw": {
+      "peer": "wenfeng-syhtcn",
+      "role": "tc",
+      "peerRole": "sc",
+      "localeFallbackAllowed": true,
+      "productId": null
+    },
+    "wenfeng-systcn": {
+      "peer": "wenfeng-systtc",
+      "role": "sc",
+      "peerRole": "tc",
+      "localeFallbackAllowed": true,
+      "productId": null
+    },
+    "wenfeng-systtc": {
+      "peer": "wenfeng-systcn",
+      "role": "tc",
+      "peerRole": "sc",
+      "localeFallbackAllowed": true,
+      "productId": null
+    },
+    "wenfeng-xwwkgb": {
+      "peer": "wenfeng-xwwktc",
+      "role": "sc",
+      "peerRole": "tc",
+      "localeFallbackAllowed": true,
+      "productId": "lxgw-wenkai"
+    },
+    "wenfeng-xwwktc": {
+      "peer": "wenfeng-xwwkgb",
+      "role": "tc",
+      "peerRole": "sc",
+      "localeFallbackAllowed": true,
+      "productId": "lxgw-wenkai"
+    }
+  }
+}
