@@ -43,11 +43,15 @@ export class CSSService {
     const fallbackFamily = validated.fallback?.trim() || '';
     const fallbackWeightRaw = validated.fallbackWeight?.trim().toLowerCase() || '';
 
+    const resolvedFamily = this.resolveFamilyAlias(normalizedFamily);
+    const resolvedFallback = fallbackFamily
+      ? this.resolveFamilyAlias(fallbackFamily)
+      : '';
     const cacheKey = this.getCacheKey(
-      normalizedFamily,
+      resolvedFamily,
       normalizedWeight,
       normalizedVersion,
-      fallbackFamily,
+      resolvedFallback,
       fallbackWeightRaw
     );
 
