@@ -104,6 +104,11 @@ export const cssApiSchema = z.object({
   fallback: z.string().min(1).optional(),
   /** 补全款字重名；缺省与主款同名，再按 font_weight 数字对齐 */
   fallbackWeight: z.string().min(1).optional(),
+  /**
+   * 简繁兄弟补全：off|auto|sc|tc。
+   * 有配对且未传 fallback 时，展开为第二款并走缺口裁切；不做码点转换。
+   */
+  localeFallback: z.enum(['off', 'auto', 'sc', 'tc']).optional(),
 });
 
 // Sync validation

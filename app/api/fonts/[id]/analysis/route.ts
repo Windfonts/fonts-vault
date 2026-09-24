@@ -13,8 +13,14 @@ const handleGet = async (req: NextRequest, { params }: { params: Promise<{ id: s
   try {
     const { id } = await params;
 
-    // 获取字体信息 - 支持 normalizedName 或 ID
+    // 获取字体信息 - 支持 normalizedName、fontFamily 或 ID
     let font = await fontService.findByNormalizedName(id);
+    if (!font) {
+      const byFamily = await fontService.findByFontFamily(id);
+      if (byFamily && byFamily.length > 0) {
+        font = byFamily.find((f) => f.status === 'published') || byFamily[0];
+      }
+    }
     if (!font) {
       font = await fontService.findById(id);
     }

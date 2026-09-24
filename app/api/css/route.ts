@@ -13,6 +13,7 @@ import { ZodError } from 'zod';
  * - weight / subset|lang
  * - fallback: 可选，谱系或简繁补全款；响应内补全 @font-face 仅含主款缺口 unicode-range
  * - fallbackWeight: 可选，补全款字重名；缺省按 font_weight 与主款对齐
+ * - localeFallback: 可选 off|auto|sc|tc；有配对且未传 fallback 时展开简繁兄弟
  *
  * 响应:
  * - Content-Type: text/css
@@ -54,12 +55,21 @@ export const GET = withFontApiAuth(
     const weight = (searchParams.get('weight') || 'regular').toLowerCase();
     const fallback = searchParams.get('fallback') || undefined;
     const fallbackWeight = searchParams.get('fallbackWeight') || undefined;
+    const localeFallbackRaw = (searchParams.get('localeFallback') || '').toLowerCase();
+    const localeFallback =
+      localeFallbackRaw === 'auto' ||
+      localeFallbackRaw === 'sc' ||
+      localeFallbackRaw === 'tc' ||
+      localeFallbackRaw === 'off'
+        ? (localeFallbackRaw as 'off' | 'auto' | 'sc' | 'tc')
+        : undefined;
     const { css, etag } = await cssService.generateCSS({
       family,
       version,
       weight,
       fallback,
       fallbackWeight,
+      localeFallback,
     });
 
     // 检查条件请求（If-None-Match）
