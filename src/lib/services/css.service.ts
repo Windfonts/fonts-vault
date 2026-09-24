@@ -127,14 +127,39 @@ export class CSSService {
     }
   }
 
+  /** 读取 data/family-aliases.json；缺文件则原样返回 */
+  private resolveFamilyAlias(family: string): string {
+    const key = family.trim().toLowerCase();
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fs = require('fs') as typeof import('fs');
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const path = require('path') as typeof import('path');
+      const file = path.join(process.cwd(), 'data', 'family-aliases.json');
+      if (!fs.existsSync(file)) return family.trim();
+      const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+        aliases?: Record<string, string>;
+      };
+      const hit = raw.aliases?.[key];
+      if (hit) return hit;
+    } catch {
+      /* ignore */
+    }
+    return family.trim();
+  }
+
   private async resolveFont(token: string): Promise<Font> {
-    const normalizedFamily = token.trim();
+    const raw = token.trim();
+    const normalizedFamily = this.resolveFamilyAlias(raw);
     let font: Font | undefined;
     const fontsByFamily = await fontService.findByFontFamily(normalizedFamily);
     if (fontsByFamily && fontsByFamily.length > 0) {
-      font = fontsByFamily[0];
+      font = fontsByFamily.find((f) => f.status === 'published') || fontsByFamily[0];
     } else {
       font = await fontService.findByNormalizedName(normalizedFamily);
+      if (!font && normalizedFamily !== raw) {
+        font = await fontService.findByNormalizedName(raw);
+      }
     }
     if (!font && typeof (fontService as { findByEnglishName?: Function }).findByEnglishName === 'function') {
       font = await (
