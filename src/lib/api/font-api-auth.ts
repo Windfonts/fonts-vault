@@ -403,9 +403,17 @@ const consumeWindowQuota = async ({
   });
 };
 
+export type FontApiAuthOptions = {
+  requireKey?: boolean;
+  allowWhitelist?: boolean;
+  allowAnonymous?: boolean;
+  /** 公开投递（如 /api/css）跳过匿名日额度；仍走黑名单等其它闸 */
+  skipAnonymousQuota?: boolean;
+};
+
 export const authorizeFontApiRequest = async (
   request: Request,
-  options?: { requireKey?: boolean; allowWhitelist?: boolean; allowAnonymous?: boolean }
+  options?: FontApiAuthOptions
 ): Promise<ApiAuthResult> => {
   const domain = getDomainFromRequest(request) ?? 'unknown';
   const ip = getIpFromRequest(request) ?? '';
@@ -421,7 +429,9 @@ export const authorizeFontApiRequest = async (
   const allowKeyAuth = evaluateSecuritySwitch(switches.get('api_key_auth')!);
   const allowWhitelistRateLimit = evaluateSecuritySwitch(switches.get('whitelist_rate_limit')!);
   const allowAnonymous = options?.allowAnonymous !== false;
-  const allowAnonymousQuota = evaluateSecuritySwitch(switches.get('anonymous_daily_quota')!);
+  const allowAnonymousQuota =
+    options?.skipAnonymousQuota !== true &&
+    evaluateSecuritySwitch(switches.get('anonymous_daily_quota')!);
 
   const rawKey = getApiKeyFromRequest(request);
 
@@ -664,7 +674,7 @@ const withPublicCors = (response: Response) => {
 export const withFontApiAuth =
   (
     handler: (request: Request, ctx: FontApiAuthContext) => Promise<Response> | Response,
-    options?: { requireKey?: boolean; allowWhitelist?: boolean; allowAnonymous?: boolean }
+    options?: FontApiAuthOptions
   ) =>
   async (request: Request) => {
     if (request.method === 'OPTIONS') {

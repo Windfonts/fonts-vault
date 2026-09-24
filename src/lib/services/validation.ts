@@ -100,6 +100,10 @@ export const cssApiSchema = z.object({
   family: z.string().min(1, 'family参数不能为空'), // fontFamily 或 normalizedName 都可以
   weight: z.string().optional().default('regular'),
   version: z.enum(['en', 'zh', 'zh-common', 'full']).optional().default('full'),
+  /** 谱系/简繁补全：第二款 family；服务端裁切 unicode-range 只留主款缺口 */
+  fallback: z.string().min(1).optional(),
+  /** 补全款字重名；缺省与主款同名，再按 font_weight 数字对齐 */
+  fallbackWeight: z.string().min(1).optional(),
 });
 
 // Sync validation

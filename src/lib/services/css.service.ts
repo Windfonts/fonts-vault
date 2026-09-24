@@ -1,4 +1,5 @@
 import type { Font } from '@/lib/db/schema';
+import { clipFallbackCss } from '@/lib/css-unicode-range';
 import { evaluateLicense } from '@/lib/license-gate';
 import { logger } from '@/lib/logger';
 import { fontService } from './font.service';
@@ -9,6 +10,8 @@ interface CacheEntry {
   etag: string;
   timestamp: number;
 }
+
+type WeightEntry = { weight_name?: string; font_weight?: number };
 
 export class CSSService {
   private cache: Map<string, CacheEntry> = new Map();
@@ -25,27 +28,107 @@ export class CSSService {
   }
 
   /**
-   * 生成字体CSS
-   * 直接从OSS获取预生成的CSS文件
+   * 生成字体CSS。
+   * 直接从 OSS 取预生成 CSS。带 fallback 时：主款全文 + 补全款仅主款缺口 unicode-range。
    */
   async generateCSS(params: CssApiDto): Promise<{ css: string; etag: string }> {
-    // 验证参数
     const validated = cssApiSchema.parse(params);
-    const { family, weight, version } = validated;
-    const normalizedFamily = family.trim();
-    const normalizedWeight = weight.trim().toLowerCase();
-    const normalizedVersion = version.toLowerCase() as 'en' | 'zh' | 'zh-common' | 'full';
+    const normalizedFamily = validated.family.trim();
+    const normalizedWeight = (validated.weight || 'regular').trim().toLowerCase();
+    const normalizedVersion = (validated.version || 'full').toLowerCase() as
+      | 'en'
+      | 'zh'
+      | 'zh-common'
+      | 'full';
+    const fallbackFamily = validated.fallback?.trim() || '';
+    const fallbackWeightRaw = validated.fallbackWeight?.trim().toLowerCase() || '';
 
-    // 生成缓存键
-    const cacheKey = this.getCacheKey(normalizedFamily, normalizedWeight, normalizedVersion);
+    const cacheKey = this.getCacheKey(
+      normalizedFamily,
+      normalizedWeight,
+      normalizedVersion,
+      fallbackFamily,
+      fallbackWeightRaw
+    );
 
-    // 检查缓存
     const cached = this.getFromCache(cacheKey);
     if (cached) {
       return cached;
     }
 
-    // Resolve family: fontFamily → normalizedName → englishName (P0-3)
+    const font = await this.resolveFont(normalizedFamily);
+    this.assertCssAllowed(font, normalizedFamily);
+
+    await fontService.incrementApiCallCount(font.id);
+
+    const primaryCss = await this.fetchOSSCSS(font, normalizedWeight, normalizedVersion);
+    if (!primaryCss) {
+      throw new Error(
+        `字体 ${validated.family} 的 ${validated.weight} 字重 ${normalizedVersion} 版本不存在`
+      );
+    }
+
+    let css = primaryCss;
+
+    if (fallbackFamily) {
+      const fallbackFont = await this.resolveFont(fallbackFamily);
+      this.assertCssAllowed(fallbackFont, fallbackFamily);
+      await fontService.incrementApiCallCount(fallbackFont.id);
+
+      const aligned =
+        fallbackWeightRaw ||
+        this.alignWeightName(fallbackFont, this.weightCssNumber(font, normalizedWeight));
+      if (!aligned) {
+        throw new Error(
+          `补全字体 ${fallbackFamily} 无与主款字重 ${normalizedWeight} 对齐的 font_weight，已拒绝双载`
+        );
+      }
+
+      const fallbackCss = await this.fetchOSSCSS(fallbackFont, aligned, normalizedVersion);
+      if (!fallbackCss) {
+        throw new Error(
+          `补全字体 ${fallbackFamily} 的 ${aligned} 字重 ${normalizedVersion} 版本不存在`
+        );
+      }
+
+      const clipped = clipFallbackCss(primaryCss, fallbackCss);
+      if (clipped) {
+        css =
+          primaryCss +
+          `\n\n/* lineage/locale fallback · gaps only · ${fallbackFont.normalizedName}/${aligned} */\n` +
+          clipped;
+      } else {
+        css =
+          primaryCss +
+          `\n\n/* fallback ${fallbackFont.normalizedName}: no unicode-range gaps vs primary */\n`;
+        logger.info('[CSSService] fallback 无缺口可裁，仅返回主款', {
+          family: font.normalizedName,
+          fallback: fallbackFont.normalizedName,
+          version: normalizedVersion,
+        });
+      }
+    }
+
+    const etag = this.generateETag(css);
+    this.setCache(cacheKey, css, etag);
+    return { css, etag };
+  }
+
+  private assertCssAllowed(font: Font, label: string): void {
+    const gate = evaluateLicense({
+      normalizedName: font.normalizedName,
+      license: font.license,
+      licenseType: font.licenseType,
+    });
+    if (!gate.cssAllowed) {
+      throw new Error(
+        `字体 ${font.normalizedName || label} 当前不可通过公共 CSS/CDN 分发（${gate.displayLabel}）。请查看详情页授权说明。`
+      );
+    }
+  }
+
+  private async resolveFont(token: string): Promise<Font> {
+    const normalizedFamily = token.trim();
     let font: Font | undefined;
     const fontsByFamily = await fontService.findByFontFamily(normalizedFamily);
     if (fontsByFamily && fontsByFamily.length > 0) {
@@ -53,11 +136,12 @@ export class CSSService {
     } else {
       font = await fontService.findByNormalizedName(normalizedFamily);
     }
-    if (!font && typeof (fontService as any).findByEnglishName === 'function') {
-      font = await (fontService as any).findByEnglishName(normalizedFamily);
+    if (!font && typeof (fontService as { findByEnglishName?: Function }).findByEnglishName === 'function') {
+      font = await (
+        fontService as { findByEnglishName: (n: string) => Promise<Font | undefined> }
+      ).findByEnglishName(normalizedFamily);
     }
     if (!font) {
-      // Soft scan englishName / normalizedName contains
       const hinted = await fontService.search(normalizedFamily).catch(() => [] as Font[]);
       if (hinted && hinted.length === 1) {
         font = hinted[0];
@@ -69,39 +153,29 @@ export class CSSService {
         const hint = keys.length
           ? `可用 family 示例：${keys.join(', ')}（请用 normalizedName / fontFamily，不是展示名空格形式）`
           : '请使用字体的 normalizedName（如 wenfeng-ibmps）或 fontFamily';
-        throw new Error(`字体 ${family} 不存在。${hint}`);
+        throw new Error(`字体 ${token} 不存在。${hint}`);
       }
     }
-
-    const gate = evaluateLicense({ normalizedName: font.normalizedName, license: font.license, licenseType: font.licenseType });
-    if (!gate.cssAllowed) {
-      throw new Error(
-        `字体 ${font.normalizedName || family} 当前不可通过公共 CSS/CDN 分发（${gate.displayLabel}）。请查看详情页授权说明。`
-      );
-    }
-
-    // 增加API调用次数
-    await fontService.incrementApiCallCount(font.id);
-
-    // 获取CSS
-    const css = await this.fetchOSSCSS(font, normalizedWeight, normalizedVersion);
-
-    if (!css) {
-      throw new Error(`字体 ${family} 的 ${weight} 字重 ${version} 版本不存在`);
-    }
-
-    const etag = this.generateETag(css);
-
-    // 存入缓存
-    this.setCache(cacheKey, css, etag);
-
-    return { css, etag };
+    return font;
   }
 
-  /**
-   * 从OSS获取预生成的CSS文件
-   * 直接请求指定版本，不存在则返回null
-   */
+  private weightCssNumber(font: Font, weightName: string): number {
+    const weights = (font.weights || {}) as Record<string, WeightEntry>;
+    const hit = Object.keys(weights).find((n) => n.toLowerCase() === weightName.toLowerCase());
+    if (hit && typeof weights[hit]?.font_weight === 'number') {
+      return weights[hit].font_weight as number;
+    }
+    return 400;
+  }
+
+  private alignWeightName(font: Font, wantCss: number): string | null {
+    const weights = (font.weights || {}) as Record<string, WeightEntry>;
+    for (const name of Object.keys(weights)) {
+      if (weights[name]?.font_weight === wantCss) return name;
+    }
+    return null;
+  }
+
   private async fetchOSSCSS(
     font: Font,
     weightName: string,
@@ -113,11 +187,9 @@ export class CSSService {
       (name) => name.toLowerCase() === normalizedWeightName
     );
 
-    // 查找对应的字重
     let weightData = matchedWeightName ? font.weights[matchedWeightName] : font.weights[weightName];
     let actualWeightName = matchedWeightName || weightName;
 
-    // 如果指定的字重不存在，使用第一个可用字重
     if (!weightData) {
       logger.warn('[CSSService] 字重不存在，尝试回退到第一个可用字重', {
         normalizedName: font.normalizedName,
@@ -170,22 +242,17 @@ export class CSSService {
         length: css.length,
       });
 
-      // 基础路径
       const basePath = `fonts-packages/${font.normalizedName}/${actualWeightName}/${version}`;
-
-      // 目标基准：优先使用 CDN，其次使用代理
       const targetBase = this.cdnBaseUrl || this.proxyBaseUrl;
 
-      // 替换相对路径 url('./xxx') 为 CDN/代理地址
-      css = css.replace(/url\(['"]?\.\/([^'")\s]+)['"]?\)/g, (match, filename) => {
+      css = css.replace(/url\(['"]?\.\/([^'")\s]+)['"]?\)/g, (_match, filename) => {
         return `url('${targetBase}/${basePath}/${filename}')`;
       });
 
-      // 替换绝对路径（如果CSS中包含完整的OSS URL）
       const escapedEndpoint = ossEndpoint.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       css = css.replace(
         new RegExp(`url\\(['"]?${escapedEndpoint}/([^'"\\)\\s]+)['"]?\\)`, 'g'),
-        (match, path) => {
+        (_match, path) => {
           return `url('${targetBase}/${path}')`;
         }
       );
@@ -204,26 +271,27 @@ export class CSSService {
     }
   }
 
-  /**
-   * 生成缓存键
-   */
-  private getCacheKey(family: string, weight?: string, version?: string): string {
+  private getCacheKey(
+    family: string,
+    weight?: string,
+    version?: string,
+    fallback?: string,
+    fallbackWeight?: string
+  ): string {
     const normalizedFamily = family.toLowerCase();
     const normalizedWeight = (weight || 'regular').toLowerCase();
     const normalizedVersion = (version || 'full').toLowerCase();
-    return `${normalizedFamily}|${normalizedWeight}|${normalizedVersion}`;
+    const fb = (fallback || '').toLowerCase();
+    const fbw = (fallbackWeight || '').toLowerCase();
+    return `${normalizedFamily}|${normalizedWeight}|${normalizedVersion}|fb:${fb}|fbw:${fbw}`;
   }
 
-  /**
-   * 从缓存获取
-   */
   private getFromCache(key: string): { css: string; etag: string } | null {
     const entry = this.cache.get(key);
     if (!entry) {
       return null;
     }
 
-    // 检查是否过期
     if (Date.now() - entry.timestamp > this.cacheTTL) {
       this.cache.delete(key);
       return null;
@@ -235,9 +303,6 @@ export class CSSService {
     };
   }
 
-  /**
-   * 设置缓存
-   */
   private setCache(key: string, css: string, etag: string): void {
     this.cache.set(key, {
       css,
@@ -246,26 +311,18 @@ export class CSSService {
     });
   }
 
-  /**
-   * 生成ETag
-   */
   private generateETag(content: string): string {
-    // 简单的哈希函数
     let hash = 0;
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
       hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
+      hash = hash & hash;
     }
     return `"${Math.abs(hash).toString(36)}"`;
   }
 
-  /**
-   * 清除缓存
-   */
   clearCache(family?: string): void {
     if (family) {
-      // 清除特定字体的缓存
       const keysToDelete: string[] = [];
       for (const key of this.cache.keys()) {
         if (key.startsWith(family)) {
@@ -274,14 +331,10 @@ export class CSSService {
       }
       keysToDelete.forEach((key) => this.cache.delete(key));
     } else {
-      // 清除所有缓存
       this.cache.clear();
     }
   }
 
-  /**
-   * 使字体缓存失效
-   */
   async invalidateFontCache(fontId: string): Promise<void> {
     const font = await fontService.findById(fontId);
     if (font) {
@@ -289,9 +342,6 @@ export class CSSService {
     }
   }
 
-  /**
-   * 获取缓存统计
-   */
   getCacheStats(): { size: number; keys: string[] } {
     return {
       size: this.cache.size,
@@ -300,5 +350,4 @@ export class CSSService {
   }
 }
 
-// 导出单例实例
 export const cssService = new CSSService();

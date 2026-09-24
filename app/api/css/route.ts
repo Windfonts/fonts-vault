@@ -9,9 +9,10 @@ import { ZodError } from 'zod';
  * 生成字体CSS（Google Fonts风格）
  *
  * 查询参数:
- * - family: 字体名称（支持多个，用|分隔，例如：Noto Sans:400,700|Roboto:300）
- * - subset: 字体变体（可选）
- * - lang: 语言（可选，zh表示纯中文）
+ * - family: 字体短码 / fontFamily（主款）
+ * - weight / subset|lang
+ * - fallback: 可选，谱系或简繁补全款；响应内补全 @font-face 仅含主款缺口 unicode-range
+ * - fallbackWeight: 可选，补全款字重名；缺省按 font_weight 与主款对齐
  *
  * 响应:
  * - Content-Type: text/css
@@ -21,7 +22,8 @@ import { ZodError } from 'zod';
  * 支持条件请求:
  * - If-None-Match: 如果ETag匹配，返回304
  */
-export const GET = withFontApiAuth(async (request) => {
+export const GET = withFontApiAuth(
+  async (request) => {
   const nextRequest = request as NextRequest;
   try {
     // 获取查询参数
@@ -50,10 +52,14 @@ export const GET = withFontApiAuth(async (request) => {
       | 'zh-common'
       | 'full';
     const weight = (searchParams.get('weight') || 'regular').toLowerCase();
+    const fallback = searchParams.get('fallback') || undefined;
+    const fallbackWeight = searchParams.get('fallbackWeight') || undefined;
     const { css, etag } = await cssService.generateCSS({
       family,
       version,
       weight,
+      fallback,
+      fallbackWeight,
     });
 
     // 检查条件请求（If-None-Match）
@@ -126,4 +132,7 @@ export const GET = withFontApiAuth(async (request) => {
       { status: 500 }
     );
   }
-});
+},
+  // 公开 CDN 投递：边缘回源常无 Origin；不可吃匿名日额度
+  { skipAnonymousQuota: true }
+);
