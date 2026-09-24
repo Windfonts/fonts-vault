@@ -1,0 +1,133 @@
+{
+  "note": "OSS batch2 ingest map · 2026-09-23. Started with confirmed recheck (Pixels/Line/Sykd); more waves merge from docs/_oss-ingest-batch2-*.json",
+  "brands": {
+    "chilltype": "e0a7cb01-7ee5-492c-be8f-0a81d70ced16",
+    "lxgw": "51686ef7-69ef-4d5a-8bb2-e8b4aa93f97e",
+    "welai": "c4b7c24b-a880-4a52-9441-7efeb19de1d8",
+    "adobe": "3ce366d5-c82a-5bc2-8dd5-338bc983c92a",
+    "atelier-anchor": "e96ad611-0b6c-40a0-8675-14c797e28a68",
+    "fontworks": "5f7ebc2a-32e6-46f2-80a8-47131c209422",
+    "aqua": "2224ffb8-c2bf-4727-8f71-2e6c0955e7c2",
+    "mplus": "c4243c44-f357-48e4-99a9-d5637a4eaffd",
+    "justfont": "79ef48e0-0e71-4d4f-81b9-13382c50e38f",
+    "google": "9df9ad2a-c39e-58e7-86a5-43bc1e41e37f"
+  },
+  "categories": {
+    "sans": {
+      "name": "无衬线字体",
+      "id": "34a366d5-8fce-4372-9621-c77161d1947c"
+    },
+    "serif": {
+      "name": "衬线",
+      "id": "3edc27b5-6d0f-4778-b113-52b54e809c58"
+    },
+    "song": {
+      "name": "宋体",
+      "id": "f08be474-1b71-4a22-95cd-7a9963ba3dcd"
+    },
+    "hand": {
+      "name": "手写体",
+      "id": "e7413c1c-60db-4970-8007-43ca466034aa"
+    },
+    "mono": {
+      "name": "Mono",
+      "id": "5191ac94-e365-431a-bde2-dcfc24c14c16"
+    },
+    "other": {
+      "name": "其他",
+      "id": "8990380b-6c3e-4fb9-8e3d-4b7019f8c420"
+    }
+  },
+  "families": [
+    {
+      "wave": "recheck",
+      "repo": "Warren2060/ChillPixels",
+      "norm": "Hcpixels",
+      "family": "wenfeng-hcpixels",
+      "name": "寒蝉像素体",
+      "en": "Chill Pixels",
+      "cat": "sans",
+      "brand": "chilltype",
+      "designer": "ChillType",
+      "foundry": "寒蝉字型",
+      "license": "SIL Open Font License 1.1",
+      "spdx": "OFL-1.1",
+      "source": "raw",
+      "assetUrl": "https://raw.githubusercontent.com/Warren2060/ChillPixels/main/ChillPixels.zip",
+      "weightPrefer": [
+        "Mono",
+        "Maximal",
+        "Minimalism",
+        "Matrix"
+      ],
+      "maxWeights": 4,
+      "desc": "寒蝉像素体，四款风格面（非传统字重）。SIL OFL 1.1。"
+    },
+    {
+      "wave": "recheck",
+      "repo": "Warren2060/ChillLine",
+      "norm": "Hcline",
+      "family": "wenfeng-hcline",
+      "name": "寒蝉线体",
+      "en": "Chill Line",
+      "cat": "sans",
+      "brand": "chilltype",
+      "designer": "ChillType",
+      "foundry": "寒蝉字型",
+      "license": "SIL Open Font License 1.1",
+      "spdx": "OFL-1.1",
+      "source": "raw",
+      "assetUrl": "https://raw.githubusercontent.com/Warren2060/ChillLine/main/Chill%20Line.zip",
+      "weightPrefer": [
+        "Thin",
+        "ExtraLight",
+        "Light",
+        "Regular",
+        "Medium",
+        "SemiBold",
+        "Bold",
+        "ExtraBold",
+        "Heavy",
+        "Black"
+      ],
+      "maxWeights": 10,
+      "desc": "寒蝉线体，多字重静态 OTF（忽略 VF）。SIL OFL 1.1。"
+    },
+    {
+      "wave": "recheck",
+      "repo": "adobe-fonts/source-han-mono",
+      "norm": "Sykd",
+      "family": "wenfeng-sykd",
+      "name": "思源等宽",
+      "en": "Source Han Mono SC",
+      "cat": "mono",
+      "brand": "adobe",
+      "designer": "Adobe",
+      "foundry": "Adobe",
+      "license": "SIL Open Font License 1.1",
+      "spdx": "OFL-1.1",
+      "source": "raw",
+      "rawPaths": [
+        "ExtraLight/OTC/SourceHanMonoSC-ExtraLight.otf",
+        "Light/OTC/SourceHanMonoSC-Light.otf",
+        "Normal/OTC/SourceHanMonoSC-Normal.otf",
+        "Regular/OTC/SourceHanMonoSC-Regular.otf",
+        "Medium/OTC/SourceHanMonoSC-Medium.otf",
+        "Bold/OTC/SourceHanMonoSC-Bold.otf",
+        "Heavy/OTC/SourceHanMonoSC-Heavy.otf"
+      ],
+      "weightPrefer": [
+        "ExtraLight",
+        "Light",
+        "Normal",
+        "Regular",
+        "Medium",
+        "Bold",
+        "Heavy"
+      ],
+      "maxWeights": 7,
+      "regionPrefer": "SC",
+      "desc": "思源等宽简体，仓内分面 OTF（非 TTC）。SIL OFL 1.1。"
+    }
+  ]
+}

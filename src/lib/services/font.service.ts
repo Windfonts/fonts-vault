@@ -1,5 +1,6 @@
 import { db } from '@/lib/db/client';
 import { brands, categories, fonts, type Font, type NewFont } from '@/lib/db/schema';
+import { resolveFamilyAlias } from '@/lib/family-alias';
 import { and, asc, desc, eq, like, or, sql } from 'drizzle-orm';
 import {
   fontCreateSchema,
@@ -8,6 +9,51 @@ import {
   type FontFilterDto,
   type FontUpdateDto,
 } from './validation';
+
+const GENERIC_NORMALIZED = new Set(['light', 'regular', 'bold', 'medium', 'heavy', 'thin', 'black']);
+
+/** Reject published fonts that look like empty shells or broken names. */
+function assertPublishable(data: {
+  name?: string | null;
+  normalizedName?: string | null;
+  status?: string | null;
+  weights?: unknown;
+}): void {
+  if ((data.status || 'published') !== 'published') return;
+  const name = String(data.name || '').trim();
+  if (!name || name.length < 2 || name.toLowerCase() === 'w') {
+    throw new Error('发布门禁：name 过短或无效');
+  }
+  const norm = String(data.normalizedName || '')
+    .trim()
+    .toLowerCase();
+  if (GENERIC_NORMALIZED.has(norm)) {
+    throw new Error(`发布门禁：normalizedName 不能是通用词（${norm}）`);
+  }
+  const w =
+    typeof data.weights === 'string'
+      ? (JSON.parse(data.weights || '{}') as Record<string, unknown>)
+      : ((data.weights || {}) as Record<string, unknown>);
+  const keys = Object.keys(w);
+  if (!keys.length) throw new Error('发布门禁：weights 为空');
+  let hasFile = false;
+  let maxChars = 0;
+  for (const meta of Object.values(w)) {
+    if (!meta || typeof meta !== 'object') continue;
+    const m = meta as Record<string, unknown>;
+    const vers = (m.versions as Record<string, Record<string, unknown>>) || { _: m };
+    for (const v of Object.values(vers)) {
+      if (v && typeof v === 'object') {
+        if (v.file) hasFile = true;
+        if (typeof v.char_count === 'number') maxChars = Math.max(maxChars, v.char_count);
+      }
+    }
+    if (m.file) hasFile = true;
+  }
+  if (!hasFile || maxChars <= 0) {
+    throw new Error('发布门禁：缺少字体文件或 char_count');
+  }
+}
 
 export interface FontListResult {
   total: number;
@@ -254,13 +300,19 @@ export class FontService {
    * 根据normalizedName获取字体
    */
   async findByNormalizedName(normalizedName: string): Promise<Font | undefined> {
-    const normalized = normalizedName.trim().toLowerCase();
+    let normalized = resolveFamilyAlias(normalizedName);
+    if (normalized.startsWith('wenfeng-')) {
+      const byFamily = await this.findByFontFamily(normalized);
+      if (byFamily[0]) return byFamily[0];
+      normalized = normalized.slice('wenfeng-'.length);
+    }
     const result = await db
       .select()
       .from(fonts)
       .where(sql`lower(${fonts.normalizedName}) = ${normalized}`)
       .limit(1);
-    return result[0];
+    const font = result[0];
+    return font && font.status === 'published' ? font : undefined;
   }
 
   /**
@@ -293,13 +345,22 @@ export class FontService {
 
   /**
    * 根据fontFamily获取字体
+   * 解析 family-aliases.json 后优先返回 published。
    */
   async findByFontFamily(fontFamily: string): Promise<Font[]> {
-    const normalizedFamily = fontFamily.trim().toLowerCase();
-    return await db
+    let normalizedFamily = resolveFamilyAlias(fontFamily);
+    let rows = await db
       .select()
       .from(fonts)
       .where(sql`lower(${fonts.fontFamily}) = ${normalizedFamily}`);
+    if (!rows.length && !normalizedFamily.startsWith('wenfeng-')) {
+      rows = await db
+        .select()
+        .from(fonts)
+        .where(sql`lower(${fonts.fontFamily}) = ${`wenfeng-${normalizedFamily}`}`);
+    }
+    const published = rows.filter((f) => f.status === 'published');
+    return published;
   }
 
   async findByEnglishName(englishName: string): Promise<Font | undefined> {
@@ -341,6 +402,7 @@ export class FontService {
   async create(data: Partial<FontCreateDto>): Promise<Font> {
     // 验证数据
     const validated = fontCreateSchema.parse(data);
+    assertPublishable(validated);
 
     // 检查normalizedName唯一性
     const existing = await this.findByNormalizedName(validated.normalizedName);
@@ -389,6 +451,13 @@ export class FontService {
     if (!existing) {
       throw new Error('字体不存在');
     }
+
+    assertPublishable({
+      name: data.name ?? existing.name,
+      normalizedName: data.normalizedName ?? existing.normalizedName,
+      status: data.status ?? existing.status,
+      weights: data.weights ?? existing.weights,
+    });
 
     // 如果更新normalizedName，检查唯一性
     if (data.normalizedName && data.normalizedName !== existing.normalizedName) {
