@@ -51,3 +51,4 @@ Thumbs.db
 *.pem
 .vercel
 README.md
+pnpm-workspace.yaml
