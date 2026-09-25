@@ -50,12 +50,13 @@ function newId(): string {
 }
 
 function slugify(name: string): string {
-  return String(name || '')
+  const s = String(name || '')
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .slice(0, 48) || 'project';
+    .slice(0, 48);
+  return s || ('proj-' + randomBytes(3).toString('hex'));
 }
 
 function validHost(host: string): boolean {
