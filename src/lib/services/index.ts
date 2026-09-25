@@ -5,4 +5,5 @@ export * from './font.service';
 export * from './sync.service';
 export * from './css.service';
 export * from './project.service';
+export * from './package-size.service';
 export * from './validation';
