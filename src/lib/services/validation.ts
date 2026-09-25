@@ -116,6 +116,32 @@ export const syncRequestSchema = z.object({
   force: z.boolean().default(false),
 });
 
+/** 项目烘焙清单：写入 data/projects/{slug}.json，由 GET /p/{slug}/index.css 展开 */
+export const projectFontSchema = z.object({
+  family: z.string().min(1),
+  weights: z.array(z.string().min(1)).min(1).default(['regular']),
+  subset: z.enum(['en', 'zh', 'zh-common', 'full']).default('full'),
+  fallback: z.string().min(1).optional(),
+  fallbackWeight: z.string().min(1).optional(),
+  localeFallback: z.enum(['off', 'auto', 'sc', 'tc']).optional(),
+});
+
+export const projectManifestSchema = z.object({
+  slug: z
+    .string()
+    .min(1)
+    .max(64)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug 仅小写字母数字与连字符'),
+  name: z.string().min(1).max(120).optional(),
+  version: z.number().int().positive().default(1),
+  publishedAt: z.string().optional(),
+  display: z.enum(['auto', 'block', 'swap', 'fallback', 'optional']).optional(),
+  domains: z.array(z.string().min(1)).default([]),
+  fonts: z.array(projectFontSchema).min(1),
+  /** 发布方 API key 哈希；非空时覆盖须同钥 */
+  ownerKeyHash: z.string().min(8).nullable().optional(),
+});
+
 // Export types
 export type BrandCreateDto = z.input<typeof brandCreateSchema>;
 export type BrandUpdateDto = z.infer<typeof brandUpdateSchema>;
@@ -126,3 +152,5 @@ export type FontUpdateDto = z.infer<typeof fontUpdateSchema>;
 export type FontFilterDto = z.input<typeof fontFilterSchema>;
 export type CssApiDto = z.infer<typeof cssApiSchema>;
 export type SyncRequestDto = z.infer<typeof syncRequestSchema>;
+export type ProjectManifest = z.infer<typeof projectManifestSchema>;
+export type ProjectManifestDto = z.input<typeof projectManifestSchema>;

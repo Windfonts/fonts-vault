@@ -1,0 +1,15 @@
+{
+  "slug": "demo",
+  "name": "文风演示项目",
+  "version": 1,
+  "publishedAt": "2026-09-25T00:00:00.000Z",
+  "display": "swap",
+  "domains": [],
+  "fonts": [
+    {
+      "family": "wenfeng-ibmps",
+      "weights": ["regular"],
+      "subset": "zh-common"
+    }
+  ]
+}

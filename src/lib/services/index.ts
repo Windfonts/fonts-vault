@@ -4,4 +4,5 @@ export * from './category.service';
 export * from './font.service';
 export * from './sync.service';
 export * from './css.service';
+export * from './project.service';
 export * from './validation';
