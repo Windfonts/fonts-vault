@@ -41,7 +41,7 @@ export const GET = withFontApiAuth(
           message: 'family参数不能为空',
           status: 'fail',
         },
-        { status: 400 }
+        { status: 400, headers: { 'Cache-Control': 'no-store' } }
       );
     }
 
@@ -96,6 +96,8 @@ export const GET = withFontApiAuth(
       },
     });
   } catch (error) {
+    const noStore = { 'Cache-Control': 'no-store' };
+
     if (error instanceof ZodError) {
       logger.error('[API-css] 参数验证失败', {
         error: error.errors,
@@ -110,7 +112,7 @@ export const GET = withFontApiAuth(
             message: e.message,
           })),
         },
-        { status: 400 }
+        { status: 400, headers: noStore }
       );
     }
 
@@ -124,7 +126,19 @@ export const GET = withFontApiAuth(
           message: error.message,
           status: 'fail',
         },
-        { status: 404 }
+        { status: 404, headers: noStore }
+      );
+    }
+
+    if (error instanceof Error && error.message.includes('不可通过公共 CSS')) {
+      logger.warn('[API-css] CSS 门禁拒绝', { error: error.message });
+      return NextResponse.json(
+        {
+          code: 500,
+          message: '生成CSS失败',
+          status: 'error',
+        },
+        { status: 500, headers: noStore }
       );
     }
 
@@ -139,7 +153,7 @@ export const GET = withFontApiAuth(
         message: '生成CSS失败',
         status: 'error',
       },
-      { status: 500 }
+      { status: 500, headers: noStore }
     );
   }
 },
