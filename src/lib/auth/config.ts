@@ -1,7 +1,9 @@
 import { logger } from '@/lib/logger';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import type { Provider } from 'next-auth/providers';
 import { z } from 'zod';
+import { weixiaoduoOAuthProvider } from '@/lib/auth/weixiaoduo-provider';
 
 const loginSchema = z.object({
   username: z.string().min(1, '用户名不能为空'),
@@ -26,8 +28,8 @@ const normalizeCredential = (value: string | undefined | null): string => {
   return withoutCarriageReturn;
 };
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
+function buildProviders(): Provider[] {
+  const providers: Provider[] = [
     Credentials({
       credentials: {
         username: { label: '用户名', type: 'text' },
@@ -77,22 +79,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       },
     }),
-  ],
+  ];
+
+  const oauth = weixiaoduoOAuthProvider();
+  if (oauth) {
+    providers.push(oauth);
+  } else {
+    logger.warn('WEIXIAODUO_OAUTH_CLIENT_* 未配置，顾客 SSO 未启用');
+  }
+
+  return providers;
+}
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: buildProviders(),
   pages: {
     signIn: '/login',
   },
+  trustHost: true,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role;
+        token.role = user.role || 'user';
+      }
+      if (account?.provider === 'weixiaoduo') {
+        token.provider = 'weixiaoduo';
+        if (!token.role) token.role = 'user';
+      }
+      if (account?.provider === 'credentials') {
+        token.provider = 'credentials';
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = (token.role as string) || 'user';
       }
       return session;
     },
@@ -101,5 +124,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 天
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
 });
