@@ -4,6 +4,20 @@
   "generatedAt": "2026-09-25",
   "pairs": [
     {
+      "scFamily": "wenfeng-swjayleg",
+      "tcFamily": "wenfeng-swfanleg",
+      "productId": "swei-swfan+swei-swjay",
+      "source": "localePeerProduct",
+      "localeFallbackAllowed": true
+    },
+    {
+      "scFamily": "wenfeng-swjaysans",
+      "tcFamily": "wenfeng-swfansans",
+      "productId": "swei-swfan+swei-swjay",
+      "source": "localePeerProduct",
+      "localeFallbackAllowed": true
+    },
+    {
       "scFamily": "wenfeng-syhtcn",
       "tcFamily": "wenfeng-syhttw",
       "productId": null,
@@ -47,6 +61,34 @@
     }
   ],
   "byFamily": {
+    "wenfeng-swjayleg": {
+      "peer": "wenfeng-swfanleg",
+      "role": "sc",
+      "peerRole": "tc",
+      "localeFallbackAllowed": true,
+      "productId": "swei-swfan+swei-swjay"
+    },
+    "wenfeng-swfanleg": {
+      "peer": "wenfeng-swjayleg",
+      "role": "tc",
+      "peerRole": "sc",
+      "localeFallbackAllowed": true,
+      "productId": "swei-swfan+swei-swjay"
+    },
+    "wenfeng-swjaysans": {
+      "peer": "wenfeng-swfansans",
+      "role": "sc",
+      "peerRole": "tc",
+      "localeFallbackAllowed": true,
+      "productId": "swei-swfan+swei-swjay"
+    },
+    "wenfeng-swfansans": {
+      "peer": "wenfeng-swjaysans",
+      "role": "tc",
+      "peerRole": "sc",
+      "localeFallbackAllowed": true,
+      "productId": "swei-swfan+swei-swjay"
+    },
     "wenfeng-syhtcn": {
       "peer": "wenfeng-syhttw",
       "role": "sc",
