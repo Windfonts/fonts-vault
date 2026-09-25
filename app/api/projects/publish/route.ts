@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { withFontApiAuth } from '@/lib/api/font-api-auth';
+import { isWellFormedApiKey, withFontApiAuth } from '@/lib/api/font-api-auth';
 import { logger } from '@/lib/logger';
 import { projectService } from '@/lib/services/project.service';
 import { projectManifestSchema } from '@/lib/services/validation';
@@ -17,6 +17,13 @@ function publishOpen(): boolean {
   return process.env.PROJECT_PUBLISH_OPEN === '1' || process.env.PROJECT_PUBLISH_OPEN === 'true';
 }
 
+/** 默认开：接受校验和正确的自签 Key（不查库）；设 PROJECT_PUBLISH_ALLOW_CLIENT=0 关闭 */
+function allowClientKey(): boolean {
+  const v = process.env.PROJECT_PUBLISH_ALLOW_CLIENT;
+  if (v === '0' || v === 'false') return false;
+  return true;
+}
+
 function envPublishKey(): string {
   return String(process.env.PROJECT_PUBLISH_KEY || '').trim();
 }
@@ -27,12 +34,23 @@ function keyHash(raw: string | null | undefined): string | null {
   return createHash('sha256').update(k).digest('hex');
 }
 
+function bearerOrApiKey(request: Request): string | null {
+  const fromX =
+    request.headers.get('x-api-key')?.trim() ||
+    request.headers.get('x-project-publish-key')?.trim();
+  if (fromX) return fromX;
+  const auth = request.headers.get('authorization') || '';
+  const m = auth.match(/^Bearer\s+(.+)$/i);
+  return m?.[1]?.trim() || null;
+}
+
 /**
  * POST /api/projects/publish
  * 写入 data/projects/{slug}.json。鉴权其一：
- * - 有效字体 API Key（withFontApiAuth requireKey）
  * - X-Project-Publish-Key / Bearer 匹配 PROJECT_PUBLISH_KEY
- * - PROJECT_PUBLISH_OPEN=1（仅开发 / 暂存）
+ * - PROJECT_PUBLISH_OPEN=1
+ * - 形态正确的自签 API Key（默认允许；ownerKeyHash 防他人覆盖）
+ * - 库内已登记 API Key（withFontApiAuth requireKey）
  */
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: PUBLISH_CORS });
@@ -94,13 +112,7 @@ async function handlePublish(request: Request, apiKeyRaw: string | null) {
 
 export const POST = async (request: Request) => {
   const envKey = envPublishKey();
-  const headerKey =
-    request.headers.get('x-project-publish-key')?.trim() ||
-    (() => {
-      const auth = request.headers.get('authorization') || '';
-      const m = auth.match(/^Bearer\s+(.+)$/i);
-      return m?.[1]?.trim() || '';
-    })();
+  const headerKey = bearerOrApiKey(request) || '';
 
   if (envKey && headerKey && headerKey === envKey) {
     return handlePublish(request, headerKey);
@@ -110,16 +122,13 @@ export const POST = async (request: Request) => {
     return handlePublish(request, headerKey || null);
   }
 
-  // 正式：要求已登记的字体 API Key
+  if (allowClientKey() && headerKey && isWellFormedApiKey(headerKey)) {
+    return handlePublish(request, headerKey);
+  }
+
   const guarded = withFontApiAuth(
     async (req, ctx) => {
-      const raw =
-        req.headers.get('x-api-key')?.trim() ||
-        (() => {
-          const auth = req.headers.get('authorization') || '';
-          const m = auth.match(/^Bearer\s+(.+)$/i);
-          return m?.[1]?.trim() || null;
-        })();
+      const raw = bearerOrApiKey(req);
       if (!ctx.apiKey) {
         return NextResponse.json(
           { code: 401, message: '需要有效 API Key 才能发布项目', status: 'fail' },
