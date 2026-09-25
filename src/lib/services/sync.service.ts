@@ -87,6 +87,7 @@ export class SyncService {
   private ossFolder: string;
   private mappingUrl: string;
   private analysisUrl?: string;
+  private metadataVersion: string;
   private excludedStyleNames = new Set(['简体中文', '繁体中文']);
 
   constructor() {
@@ -98,10 +99,20 @@ export class SyncService {
       .map((s) => s.trim());
     const mappingFile = files.find((f) => f.includes('mapping')) || files[0];
     const analysisFile = files.find((f) => f.includes('analysis'));
-    this.mappingUrl = `${this.ossEndpoint}/${this.ossFolder}/${mappingFile}`;
+    // metadata 原地覆盖时 CDN 可能按 URL 长缓存；版本串打进 query 强制换键。
+    this.metadataVersion = (process.env.OSS_METADATA_VERSION || '').trim();
+    this.mappingUrl = this.withMetadataVersion(
+      `${this.ossEndpoint}/${this.ossFolder}/${mappingFile}`
+    );
     this.analysisUrl = analysisFile
-      ? `${this.ossEndpoint}/${this.ossFolder}/${analysisFile}`
+      ? this.withMetadataVersion(`${this.ossEndpoint}/${this.ossFolder}/${analysisFile}`)
       : undefined;
+  }
+
+  private withMetadataVersion(url: string): string {
+    if (!this.metadataVersion) return url;
+    const sep = url.includes('?') ? '&' : '?';
+    return `${url}${sep}v=${encodeURIComponent(this.metadataVersion)}`;
   }
 
   private parseString(value: unknown): string | undefined {
