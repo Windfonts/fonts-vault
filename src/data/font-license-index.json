@@ -3,7 +3,7 @@
   "normalizedName": "Albbpht",
   "type": "免费商用",
   "spdx": null,
-  "licenseUrl": null,
+  "licenseUrl": "https://www.alibabafonts.com/",
   "commercial": true,
   "modification": false,
   "distribution": false,
@@ -11,9 +11,9 @@
   "webUse": true,
   "attribution": false,
   "shareAlike": false,
-  "verified": false,
-  "source": "font-mapping.json (AI 分析)",
-  "notes": "OPPO Sans 官方协议：允许不修改地嵌入并随非字体软件再分发；禁止修改、禁止单独再分发或出售字体文件本体（2026-09-24 OSS 审计已核原文）。distribution=false 即据此。"
+  "verified": true,
+  "source": "alibabafonts.com + fonts-front docs/_puhuiti3-gb18030-statement.md（2026-09-25）",
+  "notes": "阿里巴巴普惠体官方：全球永久免费正版商用；允许网页/产品嵌入使用；禁止修改字体文件、禁止单独再分发或出售字体本体。distribution=false 即据此（CDN /api/css 属嵌入分发，由 webUse/embedding 门禁放行）。"
  },
  "Alhyznht": {
   "normalizedName": "Alhyznht",

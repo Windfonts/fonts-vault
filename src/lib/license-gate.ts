@@ -240,15 +240,26 @@ export function evaluateLicense(input: {
     const freeCommercialBadge =
       label === 'ofl_ok' || label === 'apache_ok' || label === 'free_commercial'
 
+    // 品牌专项协议：展示仍标 brand_terms；若 overlay 明示可商用 + 网页嵌入，则开放公共 CSS
+    // （/api/css 是嵌入用样式，不是「单独再分发字体文件」）。普惠体 / OPPO / 钉钉等属此列。
+    const brandWebEmbedOk =
+      label === 'brand_terms'
+      && overlay.commercial === true
+      && overlay.webUse === true
+      && overlay.embedding === true
+
     const cssAllowed =
       label === 'ofl_ok'
       || label === 'apache_ok'
+      || brandWebEmbedOk
       || (redistribution && label !== 'needs_auth' && label !== 'restricted' && label !== 'high_risk' && label !== 'missing')
       || (label === 'free_commercial_unverified' && redistribution !== false)
 
     // Unverified free-commercial: allow CSS for preview but not strong badge
     // needs_auth / restricted / high_risk / missing → no public CSS
-    const cssBlocked = ['needs_auth', 'restricted', 'high_risk', 'missing', 'brand_terms'].includes(label)
+    // brand_terms 默认拦；brandWebEmbedOk 上面已放行
+    const cssBlocked = ['needs_auth', 'restricted', 'high_risk', 'missing'].includes(label)
+      || (label === 'brand_terms' && !brandWebEmbedOk)
 
     return {
       licenseSpdx: overlay.spdx || null,
