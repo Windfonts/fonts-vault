@@ -10,10 +10,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml ./
 ARG PNPM_REGISTRY=https://registry.npmmirror.com
-RUN pnpm config set registry "$PNPM_REGISTRY" \
-  && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --registry="$PNPM_REGISTRY"
 
 # 构建阶段
 FROM base AS builder
