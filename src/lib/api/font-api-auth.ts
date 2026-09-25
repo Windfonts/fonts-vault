@@ -706,3 +706,7 @@ export const generateApiKey = (keyPrefix: string) => {
   const key = `${payload}_${checksum}`;
   return { key, keyHash: sha256Hex(key), checksum, keyPrefix: normalizedPrefix };
 };
+
+/** 形态校验（含校验和）；不查库。控制台自签 Key 发布项目用。 */
+export const isWellFormedApiKey = (raw: string | null | undefined): boolean =>
+  !!parseApiKey(String(raw || ''));
