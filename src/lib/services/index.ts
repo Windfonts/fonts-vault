@@ -7,3 +7,4 @@ export * from './css.service';
 export * from './project.service';
 export * from './package-size.service';
 export * from './validation';
+export * from './console-project.service';
