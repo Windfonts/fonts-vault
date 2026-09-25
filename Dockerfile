@@ -1,8 +1,9 @@
 # 多阶段构建 - 与 packageManager=pnpm 对齐（npm ci 在现依赖树会 arborist 崩溃）
 FROM node:20-alpine AS base
-# 不用 corepack（外网易挂）；从国内镜像装固定版 pnpm
-RUN npm config set registry https://registry.npmmirror.com \
-  && npm install -g pnpm@11.20.0
+# 国内 apk + npm；pnpm 钉 9.x（Node 20；pnpm 11 要 Node>=22）
+RUN sed -i 's#https\?://dl-cdn.alpinelinux.org#https://mirrors.aliyun.com#g' /etc/apk/repositories \
+  && npm config set registry https://registry.npmmirror.com \
+  && npm install -g pnpm@9.15.9
 
 # 安装依赖阶段
 FROM base AS deps
