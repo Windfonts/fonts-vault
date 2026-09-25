@@ -53,6 +53,13 @@
       "localeFallbackAllowed": true
     },
     {
+      "scFamily": "wenfeng-systcnl",
+      "tcFamily": "wenfeng-systtc",
+      "productId": "adobe-source-han-serif",
+      "source": "font-products",
+      "localeFallbackAllowed": true
+    },
+    {
       "scFamily": "wenfeng-systsc",
       "tcFamily": "wenfeng-systtc",
       "productId": "adobe-source-han-serif",
@@ -163,6 +170,13 @@
       "peer": "wenfeng-systsc",
       "role": "tc",
       "peerRole": "sc",
+      "localeFallbackAllowed": true,
+      "productId": "adobe-source-han-serif"
+    },
+    "wenfeng-systcnl": {
+      "peer": "wenfeng-systtc",
+      "role": "sc",
+      "peerRole": "tc",
       "localeFallbackAllowed": true,
       "productId": "adobe-source-han-serif"
     },
