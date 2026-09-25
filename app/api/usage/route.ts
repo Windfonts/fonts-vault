@@ -1,9 +1,11 @@
+import { NextResponse } from 'next/server';
 import {
   PROJECT_API_CORS,
   jsonOk,
+  mapServiceError,
   withProjectOwnerAuth,
 } from '@/lib/api/project-owner-auth';
-import { NextResponse } from 'next/server';
+import { consoleUsageService } from '@/lib/services/console-usage.service';
 
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: PROJECT_API_CORS });
@@ -11,27 +13,16 @@ export async function OPTIONS() {
 
 /**
  * GET /api/usage — 控制台用量总览。
- * 诚实空壳：聚合表尚未按 API Key 暴露；返回零值结构，避免前端 404。
+ * 聚合 api_usage_daily：本 Key 计数 + 项目白名单域名上的匿名流量。
+ * 字节 / 按字体 / 状态码尚未采集（dimensions 标明）。
  */
-export const GET = withProjectOwnerAuth(async (request) => {
-  const sp = new URL(request.url).searchParams;
-  const range = Math.min(90, Math.max(1, Number(sp.get('range') || 30) || 30));
-  const to = new Date();
-  const from = new Date(to.getTime() - (range - 1) * 864e5);
-  const ymd = (d: Date) => d.toISOString().slice(0, 10);
-  const series: Array<{ day: string; requests: number; bytes: number }> = [];
-  for (let i = 0; i < range; i += 1) {
-    const d = new Date(from.getTime() + i * 864e5);
-    series.push({ day: ymd(d), requests: 0, bytes: 0 });
+export const GET = withProjectOwnerAuth(async (request, apiKey) => {
+  try {
+    const sp = new URL(request.url).searchParams;
+    const range = Number(sp.get('range') || 30);
+    const projectId = sp.get('projectId') || undefined;
+    return jsonOk(await consoleUsageService.overview(apiKey, { range, projectId }));
+  } catch (error) {
+    return mapServiceError(error);
   }
-  return jsonOk({
-    totals: { requests: 0, bytes: 0, blocked: 0, quotaGB: 200 },
-    series: { from: ymd(from), to: ymd(to), requests: series },
-    byFont: [],
-    byDomain: [],
-    status: { '200': 0, '304': 0, '403': 0 },
-    groups: [],
-    perf: [],
-    stub: true,
-  });
 });
