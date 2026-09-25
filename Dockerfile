@@ -1,6 +1,8 @@
-# 多阶段构建 - 基础镜像（与 packageManager=pnpm 对齐；npm ci 在现依赖树会崩）
+# 多阶段构建 - 与 packageManager=pnpm 对齐（npm ci 在现依赖树会 arborist 崩溃）
 FROM node:20-alpine AS base
-RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
+# 不用 corepack（外网易挂）；从国内镜像装固定版 pnpm
+RUN npm config set registry https://registry.npmmirror.com \
+  && npm install -g pnpm@11.20.0
 
 # 安装依赖阶段
 FROM base AS deps
@@ -8,7 +10,6 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-# 国内构建可设 build-arg；默认官方源
 ARG PNPM_REGISTRY=https://registry.npmmirror.com
 RUN pnpm config set registry "$PNPM_REGISTRY" \
   && pnpm install --frozen-lockfile
