@@ -24,6 +24,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 RUN mkdir -p /app/data && if [ ! -f /app/data/prod.db ]; then : > /app/data/prod.db; fi
+# COPY . 会带上误名的 workspace 文件，构建前删掉
+RUN rm -f pnpm-workspace.yaml
 RUN pnpm run build
 
 # 运行阶段 - 使用 standalone 输出
