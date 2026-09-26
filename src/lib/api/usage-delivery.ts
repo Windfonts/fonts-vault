@@ -10,7 +10,7 @@ export type DeliveryUsageInput = {
   domain: string;
   family: string;
   weight?: string;
-  /** HTTP 状态：200 / 304（及将来 403） */
+  /** HTTP 状态：200 / 304 / 403 */
   status?: string | number;
   bytes: number;
 };

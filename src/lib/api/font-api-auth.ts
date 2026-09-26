@@ -12,6 +12,7 @@ import { evaluateSecuritySwitch, getSecuritySwitches } from '@/lib/security/secu
 import { createHash } from 'crypto';
 import { and, eq, sql } from 'drizzle-orm';
 import { isIP } from 'net';
+import { recordDeliveryUsage } from '@/lib/api/usage-delivery';
 import { NextResponse } from 'next/server';
 
 export type FontApiAuthContext = {
@@ -684,6 +685,28 @@ export const withFontApiAuth =
     const auth = await authorizeFontApiRequest(request, options);
 
     if (!auth.ok) {
+      if (auth.status === 403) {
+        let family = '_auth';
+        let weight = 'regular';
+        try {
+          const u = new URL(request.url);
+          family = u.searchParams.get('family') || family;
+          weight = (u.searchParams.get('weight') || weight).toLowerCase();
+        } catch {
+          /* ignore */
+        }
+        const day = auth.ctx.day || new Date().toISOString().slice(0, 10);
+        void recordDeliveryUsage({
+          day,
+          subject: auth.ctx.apiKey?.id || 'anon',
+          keyId: auth.ctx.apiKey?.id || null,
+          domain: auth.ctx.domain || 'unknown',
+          family,
+          weight,
+          status: 403,
+          bytes: 0,
+        });
+      }
       return withPublicCors(auth.response);
     }
 

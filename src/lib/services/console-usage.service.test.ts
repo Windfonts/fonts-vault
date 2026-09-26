@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildBlockedHosts,
   buildUsageOverview,
+  findProjectByDeliveryFamily,
   findProjectForHost,
   hostMatchesRule,
   normalizeHost,
@@ -172,5 +174,66 @@ describe('buildUsageOverview', () => {
     expect(out.byFont[0]?.weights).toEqual({ regular: 10, bold: 5 });
     expect(out.groups[0]?.hitRate).toBeCloseTo(5 / 17);
     expect(out.byDomain[0]?.bytes).toBe(1200);
+  });
+});
+
+describe('403 blocked aggregation', () => {
+  it('finds project by project:slug family', () => {
+    const projects = [
+      project({ id: 'p1', name: '站点', slug: 'demo', domains: [] }),
+    ];
+    expect(findProjectByDeliveryFamily(projects, 'project:demo')?.id).toBe('p1');
+    expect(findProjectByDeliveryFamily(projects, 'wenfeng-x')).toBeNull();
+  });
+
+  it('counts 403 into totals.blocked and buildBlockedHosts', () => {
+    const projects = [
+      project({
+        id: 'p1',
+        name: '站点',
+        slug: 'demo',
+        domains: [{ host: 'ok.example', verified: true, method: 'dns' }],
+      }),
+    ];
+    const from = new Date('2026-09-20T12:00:00.000Z');
+    const to = new Date('2026-09-21T12:00:00.000Z');
+    const deliveryRows = [
+      {
+        day: '2026-09-20',
+        domain: 'ok.example',
+        family: 'wenfeng-albbpht',
+        weight: 'regular',
+        status: '200',
+        count: 10,
+        bytes: 100,
+      },
+      {
+        day: '2026-09-21',
+        domain: 'evil.example',
+        family: 'project:demo',
+        weight: 'index',
+        status: '403',
+        count: 7,
+        bytes: 0,
+      },
+    ];
+    const out = buildUsageOverview({
+      range: 2,
+      from,
+      to,
+      projects,
+      deliveryRows,
+      legacyRows: [],
+    });
+    expect(out.status['403']).toBe(7);
+    expect(out.totals.blocked).toBe(7);
+    expect(out.groups[0]?.requests).toBe(17);
+    expect(out.byFont.every((f) => !f.family.startsWith('project:'))).toBe(true);
+
+    const blocked = buildBlockedHosts(deliveryRows, projects);
+    expect(blocked).toHaveLength(1);
+    expect(blocked[0]?.host).toBe('evil.example');
+    expect(blocked[0]?.projectId).toBe('p1');
+    expect(blocked[0]?.requests30d).toBe(7);
   });
 });
