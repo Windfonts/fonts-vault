@@ -297,14 +297,14 @@ const bootstrapApiTables = async (client: ReturnType<typeof createClient>) => {
     `CREATE INDEX IF NOT EXISTS api_usage_delivery_subject_idx ON api_usage_delivery (subject);`,
     `CREATE INDEX IF NOT EXISTS api_usage_delivery_domain_idx ON api_usage_delivery (domain);`,
     `CREATE INDEX IF NOT EXISTS api_usage_delivery_family_idx ON api_usage_delivery (family);`,
-    `CREATE UNIQUE INDEX IF NOT EXISTS api_usage_delivery_subject_day_domain_family_weight_status_unique ON api_usage_delivery (subject, day, domain, family, weight, status);`,
+    // 唯一键依赖 weight/status：旧表可能尚无这两列，放在下方 ALTER 之后再建
   ];
 
   for (const sql of statements) {
     await executeWithRetry(sql);
   }
 
-  // 旧表：补 weight/status，换唯一键（含字重×状态）
+  // 旧表：补 weight/status，再建唯一键（含字重×状态）
   const deliveryCols = await executeWithRetry(`PRAGMA table_info(api_usage_delivery);`);
   const deliveryNames = new Set(deliveryCols.rows.map((r) => String(r.name)));
   if (!deliveryNames.has('weight')) {
