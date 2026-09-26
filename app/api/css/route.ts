@@ -80,6 +80,8 @@ export const GET = withFontApiAuth(
           keyId,
           domain: ctx.domain,
           family,
+          weight,
+          status: 304,
           bytes: 0,
         });
         return new NextResponse(null, {
@@ -98,6 +100,8 @@ export const GET = withFontApiAuth(
         keyId,
         domain: ctx.domain,
         family,
+        weight,
+        status: 200,
         bytes,
       });
 

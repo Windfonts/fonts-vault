@@ -40,12 +40,20 @@ export type UsageOverview = {
     requests: true;
     bytes: boolean;
     byFont: boolean;
-    status: false;
+    status: boolean;
   };
   stub: false;
 };
 
-type DeliveryRow = { day: string; domain: string; family: string; count: number; bytes: number };
+type DeliveryRow = {
+  day: string;
+  domain: string;
+  family: string;
+  weight: string;
+  status: string;
+  count: number;
+  bytes: number;
+};
 type LegacyRow = { day: string; domain: string; count: number };
 
 function sha256Hex(value: string): string {
@@ -117,9 +125,16 @@ export function buildUsageOverview(opts: {
   const domainBytes = new Map<string, number>();
   const projectReq = new Map<string, number>();
   const projectBytes = new Map<string, number>();
+  const projectHit = new Map<string, { ok: number; cached: number }>();
+  const statusCounts = { '200': 0, '304': 0, '403': 0 };
   const fontAgg = new Map<
     string,
-    { requests: number; bytes: number; byProject: Map<string, { requests: number; bytes: number }> }
+    {
+      requests: number;
+      bytes: number;
+      weights: Record<string, number>;
+      byProject: Map<string, { requests: number; bytes: number }>;
+    }
   >();
 
   const consume = (
@@ -127,7 +142,9 @@ export function buildUsageOverview(opts: {
     domain: string,
     count: number,
     bytes: number,
-    family?: string
+    family?: string,
+    weight?: string,
+    status?: string
   ) => {
     const host = normalizeHost(domain);
     const project = findProjectForHost(projects, host);
@@ -145,15 +162,27 @@ export function buildUsageOverview(opts: {
       projectReq.set(project.id, (projectReq.get(project.id) || 0) + n);
       projectBytes.set(project.id, (projectBytes.get(project.id) || 0) + b);
     }
+    const st = String(status || '');
+    if (st === '200' || st === '304' || st === '403') {
+      statusCounts[st] += n;
+      if (project && (st === '200' || st === '304')) {
+        const hit = projectHit.get(project.id) || { ok: 0, cached: 0 };
+        if (st === '200') hit.ok += n;
+        else hit.cached += n;
+        projectHit.set(project.id, hit);
+      }
+    }
     if (family) {
       const fam = family.toLowerCase();
       let row = fontAgg.get(fam);
       if (!row) {
-        row = { requests: 0, bytes: 0, byProject: new Map() };
+        row = { requests: 0, bytes: 0, weights: {}, byProject: new Map() };
         fontAgg.set(fam, row);
       }
       row.requests += n;
       row.bytes += b;
+      const w = String(weight || 'regular').toLowerCase() || 'regular';
+      row.weights[w] = (row.weights[w] || 0) + n;
       if (project) {
         const pr = row.byProject.get(project.id) || { requests: 0, bytes: 0 };
         pr.requests += n;
@@ -165,7 +194,7 @@ export function buildUsageOverview(opts: {
 
   if (useDelivery) {
     for (const row of deliveryRows) {
-      consume(row.day, row.domain, row.count, row.bytes, row.family);
+      consume(row.day, row.domain, row.count, row.bytes, row.family, row.weight, row.status);
     }
   } else {
     for (const row of legacyRows) {
@@ -196,13 +225,17 @@ export function buildUsageOverview(opts: {
     .sort((a, b) => b.requests - a.requests);
 
   const groups = (projectId ? projects.filter((p) => p.id === projectId) : projects)
-    .map((p) => ({
-      key: p.id,
-      label: p.name,
-      requests: projectReq.get(p.id) || 0,
-      bytes: projectBytes.get(p.id) || 0,
-      hitRate: 0,
-    }))
+    .map((p) => {
+      const hit = projectHit.get(p.id) || { ok: 0, cached: 0 };
+      const denom = hit.ok + hit.cached;
+      return {
+        key: p.id,
+        label: p.name,
+        requests: projectReq.get(p.id) || 0,
+        bytes: projectBytes.get(p.id) || 0,
+        hitRate: denom ? hit.cached / denom : 0,
+      };
+    })
     .sort((a, b) => b.requests - a.requests);
 
   const projectName = new Map(projects.map((p) => [p.id, p.name]));
@@ -212,7 +245,7 @@ export function buildUsageOverview(opts: {
       family,
       requests30d: agg.requests,
       bytes30d: agg.bytes,
-      weights: {} as Record<string, number>,
+      weights: agg.weights,
       projects: Array.from(agg.byProject.entries()).map(([pid, v]) => ({
         projectId: pid,
         name: projectName.get(pid) || pid,
@@ -222,19 +255,24 @@ export function buildUsageOverview(opts: {
     }))
     .sort((a, b) => b.requests30d - a.requests30d);
 
+  const statusLive = useDelivery;
+  const status = statusLive
+    ? statusCounts
+    : { '200': requests, '304': 0, '403': 0 };
+
   return {
     totals: { requests, bytes, blocked: 0, quotaGB: 200 },
     series: { from: ymd(from), to: ymd(to), requests: series },
     byFont,
     byDomain,
-    status: { '200': requests, '304': 0, '403': 0 },
+    status,
     groups,
     perf: [],
     dimensions: {
       requests: true,
       bytes: useDelivery,
       byFont: useDelivery,
-      status: false,
+      status: statusLive,
     },
     stub: false,
   };
@@ -320,17 +358,27 @@ class ConsoleUsageService {
         day: apiUsageDelivery.day,
         domain: apiUsageDelivery.domain,
         family: apiUsageDelivery.family,
+        weight: apiUsageDelivery.weight,
+        status: apiUsageDelivery.status,
         count: sql<number>`coalesce(sum(${apiUsageDelivery.count}), 0)`,
         bytes: sql<number>`coalesce(sum(${apiUsageDelivery.bytes}), 0)`,
       })
       .from(apiUsageDelivery)
       .where(and(...deliveryFilters))
-      .groupBy(apiUsageDelivery.day, apiUsageDelivery.domain, apiUsageDelivery.family);
+      .groupBy(
+        apiUsageDelivery.day,
+        apiUsageDelivery.domain,
+        apiUsageDelivery.family,
+        apiUsageDelivery.weight,
+        apiUsageDelivery.status
+      );
 
     const deliveryRows: DeliveryRow[] = deliveryRaw.map((r) => ({
       day: String(r.day),
       domain: String(r.domain || ''),
       family: String(r.family || ''),
+      weight: String(r.weight || 'regular'),
+      status: String(r.status || '200'),
       count: Number(r.count) || 0,
       bytes: Number(r.bytes) || 0,
     }));
