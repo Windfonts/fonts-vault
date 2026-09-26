@@ -45,7 +45,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # serverExternalPackages：standalone 不内联，须拷入运行镜像
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/wawoff2 ./node_modules/wawoff2
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/argparse ./node_modules/argparse
 
 RUN mkdir -p /app/data /app/logs && chown -R nextjs:nodejs /app/data /app/logs
 
