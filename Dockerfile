@@ -7,7 +7,7 @@ RUN sed -i 's#https\?://dl-cdn.alpinelinux.org#https://mirrors.aliyun.com#g' /et
 
 # 安装依赖阶段
 FROM base AS deps
-RUN apk add --no-cache bash libc6-compat
+RUN apk add --no-cache bash curl libc6-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
@@ -49,6 +49,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # serverExternalPackages：standalone 不内联，须拷入运行镜像
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/wawoff2 ./node_modules/wawoff2
 COPY --from=builder --chown=nextjs:nodejs /app/split-runtime/ ./node_modules/
+
 
 
 RUN mkdir -p /app/data /app/logs && chown -R nextjs:nodejs /app/data /app/logs
