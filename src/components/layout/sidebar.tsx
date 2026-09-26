@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   Tag,
   Type,
+  Upload,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -78,6 +79,11 @@ const sidebarItems: SidebarItem[] = [
     title: '认领审核',
     href: '/admin/claims',
     icon: BadgeCheck,
+  },
+  {
+    title: '上传审核',
+    href: '/admin/uploads',
+    icon: Upload,
   },
   {
     title: '分类管理',
