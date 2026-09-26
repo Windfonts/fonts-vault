@@ -55,6 +55,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # serverExternalPackages：standalone 不内联，须拷入运行镜像
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/wawoff2 ./node_modules/wawoff2
+# standalone 可能留下 cn-font-split 等软链/文件，先清再整树覆盖
+RUN rm -rf ./node_modules/cn-font-split ./node_modules/koffi   ./node_modules/google-protobuf ./node_modules/buffer ./node_modules/commander   ./node_modules/fs-extra ./node_modules/set-value ./node_modules/proto-to-cli   ./node_modules/ieee754 ./node_modules/base64-js ./node_modules/universalify   ./node_modules/graceful-fs ./node_modules/jsonfile ./node_modules/inherits   ./node_modules/is-plain-object ./node_modules/isobject
 COPY --from=builder --chown=nextjs:nodejs /app/split-runtime/ ./node_modules/
 
 
