@@ -195,15 +195,22 @@ export async function POST(request: NextRequest) {
             request
           );
         } else {
+          const patch: {
+            ownerEmail?: string;
+            name?: string;
+            planId?: string;
+            updatedAt: Date;
+          } = { updatedAt: new Date() };
           if (!row.ownerEmail || row.name !== CONSOLE_KEY_NAME) {
-            await db
-              .update(apiKeys)
-              .set({
-                ownerEmail: email,
-                name: CONSOLE_KEY_NAME,
-                updatedAt: new Date(),
-              })
-              .where(eq(apiKeys.id, row.id));
+            patch.ownerEmail = email;
+            patch.name = CONSOLE_KEY_NAME;
+          }
+          if (!row.planId) {
+            const planId = await resolveDefaultPlanId();
+            if (planId) patch.planId = planId;
+          }
+          if (Object.keys(patch).length > 1) {
+            await db.update(apiKeys).set(patch).where(eq(apiKeys.id, row.id));
           }
           writeConsoleSessionKey({
             email,
