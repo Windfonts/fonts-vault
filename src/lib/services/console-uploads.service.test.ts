@@ -11,6 +11,7 @@ describe('ConsoleUploadsService', () => {
     (svc as unknown as { rootDir: () => string }).rootDir = () => root;
     const prevSkip = process.env.UPLOAD_OSS_SKIP;
     process.env.UPLOAD_OSS_SKIP = '1';
+    process.env.UPLOAD_WOFF2_SKIP = '1';
     try {
       const init = svc.init(
         'key-a',
@@ -65,6 +66,7 @@ describe('ConsoleUploadsService', () => {
     const svc = new ConsoleUploadsService();
     (svc as unknown as { rootDir: () => string }).rootDir = () => root;
     process.env.UPLOAD_OSS_SKIP = '1';
+    process.env.UPLOAD_WOFF2_SKIP = '1';
     try {
       const init = svc.init(
         'key-b',

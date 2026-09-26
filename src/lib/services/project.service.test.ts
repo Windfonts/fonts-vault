@@ -39,6 +39,7 @@ describe('ProjectService.bakeUploadFaces', () => {
     const upRoot = mkdtempSync(path.join(tmpdir(), 'console-up-'));
     const svc = new ProjectService();
     process.env.UPLOAD_OSS_SKIP = '1';
+    process.env.UPLOAD_WOFF2_SKIP = '1';
     process.env.NEXTAUTH_URL = 'https://app.windfonts.com';
 
     const origRoot = (consoleUploadsService as unknown as { rootDir: () => string }).rootDir;

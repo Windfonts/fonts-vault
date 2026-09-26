@@ -49,6 +49,8 @@ const nextConfig: NextConfig = {
   // Docker 部署配置
   output: 'standalone',
 
+  serverExternalPackages: ['wawoff2'],
+
   // 静态资源缓存
   async headers() {
     return [

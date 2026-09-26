@@ -162,7 +162,10 @@ export class ProjectService {
       if (!slot || !slot.received || !slot.storedAs) {
         throw new Error(`上传 ${uploadId} 缺少字重 ${want}`);
       }
-      const fmt = fontFaceFormat(slot.filename, slot.contentType);
+      const useWoff2 = !!slot.woff2As;
+      const fmt = useWoff2
+        ? 'woff2'
+        : fontFaceFormat(slot.filename, slot.contentType);
       const cssNum = cssWeightNumber(slot.weight);
       const url =
         `${base}/api/uploads/${encodeURIComponent(uploadId)}/files/` +
