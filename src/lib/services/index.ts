@@ -13,3 +13,4 @@ export * from './console-picks.service';
 export * from './console-claims.service';
 export * from './console-favs.service';
 export * from './console-uploads.service';
+export * from './console-font-certs.service';
