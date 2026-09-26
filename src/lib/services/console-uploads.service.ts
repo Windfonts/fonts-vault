@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
+import { ossConfigured, ossPutObject } from '@/lib/oss-put';
 
 const MAX_UPLOADS = 100;
 const MAX_FILE_BYTES = 30 * 1024 * 1024;
@@ -66,11 +67,50 @@ export type ConsoleUploadRecord = {
     weight: string;
     received: boolean;
     storedAs?: string;
+    ossKey?: string;
   }>;
   proofReceived: boolean;
+  proofOssKey?: string;
+  ossPrefix?: string;
   uploadToken: string;
   tokenExpiresAt: number;
 };
+
+export type AdminUploadRow = {
+  id: string;
+  name: string;
+  family: string;
+  weights: string[];
+  glyphCount: number;
+  format: string;
+  size: number;
+  license: string;
+  licenseUrl: string;
+  proofName: string;
+  proofType: string;
+  proofSize: number;
+  uploadedAt: string;
+  status: UploadStatus;
+  review: { state: string; note: string; reviewedAt: string | null };
+  projectId: string;
+  files: Array<{
+    filename: string;
+    size: number;
+    contentType: string;
+    weight: string;
+    received: boolean;
+    ossKey: string;
+  }>;
+  proofReceived: boolean;
+  proofOssKey: string;
+  ossPrefix: string;
+  ownerKeyHash: string;
+};
+
+const reviewBodySchema = z.object({
+  status: z.enum(['approved', 'rejected']),
+  reviewNote: z.string().max(500).optional(),
+});
 
 type StoreFile = {
   ownerKeyHash: string;
@@ -170,19 +210,50 @@ export class ConsoleUploadsService {
     const { uploadToken: _t, tokenExpiresAt: _e, files, proofReceived, ...rest } = u;
     return {
       ...rest,
-      files: files.map(({ received, filename, size, contentType, weight }) => ({
+      files: files.map(({ received, filename, size, contentType, weight, ossKey }) => ({
         filename,
         size,
         contentType,
         weight,
         received,
+        ossKey: ossKey || '',
       })),
       proofReceived,
+      proofOssKey: u.proofOssKey || '',
+      ossPrefix: u.ossPrefix || '',
     };
   }
 
   list(apiKeyRaw: string) {
     return this.readStore(this.ownerHash(apiKeyRaw)).uploads.map((u) => this.publicRow(u));
+  }
+
+  /** Admin: list across all owner stores. filter=queued → processing + review.queued */
+  listAll(filter?: { status?: 'queued' | 'ready' | 'rejected' | 'pending_upload' | 'processing' }) {
+    const dir = this.rootDir();
+    const out: AdminUploadRow[] = [];
+    if (!fs.existsSync(dir)) return out;
+    for (const name of fs.readdirSync(dir)) {
+      if (!name.endsWith('.json')) continue;
+      const hash = name.slice(0, -5);
+      const store = this.readStore(hash);
+      for (const u of store.uploads) {
+        const row = { ...this.publicRow(u), ownerKeyHash: hash };
+        if (!filter?.status) {
+          out.push(row);
+          continue;
+        }
+        if (filter.status === 'queued') {
+          if (u.status === 'processing' && (u.review?.state === 'queued' || !u.review?.reviewedAt)) {
+            out.push(row);
+          }
+          continue;
+        }
+        if (u.status === filter.status) out.push(row);
+      }
+    }
+    out.sort((a, b) => String(b.uploadedAt).localeCompare(String(a.uploadedAt)));
+    return out;
   }
 
   get(apiKeyRaw: string, id: string) {
@@ -360,30 +431,145 @@ export class ConsoleUploadsService {
     }
 
     record.status = 'processing';
+    record.review = { state: 'queued', note: '待运营审核；通过后推 OSS', reviewedAt: null };
     this.writeStore(store);
 
-    // MVP：无独立 worker；短延迟后标 ready（文件已落盘，待 OSS 入库管线另做）
-    setTimeout(() => {
-      try {
-        const s2 = this.readStore(hash);
-        const u2 = s2.uploads.find((x) => x.id === id);
-        if (!u2 || u2.status !== 'processing') return;
-        u2.status = 'ready';
-        u2.review = {
-          state: 'auto_pass',
-          note: '已收件落盘；OSS 字形包入库另排队',
-          reviewedAt: new Date().toISOString(),
-        };
-        this.writeStore(s2);
-      } catch (error) {
-        logger.warn('[ConsoleUploadsService] auto-ready failed', {
-          id,
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-    }, 800);
-
     return { id, status: 'processing' as UploadStatus };
+  }
+
+  /**
+   * Admin review. approved → push blobs to OSS (if configured) then ready;
+   * rejected → rejected. Does not delete local blobs on reject (operator may re-check).
+   */
+  async review(
+    id: string,
+    body: unknown,
+    actor?: { email?: string | null }
+  ): Promise<{ upload: AdminUploadRow; ossPushed: boolean }> {
+    const parsed = reviewBodySchema.parse(body);
+    const found = this.findById(id);
+    if (!found) {
+      throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
+    }
+    const { hash, store, record } = found;
+    if (record.status === 'pending_upload') {
+      throw Object.assign(new Error('文件尚未传完'), { status: 422, code: 'validation_error' });
+    }
+    if (record.status === 'ready' && parsed.status === 'approved') {
+      return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed: !!record.ossPrefix };
+    }
+    if (record.status === 'rejected' && parsed.status === 'rejected') {
+      return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed: false };
+    }
+
+    const note = (parsed.reviewNote || '').trim();
+    const who = (actor?.email || '').trim();
+
+    if (parsed.status === 'rejected') {
+      record.status = 'rejected';
+      record.review = {
+        state: 'rejected',
+        note: note || (who ? `已拒绝（${who}）` : '已拒绝'),
+        reviewedAt: new Date().toISOString(),
+      };
+      this.writeStore(store);
+      return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed: false };
+    }
+
+    // approved
+    let ossPushed = false;
+    const prefix = `console-uploads/${id}`;
+    if (ossConfigured()) {
+      for (const slot of record.files) {
+        if (!slot.received || !slot.storedAs) continue;
+        const local = path.join(this.blobDir(id), slot.storedAs);
+        if (!fs.existsSync(local)) {
+          throw Object.assign(new Error(`缺少字重文件 ${slot.weight}`), {
+            status: 422,
+            code: 'validation_error',
+          });
+        }
+        const objectKey = `${prefix}/${slot.storedAs}`;
+        const put = await ossPutObject({
+          objectKey,
+          body: fs.readFileSync(local),
+          contentType: slot.contentType || 'application/octet-stream',
+        });
+        if (put) {
+          slot.ossKey = put.objectKey;
+          ossPushed = true;
+        }
+      }
+      if (record.proofReceived) {
+        const local = path.join(this.blobDir(id), 'proof.bin');
+        if (fs.existsSync(local)) {
+          const objectKey = `${prefix}/proof.bin`;
+          const put = await ossPutObject({
+            objectKey,
+            body: fs.readFileSync(local),
+            contentType: record.proofType || 'application/octet-stream',
+          });
+          if (put) {
+            record.proofOssKey = put.objectKey;
+            ossPushed = true;
+          }
+        }
+      }
+      if (ossPushed) record.ossPrefix = prefix;
+    }
+
+    record.status = 'ready';
+    record.review = {
+      state: 'approved',
+      note:
+        note ||
+        (ossPushed
+          ? `已通过并推 OSS ${prefix}${who ? `（${who}）` : ''}`
+          : `已通过（本地落盘；OSS 未配置或跳过）${who ? `（${who}）` : ''}`),
+      reviewedAt: new Date().toISOString(),
+    };
+    this.writeStore(store);
+    logger.info('[ConsoleUploadsService] review approved', {
+      id,
+      ossPushed,
+      actor: who || null,
+    });
+    return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed };
+  }
+
+  /** Admin: read a local blob part (weight name or "proof"). */
+  readBlob(id: string, part: string): { bytes: Buffer; contentType: string; filename: string } {
+    const found = this.findById(id);
+    if (!found) {
+      throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
+    }
+    const { record } = found;
+    const dir = this.blobDir(id);
+    if (part === 'proof') {
+      const p = path.join(dir, 'proof.bin');
+      if (!fs.existsSync(p)) {
+        throw Object.assign(new Error('无授权证明'), { status: 404, code: 'not_found' });
+      }
+      return {
+        bytes: fs.readFileSync(p),
+        contentType: record.proofType || 'application/octet-stream',
+        filename: record.proofName || 'proof.bin',
+      };
+    }
+    const weight = safeWeight(decodeURIComponent(part));
+    const slot = record.files.find((f) => f.weight === weight);
+    if (!slot?.storedAs) {
+      throw Object.assign(new Error('字重文件不存在'), { status: 404, code: 'not_found' });
+    }
+    const p = path.join(dir, slot.storedAs);
+    if (!fs.existsSync(p)) {
+      throw Object.assign(new Error('字重文件不存在'), { status: 404, code: 'not_found' });
+    }
+    return {
+      bytes: fs.readFileSync(p),
+      contentType: slot.contentType || 'application/octet-stream',
+      filename: slot.filename,
+    };
   }
 
   remove(apiKeyRaw: string, id: string) {
