@@ -1,13 +1,15 @@
-# 多阶段构建 - 与 packageManager=pnpm 对齐（npm ci 在现依赖树会 arborist 崩溃）
-FROM node:20-alpine AS base
-# 国内 apk + npm；pnpm 钉 9.x（Node 20；pnpm 11 要 Node>=22）
-RUN sed -i 's#https\?://dl-cdn.alpinelinux.org#https://mirrors.aliyun.com#g' /etc/apk/repositories \
+# 多阶段构建 - 与 packageManager=pnpm 对齐
+# cn-font-split 仅提供 linux-gnu 原生库，须用 glibc 镜像（勿用 alpine/musl）
+FROM node:20-bookworm-slim AS base
+# 国内 apt + registry；pnpm 钉 9.x（corepack）
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g; s/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources \
+  && apt-get update && apt-get install -y --no-install-recommends ca-certificates curl \
+  && apt-get clean \
   && npm config set registry https://registry.npmmirror.com \
-  && npm install -g pnpm@9.15.9
+  && corepack enable && corepack prepare pnpm@9.15.9 --activate
 
 # 安装依赖阶段
 FROM base AS deps
-RUN apk add --no-cache bash curl libc6-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
@@ -40,8 +42,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV AUTH_TRUST_HOST=true
 ENV DATABASE_URL=file:./data/prod.db
 
-RUN addgroup --system --gid 1001 nodejs \
-  && adduser --system --uid 1001 nextjs
+RUN groupadd --system --gid 1001 nodejs \
+  && useradd --system --uid 1001 --gid nodejs nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

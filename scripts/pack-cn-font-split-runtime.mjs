@@ -131,6 +131,7 @@ async function ensureNativeBin(splitRoot) {
   const verFile = path.join(dist, 'version');
   if (fs.existsSync(verFile)) {
     ver = fs.readFileSync(verFile, 'utf8').trim();
+    if (ver.includes('@')) ver = ver.split('@').pop() || ver;
   }
   if (!ver) {
     try {
