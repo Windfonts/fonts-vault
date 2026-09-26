@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import {
+  BadgeCheck,
   ChevronDown,
   ChevronRight,
   FolderOpen,
@@ -72,6 +73,11 @@ const sidebarItems: SidebarItem[] = [
     title: '厂商管理',
     href: '/admin/brands',
     icon: Tag,
+  },
+  {
+    title: '认领审核',
+    href: '/admin/claims',
+    icon: BadgeCheck,
   },
   {
     title: '分类管理',
