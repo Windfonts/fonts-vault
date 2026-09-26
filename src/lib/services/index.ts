@@ -9,3 +9,4 @@ export * from './package-size.service';
 export * from './validation';
 export * from './console-project.service';
 export * from './console-usage.service';
+export * from './console-picks.service';
