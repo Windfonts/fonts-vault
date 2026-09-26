@@ -19,8 +19,9 @@ type Ctx = {
 };
 
 /**
- * GET /api/uploads/:id/files/:part/shards/:file?p={slug}
+ * GET /api/uploads/:id/files/:part/shards/:file?p={slug}&t={textKey?}
  * cn-font-split 分片（N.woff2）。须 ready + 项目引用 + 域名白名单。
+ * t= 按文字子集缓存键（text-subset/{t}/{weight}/）。
  */
 export async function GET(request: Request, ctx: Ctx) {
   try {
@@ -64,7 +65,10 @@ export async function GET(request: Request, ctx: Ctx) {
       });
     }
 
-    const shard = consoleUploadsService.readSplitShard(uploadId, weightPart, shardFile);
+    const textKey = String(url.searchParams.get('t') || '').trim();
+    const shard = textKey
+      ? consoleUploadsService.readTextSubsetShard(uploadId, weightPart, textKey, shardFile)
+      : consoleUploadsService.readSplitShard(uploadId, weightPart, shardFile);
     return new NextResponse(new Uint8Array(shard.bytes), {
       status: 200,
       headers: {

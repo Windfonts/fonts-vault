@@ -128,6 +128,11 @@ export const projectFontSchema = z.object({
   source: z.enum(['catalog', 'upload']).optional().default('catalog'),
   /** source=upload 时必填：console-uploads 记录 id */
   uploadId: z.string().min(1).max(64).optional(),
+  /**
+   * 按文字子集正文（去重后切包）。仅 upload 生效：发布时 cn-font-split subsets。
+   * catalog 忽略，仍走 subset 预计算档。
+   */
+  text: z.string().max(8000).optional(),
 });
 
 export const projectManifestSchema = z.object({

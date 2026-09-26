@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { logger } from '@/lib/logger';
 import { ossConfigured, ossPutObject } from '@/lib/oss-put';
 import { tryCompressToWoff2 } from '@/lib/upload-woff2';
-import { trySplitFontToDir } from '@/lib/upload-split';
+import { splitFontToDir, trySplitFontToDir } from '@/lib/upload-split';
 
 const MAX_UPLOADS = 100;
 const MAX_FILE_BYTES = 30 * 1024 * 1024;
@@ -833,6 +833,149 @@ export class ConsoleUploadsService {
       });
     }
     return found.record;
+  }
+
+  /** 原版 TTF/OTF 路径（按文字切包需要源字形，不能用整包 woff2）。 */
+  readSourceFontPath(id: string, weight: string): string {
+    const found = this.findById(id);
+    if (!found || found.record.status !== 'ready') {
+      throw Object.assign(new Error('上传不可用'), { status: 404, code: 'not_found' });
+    }
+    const slot = matchUploadWeightSlot(found.record.files, weight);
+    if (!slot?.received || !slot.storedAs) {
+      throw Object.assign(new Error(`缺少字重 ${weight}`), { status: 404, code: 'not_found' });
+    }
+    const ext = path.extname(slot.storedAs).toLowerCase();
+    const ct = String(slot.contentType || '');
+    if (
+      !['.ttf', '.otf', '.ttc'].includes(ext) &&
+      !/truetype|opentype/i.test(ct)
+    ) {
+      throw Object.assign(new Error('按文字切包需要 TTF/OTF 源文件'), {
+        status: 422,
+        code: 'no_source_font',
+      });
+    }
+    const p = path.join(this.blobDir(id), slot.storedAs);
+    if (!fs.existsSync(p)) {
+      throw Object.assign(new Error('源字体文件缺失'), { status: 404, code: 'not_found' });
+    }
+    return p;
+  }
+
+  private textSubsetRel(textKey: string, weight: string): string {
+    return `text-subset/${textKey}/${safeWeight(weight)}`;
+  }
+
+  /** Absolute path to text-subset result.css, or null if not built yet. */
+  readTextSubsetCssPath(id: string, weight: string, textKey: string): string | null {
+    if (!/^[a-f0-9]{8,64}$/i.test(textKey)) return null;
+    const found = this.findById(id);
+    if (!found || found.record.status !== 'ready') return null;
+    const slot = matchUploadWeightSlot(found.record.files, weight);
+    if (!slot) return null;
+    const p = path.join(this.blobDir(id), this.textSubsetRel(textKey, slot.weight), 'result.css');
+    return fs.existsSync(p) ? p : null;
+  }
+
+  /**
+   * Ensure text-subset/{key}/{weight}/ exists (cn-font-split subsets).
+   * Cached by textKey; returns relative blob dir + shard count.
+   */
+  async ensureTextSubset(opts: {
+    uploadId: string;
+    weight: string;
+    textKey: string;
+    codePoints: number[];
+    family: string;
+  }): Promise<{ rel: string; shardCount: number }> {
+    const { uploadId, weight, textKey, codePoints, family } = opts;
+    if (!/^[a-f0-9]{8,64}$/i.test(textKey)) {
+      throw Object.assign(new Error('非法 textKey'), { status: 400, code: 'validation_error' });
+    }
+    if (!codePoints.length) {
+      throw Object.assign(new Error('按文字至少需要 1 个字符'), {
+        status: 422,
+        code: 'validation_error',
+      });
+    }
+    const record = this.requireReady(uploadId);
+    const slot = matchUploadWeightSlot(record.files, weight);
+    if (!slot) {
+      throw Object.assign(new Error(`上传 ${uploadId} 缺少字重 ${weight}`), {
+        status: 404,
+        code: 'not_found',
+      });
+    }
+    const rel = this.textSubsetRel(textKey, slot.weight);
+    const outDir = path.join(this.blobDir(uploadId), rel);
+    const cssPath = path.join(outDir, 'result.css');
+    if (fs.existsSync(cssPath)) {
+      const shardCount = fs.readdirSync(outDir).filter((n) => /\.woff2$/i.test(n)).length;
+      return { rel, shardCount };
+    }
+    const src = this.readSourceFontPath(uploadId, slot.weight);
+    const result = await splitFontToDir(fs.readFileSync(src), outDir, {
+      family: family || record.family || 'upload',
+      weightCss: cssWeightNumber(slot.weight),
+      codePoints,
+      chunkKb: 200,
+    });
+    logger.info('[ensureTextSubset] built', {
+      uploadId,
+      weight: slot.weight,
+      textKey,
+      shards: result.shardCount,
+      chars: codePoints.length,
+    });
+    return { rel, shardCount: result.shardCount };
+  }
+
+  /** Serve a text-subset shard for ready upload. */
+  readTextSubsetShard(
+    id: string,
+    weight: string,
+    textKey: string,
+    file: string
+  ): { bytes: Buffer; contentType: string; filename: string; weight: string } {
+    if (!/^[a-f0-9]{8,64}$/i.test(textKey)) {
+      throw Object.assign(new Error('非法 textKey'), { status: 400, code: 'validation_error' });
+    }
+    const found = this.findById(id);
+    if (!found) {
+      throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
+    }
+    if (found.record.status !== 'ready') {
+      throw Object.assign(new Error('字体尚未通过审核'), { status: 403, code: 'not_ready' });
+    }
+    const slot = matchUploadWeightSlot(found.record.files, weight);
+    if (!slot) {
+      throw Object.assign(new Error('字重不存在'), { status: 404, code: 'not_found' });
+    }
+    const base = path.basename(String(file || ''));
+    if (!base || base !== file || base.includes('..') || /[\\\/]/.test(file)) {
+      throw Object.assign(new Error('非法分片名'), { status: 400, code: 'validation_error' });
+    }
+    if (!/^(\d+\.(woff2|woff|ttf|otf)|result\.css)$/i.test(base)) {
+      throw Object.assign(new Error('非法分片名'), { status: 400, code: 'validation_error' });
+    }
+    const p = path.join(this.blobDir(id), this.textSubsetRel(textKey, slot.weight), base);
+    if (!fs.existsSync(p)) {
+      throw Object.assign(new Error('分片不存在'), { status: 404, code: 'not_found' });
+    }
+    const ct = /\.css$/i.test(base)
+      ? 'text/css; charset=utf-8'
+      : /\.woff2$/i.test(base)
+        ? 'font/woff2'
+        : /\.woff$/i.test(base)
+          ? 'font/woff'
+          : 'application/octet-stream';
+    return {
+      bytes: fs.readFileSync(p),
+      contentType: ct,
+      filename: base,
+      weight: slot.weight,
+    };
   }
 
   remove(apiKeyRaw: string, id: string) {

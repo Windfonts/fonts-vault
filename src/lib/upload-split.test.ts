@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
-import { rewriteSplitCss, trySplitFontToDir } from '@/lib/upload-split';
+import {
+  codePointsFromText,
+  rewriteSplitCss,
+  textSubsetKey,
+  trySplitFontToDir,
+} from '@/lib/upload-split';
 import { consoleUploadsService } from '@/lib/services/console-uploads.service';
 
 const FIXTURE_CANDIDATES = [
@@ -39,6 +44,14 @@ describe('upload-split rewrite', () => {
   });
 });
 
+describe('codePointsFromText', () => {
+  it('dedupes and skips whitespace', () => {
+    const cps = codePointsFromText('啊 啊ab\n文');
+    expect(cps).toEqual([97, 98, 21834, 25991]);
+    expect(textSubsetKey(cps)).toMatch(/^[a-f0-9]{16}$/);
+  });
+});
+
 describe('upload-split fontSplit', () => {
   it('splits a real TTF when fixture exists', async () => {
     const fixture = findFixture();
@@ -52,6 +65,27 @@ describe('upload-split fontSplit', () => {
       });
       expect(result).not.toBeNull();
       expect(result!.shardCount).toBeGreaterThan(0);
+      expect(existsSync(path.join(outDir, 'result.css'))).toBe(true);
+    } finally {
+      rmSync(outDir, { recursive: true, force: true });
+    }
+  }, 120_000);
+
+  it('text subset yields few shards', async () => {
+    const fixture = findFixture();
+    if (!fixture) return;
+    const outDir = mkdtempSync(path.join(tmpdir(), 'split-text-'));
+    try {
+      const cps = codePointsFromText('Hello文风123');
+      const result = await trySplitFontToDir(readFileSync(fixture), outDir, {
+        family: 'text-test',
+        weightCss: 400,
+        codePoints: cps,
+        label: 'text-fixture',
+        chunkKb: 200,
+      });
+      expect(result).not.toBeNull();
+      expect(result!.shardCount).toBeLessThanOrEqual(3);
       expect(existsSync(path.join(outDir, 'result.css'))).toBe(true);
     } finally {
       rmSync(outDir, { recursive: true, force: true });
@@ -100,6 +134,20 @@ describe('upload-split fontSplit', () => {
       const shard = consoleUploadsService.readSplitShard(init.id, 'Regular', '0.woff2');
       expect(shard.contentType).toBe('font/woff2');
       expect(shard.bytes.length).toBeGreaterThan(100);
+
+      const cps = codePointsFromText('Hi文');
+      const key = textSubsetKey(cps);
+      const built = await consoleUploadsService.ensureTextSubset({
+        uploadId: init.id,
+        weight: 'Regular',
+        textKey: key,
+        codePoints: cps,
+        family: 'split-test',
+      });
+      expect(built.shardCount).toBeGreaterThan(0);
+      expect(built.rel).toContain(key);
+      const tShard = consoleUploadsService.readTextSubsetShard(init.id, 'Regular', key, '0.woff2');
+      expect(tShard.bytes.length).toBeGreaterThan(50);
     } finally {
       svc.rootDir = origRoot;
       if (prevOss === undefined) delete process.env.UPLOAD_OSS_SKIP;

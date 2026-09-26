@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, rmSync } from 'fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
 import { ProjectService } from '@/lib/services/project.service';
@@ -40,6 +40,7 @@ describe('ProjectService.bakeUploadFaces', () => {
     const svc = new ProjectService();
     process.env.UPLOAD_OSS_SKIP = '1';
     process.env.UPLOAD_WOFF2_SKIP = '1';
+    process.env.UPLOAD_SPLIT_SKIP = '1';
     process.env.NEXTAUTH_URL = 'https://app.windfonts.com';
 
     const origRoot = (consoleUploadsService as unknown as { rootDir: () => string }).rootDir;
@@ -93,4 +94,76 @@ describe('ProjectService.bakeUploadFaces', () => {
       rmSync(upRoot, { recursive: true, force: true });
     }
   });
+
+  it('bakes text subset shards with t= query when fixture exists', async () => {
+    const fixtureCandidates = [
+      path.join(
+        process.env.HOME || '',
+        'Projects/fonts-packages/_upstream-src/RocknRollOne-Regular.ttf'
+      ),
+      '/System/Library/Fonts/Supplemental/Arial.ttf',
+    ];
+    const fixture = fixtureCandidates.find((p) => p && existsSync(p));
+    if (!fixture) return;
+
+    const upRoot = mkdtempSync(path.join(tmpdir(), 'console-up-text-'));
+    const svc = new ProjectService();
+    process.env.UPLOAD_OSS_SKIP = '1';
+    process.env.UPLOAD_WOFF2_SKIP = '1';
+    process.env.UPLOAD_SPLIT_SKIP = '1';
+    process.env.NEXTAUTH_URL = 'https://app.windfonts.com';
+
+    const origRoot = (consoleUploadsService as unknown as { rootDir: () => string }).rootDir;
+    (consoleUploadsService as unknown as { rootDir: () => string }).rootDir = () => upRoot;
+
+    try {
+      const bytes = readFileSync(fixture);
+      const init = consoleUploadsService.init(
+        'key-text',
+        {
+          name: 'Text Subset',
+          family: 'text-face',
+          license: 'ofl',
+          files: [{ filename: 'a.ttf', size: bytes.length, weight: 'Regular' }],
+        },
+        'https://app.windfonts.com'
+      );
+      const token = init.uploadUrls[0]?.headers?.['X-Upload-Token'] || '';
+      consoleUploadsService.putFile({
+        uploadId: init.id,
+        part: 'Regular',
+        token,
+        bytes,
+        contentType: 'font/ttf',
+      });
+      consoleUploadsService.complete('key-text', init.id);
+      await consoleUploadsService.review(init.id, { status: 'approved' });
+
+      const manifest: ProjectManifest = {
+        slug: 'texty',
+        version: 1,
+        domains: [],
+        display: 'swap',
+        fonts: [
+          {
+            family: 'text-face',
+            weights: ['Regular'],
+            subset: 'full',
+            source: 'upload',
+            uploadId: init.id,
+            text: 'Hi文风',
+          },
+        ],
+      };
+
+      const { css } = await svc.bakeCss(manifest);
+      expect(css).toContain('@font-face');
+      expect(css).toContain('text-face');
+      expect(css).toMatch(/\/shards\/[^"'?\s]+\.woff2\?p=texty&t=[a-f0-9]+/i);
+      expect(css).toContain(' · text');
+    } finally {
+      (consoleUploadsService as unknown as { rootDir: () => string }).rootDir = origRoot;
+      rmSync(upRoot, { recursive: true, force: true });
+    }
+  }, 180_000);
 });
