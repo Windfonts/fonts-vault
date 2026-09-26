@@ -8,6 +8,13 @@ const MAX_MEMBERS = 5;
 const ROLES = ['owner', 'admin', 'editor', 'viewer'] as const;
 type Role = (typeof ROLES)[number];
 
+function asRole(raw: string, fallback: Role = 'editor'): Role {
+  const v = String(raw || '').trim();
+  if ((ROLES as readonly string[]).includes(v) && v !== 'owner') return v as Role;
+  return fallback;
+}
+
+
 const memberSchema = z.object({
   id: z.string().min(1).max(64),
   name: z.string().min(1).max(120),
@@ -126,14 +133,13 @@ export class ConsoleTeamService {
     if (!email || !email.includes('@')) {
       throw Object.assign(new Error('邮箱无效'), { status: 422, code: 'validation_error' });
     }
-    let role = String(body.role || 'editor').trim() as Role;
-    if (role === 'owner') {
+    if (String(body.role || '').trim() === 'owner') {
       throw Object.assign(new Error('不能直接邀请为所有者'), {
         status: 422,
         code: 'validation_error',
       });
     }
-    if (!ROLES.includes(role) || role === 'owner') role = 'editor';
+    const role = asRole(String(body.role || 'editor'));
     const hash = this.ownerHash(apiKeyRaw);
     const store = this.readStore(hash);
     if (store.members.length >= MAX_MEMBERS) {
@@ -159,16 +165,17 @@ export class ConsoleTeamService {
   }
 
   setRole(apiKeyRaw: string, id: string, roleRaw: unknown): ConsoleTeamMember {
-    const role = String(roleRaw || '').trim() as Role;
-    if (!ROLES.includes(role)) {
-      throw Object.assign(new Error('角色无效'), { status: 422, code: 'validation_error' });
-    }
-    if (role === 'owner') {
+    const raw = String(roleRaw || '').trim();
+    if (raw === 'owner') {
       throw Object.assign(new Error('不能直接设为所有者'), {
         status: 422,
         code: 'validation_error',
       });
     }
+    if (!(ROLES as readonly string[]).includes(raw) || raw === 'owner') {
+      throw Object.assign(new Error('角色无效'), { status: 422, code: 'validation_error' });
+    }
+    const role = raw as Role;
     const hash = this.ownerHash(apiKeyRaw);
     const store = this.readStore(hash);
     const member = store.members.find((m) => m.id === id);
