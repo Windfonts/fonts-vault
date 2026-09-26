@@ -205,7 +205,7 @@ export class ProjectService {
     return chunks.join('\n');
   }
 
-  async bakeCss  async bakeCss(manifest: ProjectManifest): Promise<{ css: string; etag: string }> {
+  async bakeCss(manifest: ProjectManifest): Promise<{ css: string; etag: string }> {
     const chunks: string[] = [];
     chunks.push(
       `/* windfonts project · ${manifest.slug} · v${manifest.version}` +
