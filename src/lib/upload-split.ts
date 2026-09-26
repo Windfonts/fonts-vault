@@ -2,6 +2,20 @@ import fs from 'fs';
 import path from 'path';
 import { logger } from '@/lib/logger';
 
+function ensureCnFontSplitBin(): void {
+  if (process.env.CN_FONT_SPLIT_BIN && fs.existsSync(process.env.CN_FONT_SPLIT_BIN)) return;
+  try {
+    const pkg = path.dirname(require.resolve('cn-font-split/package.json'));
+    const dist = path.join(pkg, 'dist');
+    if (!fs.existsSync(dist)) return;
+    const hit = fs.readdirSync(dist).find((n) => n.startsWith('libffi-'));
+    if (hit) process.env.CN_FONT_SPLIT_BIN = path.join(dist, hit);
+  } catch {
+    /* optional */
+  }
+}
+
+
 export type SplitResult = {
   outDir: string;
   cssFile: string;
@@ -22,6 +36,7 @@ export async function splitFontToDir(
     fs.rmSync(path.join(outDir, name), { recursive: true, force: true });
   }
 
+  ensureCnFontSplitBin();
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { fontSplit } = require('cn-font-split') as {
     fontSplit: (options: Record<string, unknown>) => Promise<void>;
