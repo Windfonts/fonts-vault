@@ -124,6 +124,10 @@ export const projectFontSchema = z.object({
   fallback: z.string().min(1).optional(),
   fallbackWeight: z.string().min(1).optional(),
   localeFallback: z.enum(['off', 'auto', 'sc', 'tc']).optional(),
+  /** catalog（默认）走 OSS fonts-packages；upload 走自有字落盘 */
+  source: z.enum(['catalog', 'upload']).optional().default('catalog'),
+  /** source=upload 时必填：console-uploads 记录 id */
+  uploadId: z.string().min(1).max(64).optional(),
 });
 
 export const projectManifestSchema = z.object({
