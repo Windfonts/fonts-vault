@@ -56,6 +56,62 @@ type DeliveryRow = {
 };
 type LegacyRow = { day: string; domain: string; count: number };
 
+
+export type BlockedHostRow = {
+  host: string;
+  projectId: string;
+  projectName: string;
+  requests30d: number;
+  lastSeenAt: string | null;
+  /** 前台域名页历史字段 */
+  lastAt: string | null;
+};
+
+/** 从投递行聚合 status=403 的未授权来源。 */
+export function buildBlockedHosts(
+  deliveryRows: DeliveryRow[],
+  projects: ConsoleProject[],
+  projectId?: string
+): BlockedHostRow[] {
+  const map = new Map<
+    string,
+    { host: string; projectId: string; projectName: string; requests: number; lastDay: string }
+  >();
+  for (const row of deliveryRows) {
+    if (String(row.status) !== '403') continue;
+    const host = normalizeHost(row.domain) || 'unknown';
+    let project =
+      findProjectForHost(projects, host) || findProjectByDeliveryFamily(projects, row.family);
+    if (projectId && (!project || project.id !== projectId)) continue;
+    const pid = project?.id || '';
+    const pname = project?.name || '';
+    const key = `${host}\0${pid}`;
+    const prev = map.get(key);
+    const day = String(row.day || '');
+    const n = Number(row.count) || 0;
+    if (!prev) {
+      map.set(key, { host, projectId: pid, projectName: pname, requests: n, lastDay: day });
+    } else {
+      prev.requests += n;
+      if (day && day > prev.lastDay) prev.lastDay = day;
+    }
+  }
+  return Array.from(map.values())
+    .map((r) => {
+      const last = r.lastDay ? `${r.lastDay}T00:00:00.000Z` : null;
+      return {
+        host: r.host,
+        projectId: r.projectId,
+        projectName: r.projectName,
+        requests30d: r.requests,
+        lastSeenAt: last,
+        lastAt: last,
+      };
+    })
+    .sort((a, b) => b.requests30d - a.requests30d);
+}
+
+
 function sha256Hex(value: string): string {
   return createHash('sha256').update(String(value || '').trim()).digest('hex');
 }
@@ -92,6 +148,22 @@ export function findProjectForHost(
   for (const p of projects) {
     for (const d of p.domains || []) {
       if (hostMatchesRule(h, d.host)) return p;
+    }
+  }
+  return null;
+}
+
+export function findProjectByDeliveryFamily(
+  projects: ConsoleProject[],
+  family: string
+): ConsoleProject | null {
+  const m = /^project:(.+)$/i.exec(String(family || '').trim());
+  if (!m) return null;
+  const slug = m[1].trim().toLowerCase();
+  if (!slug) return null;
+  for (const p of projects) {
+    if (String(p.slug || '').toLowerCase() === slug || String(p.id || '').toLowerCase() === slug) {
+      return p;
     }
   }
   return null;
@@ -147,7 +219,8 @@ export function buildUsageOverview(opts: {
     status?: string
   ) => {
     const host = normalizeHost(domain);
-    const project = findProjectForHost(projects, host);
+    let project = findProjectForHost(projects, host);
+    if (!project && family) project = findProjectByDeliveryFamily(projects, family);
     if (projectId && (!project || project.id !== projectId)) return;
     const n = Number(count) || 0;
     const b = Number(bytes) || 0;
@@ -172,7 +245,7 @@ export function buildUsageOverview(opts: {
         projectHit.set(project.id, hit);
       }
     }
-    if (family) {
+    if (family && !/^project:/i.test(family) && family !== '_auth') {
       const fam = family.toLowerCase();
       let row = fontAgg.get(fam);
       if (!row) {
@@ -261,7 +334,7 @@ export function buildUsageOverview(opts: {
     : { '200': requests, '304': 0, '403': 0 };
 
   return {
-    totals: { requests, bytes, blocked: 0, quotaGB: 200 },
+    totals: { requests, bytes, blocked: status['403'] || 0, quotaGB: 200 },
     series: { from: ymd(from), to: ymd(to), requests: series },
     byFont,
     byDomain,
@@ -415,6 +488,58 @@ class ConsoleUsageService {
       projects,
       projectId: params.projectId,
     });
+  }
+
+
+  async blocked(
+    apiKeyRaw: string,
+    params: { range?: number; projectId?: string } = {}
+  ): Promise<BlockedHostRow[]> {
+    const { from, to } = rangeWindow(params.range ?? 30);
+    const projects = consoleProjectService.list(apiKeyRaw);
+    const keyId = await resolveKeyId(apiKeyRaw);
+    if (!keyId) return [];
+
+    const dayFrom = ymd(from);
+    const dayTo = ymd(to);
+    const deliveryRaw = await db
+      .select({
+        day: apiUsageDelivery.day,
+        domain: apiUsageDelivery.domain,
+        family: apiUsageDelivery.family,
+        weight: apiUsageDelivery.weight,
+        status: apiUsageDelivery.status,
+        count: sql<number>`coalesce(sum(${apiUsageDelivery.count}), 0)`,
+        bytes: sql<number>`coalesce(sum(${apiUsageDelivery.bytes}), 0)`,
+      })
+      .from(apiUsageDelivery)
+      .where(
+        and(
+          eq(apiUsageDelivery.subject, keyId),
+          eq(apiUsageDelivery.status, '403'),
+          gte(apiUsageDelivery.day, dayFrom),
+          lte(apiUsageDelivery.day, dayTo)
+        )
+      )
+      .groupBy(
+        apiUsageDelivery.day,
+        apiUsageDelivery.domain,
+        apiUsageDelivery.family,
+        apiUsageDelivery.weight,
+        apiUsageDelivery.status
+      );
+
+    const deliveryRows: DeliveryRow[] = deliveryRaw.map((r) => ({
+      day: String(r.day),
+      domain: String(r.domain || ''),
+      family: String(r.family || ''),
+      weight: String(r.weight || 'regular'),
+      status: String(r.status || '403'),
+      count: Number(r.count) || 0,
+      bytes: Number(r.bytes) || 0,
+    }));
+
+    return buildBlockedHosts(deliveryRows, projects, params.projectId);
   }
 
   async series(apiKeyRaw: string, params: { range?: number; projectId?: string } = {}) {
