@@ -49,7 +49,7 @@ describe('console-usage host matching', () => {
 });
 
 describe('buildUsageOverview', () => {
-  it('aggregates by day / domain / project', () => {
+  it('aggregates legacy rows by day / domain / project (no bytes/byFont)', () => {
     const projects = [
       project({
         id: 'p1',
@@ -64,7 +64,8 @@ describe('buildUsageOverview', () => {
       from,
       to,
       projects,
-      rows: [
+      deliveryRows: [],
+      legacyRows: [
         { day: '2026-09-20', domain: 'blog.xizhiyu.com', count: 10 },
         { day: '2026-09-21', domain: 'blog.xizhiyu.com', count: 5 },
         { day: '2026-09-21', domain: 'evil.com', count: 100 },
@@ -72,11 +73,12 @@ describe('buildUsageOverview', () => {
       ],
     });
     expect(out.stub).toBe(false);
-    // SQL 层已收窄；overview 汇总全部传入行（含未归属域名）
     expect(out.totals.requests).toBe(118);
+    expect(out.totals.bytes).toBe(0);
     expect(out.byDomain.find((d) => d.key === 'blog.xizhiyu.com')?.requests).toBe(15);
     expect(out.groups[0]?.requests).toBe(15);
     expect(out.dimensions.bytes).toBe(false);
+    expect(out.dimensions.byFont).toBe(false);
     expect(out.byFont).toEqual([]);
   });
 
@@ -101,7 +103,8 @@ describe('buildUsageOverview', () => {
       to,
       projects,
       projectId: 'p1',
-      rows: [
+      deliveryRows: [],
+      legacyRows: [
         { day: '2026-09-20', domain: 'a.example', count: 9 },
         { day: '2026-09-20', domain: 'b.example', count: 4 },
       ],
@@ -109,5 +112,57 @@ describe('buildUsageOverview', () => {
     expect(out.totals.requests).toBe(9);
     expect(out.groups).toHaveLength(1);
     expect(out.groups[0]?.key).toBe('p1');
+  });
+
+  it('aggregates delivery rows with bytes and byFont', () => {
+    const projects = [
+      project({
+        id: 'p1',
+        name: '站点',
+        domains: [{ host: 'blog.xizhiyu.com', verified: true, method: 'dns' }],
+      }),
+    ];
+    const from = new Date('2026-09-20T12:00:00.000Z');
+    const to = new Date('2026-09-21T12:00:00.000Z');
+    const out = buildUsageOverview({
+      range: 2,
+      from,
+      to,
+      projects,
+      deliveryRows: [
+        {
+          day: '2026-09-20',
+          domain: 'blog.xizhiyu.com',
+          family: 'wenfeng-albbpht',
+          count: 10,
+          bytes: 1000,
+        },
+        {
+          day: '2026-09-21',
+          domain: 'blog.xizhiyu.com',
+          family: 'wenfeng-albbpht',
+          count: 5,
+          bytes: 500,
+        },
+        {
+          day: '2026-09-21',
+          domain: 'blog.xizhiyu.com',
+          family: 'SourceHanSansSC',
+          count: 2,
+          bytes: 200,
+        },
+      ],
+      legacyRows: [],
+    });
+    expect(out.dimensions.bytes).toBe(true);
+    expect(out.dimensions.byFont).toBe(true);
+    expect(out.totals.requests).toBe(17);
+    expect(out.totals.bytes).toBe(1700);
+    expect(out.byFont).toHaveLength(2);
+    expect(out.byFont[0]?.family).toBe('wenfeng-albbpht');
+    expect(out.byFont[0]?.requests30d).toBe(15);
+    expect(out.byFont[0]?.bytes30d).toBe(1500);
+    expect(out.byFont[0]?.projects[0]?.projectId).toBe('p1');
+    expect(out.byDomain[0]?.bytes).toBe(1700);
   });
 });

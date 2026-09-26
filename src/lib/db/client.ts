@@ -279,6 +279,23 @@ const bootstrapApiTables = async (client: ReturnType<typeof createClient>) => {
     `CREATE INDEX IF NOT EXISTS api_usage_window_subject_idx ON api_usage_window (subject);`,
     `CREATE INDEX IF NOT EXISTS api_usage_window_domain_idx ON api_usage_window (domain);`,
     `CREATE UNIQUE INDEX IF NOT EXISTS api_usage_window_subject_window_domain_unique ON api_usage_window (subject, window, domain);`,
+    `CREATE TABLE IF NOT EXISTS api_usage_delivery (
+      id text PRIMARY KEY NOT NULL,
+      day text NOT NULL,
+      subject text NOT NULL,
+      key_id text,
+      domain text NOT NULL,
+      family text NOT NULL,
+      count integer DEFAULT 0 NOT NULL,
+      bytes integer DEFAULT 0 NOT NULL,
+      updated_at integer NOT NULL,
+      FOREIGN KEY (key_id) REFERENCES api_keys(id) ON UPDATE no action ON DELETE set null
+    );`,
+    `CREATE INDEX IF NOT EXISTS api_usage_delivery_day_idx ON api_usage_delivery (day);`,
+    `CREATE INDEX IF NOT EXISTS api_usage_delivery_subject_idx ON api_usage_delivery (subject);`,
+    `CREATE INDEX IF NOT EXISTS api_usage_delivery_domain_idx ON api_usage_delivery (domain);`,
+    `CREATE INDEX IF NOT EXISTS api_usage_delivery_family_idx ON api_usage_delivery (family);`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS api_usage_delivery_subject_day_domain_family_unique ON api_usage_delivery (subject, day, domain, family);`,
   ];
 
   for (const sql of statements) {

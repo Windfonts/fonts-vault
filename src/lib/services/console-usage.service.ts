@@ -1,17 +1,24 @@
 import { createHash } from 'crypto';
 import { and, eq, gte, inArray, lte, or, sql, type SQL } from 'drizzle-orm';
 import { db } from '@/lib/db/client';
-import { apiKeys, apiUsageDaily } from '@/lib/db/schema';
+import { apiKeys, apiUsageDaily, apiUsageDelivery } from '@/lib/db/schema';
 import { consoleProjectService, type ConsoleProject } from '@/lib/services/console-project.service';
 
-export type UsageRangeDays = 7 | 30 | 90;
-
 export type UsageDayPoint = { day: string; requests: number; bytes: number };
+
+export type UsageByFontRow = {
+  fontId: string;
+  family: string;
+  requests30d: number;
+  bytes30d: number;
+  weights: Record<string, number>;
+  projects: Array<{ projectId: string; name: string; requests30d: number; bytes30d: number }>;
+};
 
 export type UsageOverview = {
   totals: { requests: number; bytes: number; blocked: number; quotaGB: number };
   series: { from: string; to: string; requests: UsageDayPoint[] };
-  byFont: unknown[];
+  byFont: UsageByFontRow[];
   byDomain: Array<{
     key: string;
     label: string;
@@ -29,15 +36,17 @@ export type UsageOverview = {
     hitRate: number;
   }>;
   perf: unknown[];
-  /** 请求计数来自 api_usage_daily；字节/字体/状态码尚未采集 */
   dimensions: {
     requests: true;
-    bytes: false;
-    byFont: false;
+    bytes: boolean;
+    byFont: boolean;
     status: false;
   };
   stub: false;
 };
+
+type DeliveryRow = { day: string; domain: string; family: string; count: number; bytes: number };
+type LegacyRow = { day: string; domain: string; count: number };
 
 function sha256Hex(value: string): string {
   return createHash('sha256').update(String(value || '').trim()).digest('hex');
@@ -54,14 +63,13 @@ export function normalizeHost(host: string): string {
     .replace(/:\d+$/, '');
 }
 
-/** 与 ProjectService.isHostAllowed 同口径的单规则匹配（不含「空名单放行」）。 */
 export function hostMatchesRule(host: string, rule: string): boolean {
   const h = normalizeHost(host);
   const r = normalizeHost(rule);
   if (!h || !r) return false;
   if (r === h) return true;
   if (r.startsWith('*.')) {
-    const suffix = r.slice(1); // .example.com
+    const suffix = r.slice(1);
     return h.endsWith(suffix) && h !== r.slice(2);
   }
   return false;
@@ -87,7 +95,6 @@ export function emptySeries(from: Date, to: Date, range: number): UsageDayPoint[
     const d = new Date(from.getTime() + i * 864e5);
     series.push({ day: ymd(d), requests: 0, bytes: 0 });
   }
-  // 修正末日本地时区漂移：用 to 对齐最后一天
   if (series.length) series[series.length - 1].day = ymd(to);
   return series;
 }
@@ -96,73 +103,139 @@ export function buildUsageOverview(opts: {
   range: number;
   from: Date;
   to: Date;
-  rows: Array<{ day: string; domain: string; count: number }>;
+  deliveryRows: DeliveryRow[];
+  legacyRows: LegacyRow[];
   projects: ConsoleProject[];
   projectId?: string;
 }): UsageOverview {
-  const { range, from, to, rows, projects, projectId } = opts;
-  const scopedProjects = projectId
-    ? projects.filter((p) => p.id === projectId)
-    : projects;
+  const { range, from, to, deliveryRows, legacyRows, projects, projectId } = opts;
+  const useDelivery = deliveryRows.length > 0;
 
-  const dayMap = new Map<string, number>();
-  const domainMap = new Map<string, number>();
+  const dayReq = new Map<string, number>();
+  const dayBytes = new Map<string, number>();
+  const domainReq = new Map<string, number>();
+  const domainBytes = new Map<string, number>();
   const projectReq = new Map<string, number>();
+  const projectBytes = new Map<string, number>();
+  const fontAgg = new Map<
+    string,
+    { requests: number; bytes: number; byProject: Map<string, { requests: number; bytes: number }> }
+  >();
 
-  for (const row of rows) {
-    const host = normalizeHost(row.domain);
+  const consume = (
+    day: string,
+    domain: string,
+    count: number,
+    bytes: number,
+    family?: string
+  ) => {
+    const host = normalizeHost(domain);
     const project = findProjectForHost(projects, host);
-    // SQL 已按 Key / 白名单域名收窄；此处仅按 projectId 再滤一层
-    if (projectId && (!project || project.id !== projectId)) continue;
-
-    const n = Number(row.count) || 0;
-    if (n <= 0) continue;
-    dayMap.set(row.day, (dayMap.get(row.day) || 0) + n);
-    if (host) domainMap.set(host, (domainMap.get(host) || 0) + n);
+    if (projectId && (!project || project.id !== projectId)) return;
+    const n = Number(count) || 0;
+    const b = Number(bytes) || 0;
+    if (n <= 0 && b <= 0) return;
+    dayReq.set(day, (dayReq.get(day) || 0) + n);
+    dayBytes.set(day, (dayBytes.get(day) || 0) + b);
+    if (host) {
+      domainReq.set(host, (domainReq.get(host) || 0) + n);
+      domainBytes.set(host, (domainBytes.get(host) || 0) + b);
+    }
     if (project) {
       projectReq.set(project.id, (projectReq.get(project.id) || 0) + n);
+      projectBytes.set(project.id, (projectBytes.get(project.id) || 0) + b);
+    }
+    if (family) {
+      const fam = family.toLowerCase();
+      let row = fontAgg.get(fam);
+      if (!row) {
+        row = { requests: 0, bytes: 0, byProject: new Map() };
+        fontAgg.set(fam, row);
+      }
+      row.requests += n;
+      row.bytes += b;
+      if (project) {
+        const pr = row.byProject.get(project.id) || { requests: 0, bytes: 0 };
+        pr.requests += n;
+        pr.bytes += b;
+        row.byProject.set(project.id, pr);
+      }
+    }
+  };
+
+  if (useDelivery) {
+    for (const row of deliveryRows) {
+      consume(row.day, row.domain, row.count, row.bytes, row.family);
+    }
+  } else {
+    for (const row of legacyRows) {
+      consume(row.day, row.domain, row.count, 0);
     }
   }
 
   const series = emptySeries(from, to, range).map((p) => ({
     ...p,
-    requests: dayMap.get(p.day) || 0,
+    requests: dayReq.get(p.day) || 0,
+    bytes: dayBytes.get(p.day) || 0,
   }));
   const requests = series.reduce((a, p) => a + p.requests, 0);
+  const bytes = series.reduce((a, p) => a + p.bytes, 0);
 
-  const byDomain = Array.from(domainMap.entries())
+  const byDomain = Array.from(domainReq.entries())
     .map(([host, req]) => {
       const project = findProjectForHost(projects, host);
       return {
         key: host,
         label: host,
         requests: req,
-        bytes: 0,
+        bytes: domainBytes.get(host) || 0,
         projectId: project?.id,
         projectName: project?.name,
       };
     })
     .sort((a, b) => b.requests - a.requests);
 
-  const groups = (projectId ? scopedProjects : projects)
+  const groups = (projectId ? projects.filter((p) => p.id === projectId) : projects)
     .map((p) => ({
       key: p.id,
       label: p.name,
       requests: projectReq.get(p.id) || 0,
-      bytes: 0,
+      bytes: projectBytes.get(p.id) || 0,
       hitRate: 0,
     }))
     .sort((a, b) => b.requests - a.requests);
 
+  const projectName = new Map(projects.map((p) => [p.id, p.name]));
+  const byFont: UsageByFontRow[] = Array.from(fontAgg.entries())
+    .map(([family, agg]) => ({
+      fontId: family,
+      family,
+      requests30d: agg.requests,
+      bytes30d: agg.bytes,
+      weights: {} as Record<string, number>,
+      projects: Array.from(agg.byProject.entries()).map(([pid, v]) => ({
+        projectId: pid,
+        name: projectName.get(pid) || pid,
+        requests30d: v.requests,
+        bytes30d: v.bytes,
+      })),
+    }))
+    .sort((a, b) => b.requests30d - a.requests30d);
+
   return {
-    totals: { requests, bytes: 0, blocked: 0, quotaGB: 200 },
+    totals: { requests, bytes, blocked: 0, quotaGB: 200 },
     series: { from: ymd(from), to: ymd(to), requests: series },
-    byFont: [],
+    byFont,
     byDomain,
     status: { '200': requests, '304': 0, '403': 0 },
     groups,
     perf: [],
-    dimensions: { requests: true, bytes: false, byFont: false, status: false },
+    dimensions: {
+      requests: true,
+      bytes: useDelivery,
+      byFont: useDelivery,
+      status: false,
+    },
     stub: false,
   };
 }
@@ -185,6 +258,26 @@ function rangeWindow(rangeRaw: number): { range: number; from: Date; to: Date } 
   return { range, from, to };
 }
 
+function buildScope(keyId: string | null, hosts: Set<string>, table: 'daily' | 'delivery'): SQL[] {
+  const scope: SQL[] = [];
+  const dayCol = table === 'daily' ? apiUsageDaily : apiUsageDelivery;
+  if (keyId) {
+    scope.push(eq(dayCol.subject, keyId));
+    scope.push(eq(dayCol.keyId, keyId));
+  }
+  const exactHosts = Array.from(hosts).filter((h) => !h.startsWith('*.'));
+  if (exactHosts.length) {
+    scope.push(inArray(dayCol.domain, exactHosts));
+  }
+  const wildSuffixes = Array.from(hosts)
+    .filter((h) => h.startsWith('*.'))
+    .map((h) => h.slice(1));
+  for (const suffix of wildSuffixes) {
+    scope.push(sql`${dayCol.domain} like ${'%' + suffix}`);
+  }
+  return scope;
+}
+
 class ConsoleUsageService {
   async overview(
     apiKeyRaw: string,
@@ -203,59 +296,74 @@ class ConsoleUsageService {
 
     const dayFrom = ymd(from);
     const dayTo = ymd(to);
-    const filters: SQL[] = [gte(apiUsageDaily.day, dayFrom), lte(apiUsageDaily.day, dayTo)];
+    const empty = buildUsageOverview({
+      range,
+      from,
+      to,
+      deliveryRows: [],
+      legacyRows: [],
+      projects,
+      projectId: params.projectId,
+    });
 
-    const scope: SQL[] = [];
-    if (keyId) {
-      scope.push(eq(apiUsageDaily.subject, keyId));
-      scope.push(eq(apiUsageDaily.keyId, keyId));
-    }
-    // 精确域名；通配在内存二次过滤（行量可控）
-    const exactHosts = Array.from(hosts).filter((h) => !h.startsWith('*.'));
-    if (exactHosts.length) {
-      scope.push(inArray(apiUsageDaily.domain, exactHosts));
-    }
-    const wildSuffixes = Array.from(hosts)
-      .filter((h) => h.startsWith('*.'))
-      .map((h) => h.slice(1)); // .example.com
-    for (const suffix of wildSuffixes) {
-      scope.push(sql`${apiUsageDaily.domain} like ${'%' + suffix}`);
-    }
+    const deliveryScope = buildScope(keyId, hosts, 'delivery');
+    if (!deliveryScope.length) return empty;
 
-    if (!scope.length) {
-      return buildUsageOverview({
-        range,
-        from,
-        to,
-        rows: [],
-        projects,
-        projectId: params.projectId,
-      });
-    }
+    const deliveryFilters: SQL[] = [
+      gte(apiUsageDelivery.day, dayFrom),
+      lte(apiUsageDelivery.day, dayTo),
+      or(...deliveryScope)!,
+    ];
 
-    filters.push(or(...scope)!);
-
-    const raw = await db
+    const deliveryRaw = await db
       .select({
-        day: apiUsageDaily.day,
-        domain: apiUsageDaily.domain,
-        count: sql<number>`coalesce(sum(${apiUsageDaily.count}), 0)`,
+        day: apiUsageDelivery.day,
+        domain: apiUsageDelivery.domain,
+        family: apiUsageDelivery.family,
+        count: sql<number>`coalesce(sum(${apiUsageDelivery.count}), 0)`,
+        bytes: sql<number>`coalesce(sum(${apiUsageDelivery.bytes}), 0)`,
       })
-      .from(apiUsageDaily)
-      .where(and(...filters))
-      .groupBy(apiUsageDaily.day, apiUsageDaily.domain);
+      .from(apiUsageDelivery)
+      .where(and(...deliveryFilters))
+      .groupBy(apiUsageDelivery.day, apiUsageDelivery.domain, apiUsageDelivery.family);
 
-    const rows = raw.map((r) => ({
+    const deliveryRows: DeliveryRow[] = deliveryRaw.map((r) => ({
       day: String(r.day),
       domain: String(r.domain || ''),
+      family: String(r.family || ''),
       count: Number(r.count) || 0,
+      bytes: Number(r.bytes) || 0,
     }));
+
+    let legacyRows: LegacyRow[] = [];
+    if (!deliveryRows.length) {
+      const legacyScope = buildScope(keyId, hosts, 'daily');
+      if (legacyScope.length) {
+        const legacyRaw = await db
+          .select({
+            day: apiUsageDaily.day,
+            domain: apiUsageDaily.domain,
+            count: sql<number>`coalesce(sum(${apiUsageDaily.count}), 0)`,
+          })
+          .from(apiUsageDaily)
+          .where(
+            and(gte(apiUsageDaily.day, dayFrom), lte(apiUsageDaily.day, dayTo), or(...legacyScope)!)
+          )
+          .groupBy(apiUsageDaily.day, apiUsageDaily.domain);
+        legacyRows = legacyRaw.map((r) => ({
+          day: String(r.day),
+          domain: String(r.domain || ''),
+          count: Number(r.count) || 0,
+        }));
+      }
+    }
 
     return buildUsageOverview({
       range,
       from,
       to,
-      rows,
+      deliveryRows,
+      legacyRows,
       projects,
       projectId: params.projectId,
     });

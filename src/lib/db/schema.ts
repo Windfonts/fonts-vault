@@ -535,6 +535,35 @@ export const apiUsageWindow = sqliteTable(
   })
 );
 
+/** CSS 投递明细：按天×域名×字体记请求与响应字节（控制台用量） */
+export const apiUsageDelivery = sqliteTable(
+  'api_usage_delivery',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    day: text('day').notNull(),
+    subject: text('subject').notNull(),
+    keyId: text('key_id').references(() => apiKeys.id, { onDelete: 'set null' }),
+    domain: text('domain').notNull(),
+    family: text('family').notNull(),
+    count: integer('count').notNull().default(0),
+    bytes: integer('bytes').notNull().default(0),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => ({
+    byDayIdx: index('api_usage_delivery_day_idx').on(table.day),
+    bySubjectIdx: index('api_usage_delivery_subject_idx').on(table.subject),
+    byDomainIdx: index('api_usage_delivery_domain_idx').on(table.domain),
+    byFamilyIdx: index('api_usage_delivery_family_idx').on(table.family),
+    uniqueSubjectDayDomainFamilyIdx: uniqueIndex(
+      'api_usage_delivery_subject_day_domain_family_unique'
+    ).on(table.subject, table.day, table.domain, table.family),
+  })
+);
+
 // 导出类型
 export type Brand = typeof brands.$inferSelect;
 export type NewBrand = typeof brands.$inferInsert;
@@ -592,3 +621,6 @@ export type NewApiUsageDaily = typeof apiUsageDaily.$inferInsert;
 
 export type ApiUsageWindow = typeof apiUsageWindow.$inferSelect;
 export type NewApiUsageWindow = typeof apiUsageWindow.$inferInsert;
+
+export type ApiUsageDelivery = typeof apiUsageDelivery.$inferSelect;
+export type NewApiUsageDelivery = typeof apiUsageDelivery.$inferInsert;

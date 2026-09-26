@@ -1,4 +1,5 @@
-import { withFontApiAuth } from '@/lib/api/font-api-auth';
+import { withFontApiAuth, type FontApiAuthContext } from '@/lib/api/font-api-auth';
+import { recordDeliveryUsage } from '@/lib/api/usage-delivery';
 import { logger } from '@/lib/logger';
 import { cssService } from '@/lib/services/css.service';
 import { NextRequest, NextResponse } from 'next/server';
@@ -24,114 +25,144 @@ import { ZodError } from 'zod';
  * - If-None-Match: 如果ETag匹配，返回304
  */
 export const GET = withFontApiAuth(
-  async (request) => {
-  const nextRequest = request as NextRequest;
-  try {
-    // 获取查询参数
-    const searchParams = nextRequest.nextUrl.searchParams;
-    const family = searchParams.get('family');
-    const subset = searchParams.get('subset') || undefined;
-    const lang = searchParams.get('lang') || undefined;
+  async (request, ctx: FontApiAuthContext) => {
+    const nextRequest = request as NextRequest;
+    try {
+      const searchParams = nextRequest.nextUrl.searchParams;
+      const family = searchParams.get('family');
+      const subset = searchParams.get('subset') || undefined;
+      const lang = searchParams.get('lang') || undefined;
 
-    // 验证必需参数
-    if (!family) {
-      return NextResponse.json(
-        {
-          code: 400,
-          message: 'family参数不能为空',
-          status: 'fail',
-        },
-        { status: 400, headers: { 'Cache-Control': 'no-store' } }
-      );
-    }
+      if (!family) {
+        return NextResponse.json(
+          {
+            code: 400,
+            message: 'family参数不能为空',
+            status: 'fail',
+          },
+          { status: 400, headers: { 'Cache-Control': 'no-store' } }
+        );
+      }
 
-    // 生成CSS
-    // 将 subset/lang 参数映射到 version
-    const version = ((subset || lang || 'full').toLowerCase() || 'full') as
-      | 'en'
-      | 'zh'
-      | 'zh-common'
-      | 'full';
-    const weight = (searchParams.get('weight') || 'regular').toLowerCase();
-    const fallback = searchParams.get('fallback') || undefined;
-    const fallbackWeight = searchParams.get('fallbackWeight') || undefined;
-    const localeFallbackRaw = (searchParams.get('localeFallback') || '').toLowerCase();
-    const localeFallback =
-      localeFallbackRaw === 'auto' ||
-      localeFallbackRaw === 'sc' ||
-      localeFallbackRaw === 'tc' ||
-      localeFallbackRaw === 'off'
-        ? (localeFallbackRaw as 'off' | 'auto' | 'sc' | 'tc')
-        : undefined;
-    const { css, etag } = await cssService.generateCSS({
-      family,
-      version,
-      weight,
-      fallback,
-      fallbackWeight,
-      localeFallback,
-    });
+      const version = ((subset || lang || 'full').toLowerCase() || 'full') as
+        | 'en'
+        | 'zh'
+        | 'zh-common'
+        | 'full';
+      const weight = (searchParams.get('weight') || 'regular').toLowerCase();
+      const fallback = searchParams.get('fallback') || undefined;
+      const fallbackWeight = searchParams.get('fallbackWeight') || undefined;
+      const localeFallbackRaw = (searchParams.get('localeFallback') || '').toLowerCase();
+      const localeFallback =
+        localeFallbackRaw === 'auto' ||
+        localeFallbackRaw === 'sc' ||
+        localeFallbackRaw === 'tc' ||
+        localeFallbackRaw === 'off'
+          ? (localeFallbackRaw as 'off' | 'auto' | 'sc' | 'tc')
+          : undefined;
+      const { css, etag } = await cssService.generateCSS({
+        family,
+        version,
+        weight,
+        fallback,
+        fallbackWeight,
+        localeFallback,
+      });
 
-    // 检查条件请求（If-None-Match）
-    const ifNoneMatch = nextRequest.headers.get('if-none-match');
-    if (ifNoneMatch === etag) {
-      // 内容未变化，返回304
-      return new NextResponse(null, {
-        status: 304,
+      const ifNoneMatch = nextRequest.headers.get('if-none-match');
+      const subject = ctx.apiKey?.id || 'anon';
+      const keyId = ctx.apiKey?.id || null;
+
+      if (ifNoneMatch === etag) {
+        void recordDeliveryUsage({
+          day: ctx.day,
+          subject,
+          keyId,
+          domain: ctx.domain,
+          family,
+          bytes: 0,
+        });
+        return new NextResponse(null, {
+          status: 304,
+          headers: {
+            ETag: etag,
+            'Cache-Control': 'public, max-age=3600, s-maxage=7200',
+          },
+        });
+      }
+
+      const bytes = Buffer.byteLength(css, 'utf8');
+      void recordDeliveryUsage({
+        day: ctx.day,
+        subject,
+        keyId,
+        domain: ctx.domain,
+        family,
+        bytes,
+      });
+
+      return new NextResponse(css, {
+        status: 200,
         headers: {
-          ETag: etag,
+          'Content-Type': 'text/css; charset=utf-8',
           'Cache-Control': 'public, max-age=3600, s-maxage=7200',
+          ETag: etag,
+          Vary: 'Accept-Encoding',
+          'Content-Length': String(bytes),
         },
       });
-    }
+    } catch (error) {
+      const noStore = { 'Cache-Control': 'no-store' };
 
-    // 返回CSS内容
-    return new NextResponse(css, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/css; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, s-maxage=7200',
-        ETag: etag,
-        Vary: 'Accept-Encoding',
-      },
-    });
-  } catch (error) {
-    const noStore = { 'Cache-Control': 'no-store' };
+      if (error instanceof ZodError) {
+        logger.error('[API-css] 参数验证失败', {
+          error: error.errors,
+        });
+        return NextResponse.json(
+          {
+            code: 400,
+            message: '参数验证失败',
+            status: 'fail',
+            errors: error.errors.map((e) => ({
+              field: e.path.join('.'),
+              message: e.message,
+            })),
+          },
+          { status: 400, headers: noStore }
+        );
+      }
 
-    if (error instanceof ZodError) {
-      logger.error('[API-css] 参数验证失败', {
-        error: error.errors,
+      if (error instanceof Error && error.message.includes('不存在')) {
+        logger.warn('[API-css] 字体不存在', {
+          error: error.message,
+        });
+        return NextResponse.json(
+          {
+            code: 404,
+            message: error.message,
+            status: 'fail',
+          },
+          { status: 404, headers: noStore }
+        );
+      }
+
+      if (error instanceof Error && error.message.includes('不可通过公共 CSS')) {
+        logger.warn('[API-css] CSS 门禁拒绝', { error: error.message });
+        return NextResponse.json(
+          {
+            code: 500,
+            message: '生成CSS失败',
+            status: 'error',
+          },
+          { status: 500, headers: noStore }
+        );
+      }
+
+      logger.error('[API-css] 生成CSS失败', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
       });
-      return NextResponse.json(
-        {
-          code: 400,
-          message: '参数验证失败',
-          status: 'fail',
-          errors: error.errors.map((e) => ({
-            field: e.path.join('.'),
-            message: e.message,
-          })),
-        },
-        { status: 400, headers: noStore }
-      );
-    }
 
-    if (error instanceof Error && error.message.includes('不存在')) {
-      logger.warn('[API-css] 字体不存在', {
-        error: error.message,
-      });
-      return NextResponse.json(
-        {
-          code: 404,
-          message: error.message,
-          status: 'fail',
-        },
-        { status: 404, headers: noStore }
-      );
-    }
-
-    if (error instanceof Error && error.message.includes('不可通过公共 CSS')) {
-      logger.warn('[API-css] CSS 门禁拒绝', { error: error.message });
       return NextResponse.json(
         {
           code: 500,
@@ -141,22 +172,7 @@ export const GET = withFontApiAuth(
         { status: 500, headers: noStore }
       );
     }
-
-    logger.error('[API-css] 生成CSS失败', {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-
-    return NextResponse.json(
-      {
-        code: 500,
-        message: '生成CSS失败',
-        status: 'error',
-      },
-      { status: 500, headers: noStore }
-    );
-  }
-},
+  },
   // 公开 CDN 投递：边缘回源常无 Origin；不可吃匿名日额度
   { skipAnonymousQuota: true }
 );
