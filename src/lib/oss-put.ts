@@ -48,6 +48,16 @@ export function ossConfigured(): boolean {
   return !!requiredEnv();
 }
 
+/** Build OSS V1 CanonicalizedOSSHeaders (must include every x-oss-* request header). */
+export function canonicalizedOssHeaders(headers: Record<string, string>): string {
+  const entries = Object.entries(headers)
+    .map(([k, v]) => [k.toLowerCase().trim(), String(v).trim()] as const)
+    .filter(([k]) => k.startsWith('x-oss-'))
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  if (!entries.length) return '';
+  return entries.map(([k, v]) => `${k}:${v}`).join('\n') + '\n';
+}
+
 /**
  * PUT one object to Aliyun OSS (V1 signature). Private ACL by default.
  * Returns null when OSS is not configured / skipped.
@@ -66,7 +76,11 @@ export async function ossPutObject(opts: {
   const contentType = opts.contentType || 'application/octet-stream';
   const date = new Date().toUTCString();
   const resource = `/${cfg.bucket}/${objectKey}`;
-  const stringToSign = `PUT\n\n${contentType}\n${date}\n${resource}`;
+  const ossHeaders: Record<string, string> = {
+    'x-oss-object-acl': 'private',
+  };
+  const canonicalHeaders = canonicalizedOssHeaders(ossHeaders);
+  const stringToSign = `PUT\n\n${contentType}\n${date}\n${canonicalHeaders}${resource}`;
   const signature = createHmac('sha1', cfg.accessKeySecret).update(stringToSign).digest('base64');
   const url = `https://${cfg.endpointHost}/${objectKey}`;
 
@@ -76,7 +90,7 @@ export async function ossPutObject(opts: {
       Date: date,
       'Content-Type': contentType,
       'Content-Length': String(opts.body.length),
-      'x-oss-object-acl': 'private',
+      ...ossHeaders,
       Authorization: `OSS ${cfg.accessKeyId}:${signature}`,
     },
     body: new Uint8Array(opts.body),
