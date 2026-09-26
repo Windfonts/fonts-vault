@@ -4,6 +4,7 @@ import path from 'path';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
 import { ossConfigured, ossPutObject } from '@/lib/oss-put';
+import { tryCompressToWoff2 } from '@/lib/upload-woff2';
 
 const MAX_UPLOADS = 100;
 const MAX_FILE_BYTES = 30 * 1024 * 1024;
@@ -67,6 +68,8 @@ export type ConsoleUploadRecord = {
     weight: string;
     received: boolean;
     storedAs?: string;
+    /** WOFF2 衍生物文件名（与 storedAs 同目录） */
+    woff2As?: string;
     ossKey?: string;
   }>;
   proofReceived: boolean;
@@ -100,6 +103,7 @@ export type AdminUploadRow = {
     weight: string;
     received: boolean;
     ossKey: string;
+    woff2As: string;
   }>;
   proofReceived: boolean;
   proofOssKey: string;
@@ -270,13 +274,14 @@ export class ConsoleUploadsService {
     const { uploadToken: _t, tokenExpiresAt: _e, files, proofReceived, ...rest } = u;
     return {
       ...rest,
-      files: files.map(({ received, filename, size, contentType, weight, ossKey }) => ({
+      files: files.map(({ received, filename, size, contentType, weight, ossKey, woff2As }) => ({
         filename,
         size,
         contentType,
         weight,
         received,
         ossKey: ossKey || '',
+        woff2As: woff2As || '',
       })),
       proofReceived,
       proofOssKey: u.proofOssKey || '',
@@ -536,32 +541,69 @@ export class ConsoleUploadsService {
       return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed: false };
     }
 
-    // approved
+    // approved — 先转 WOFF2，再推 OSS（含 woff2）
     let ossPushed = false;
+    let woff2Count = 0;
     const prefix = `console-uploads/${id}`;
+    const dir = this.blobDir(id);
+
+    for (const slot of record.files) {
+      if (!slot.received || !slot.storedAs) continue;
+      const local = path.join(dir, slot.storedAs);
+      if (!fs.existsSync(local)) {
+        throw Object.assign(new Error(`缺少字重文件 ${slot.weight}`), {
+          status: 422,
+          code: 'validation_error',
+        });
+      }
+      const alreadyWoff2 =
+        /\.woff2$/i.test(slot.storedAs) ||
+        String(slot.contentType || '').toLowerCase().includes('woff2');
+      if (alreadyWoff2) {
+        slot.woff2As = slot.storedAs;
+        woff2Count += 1;
+        continue;
+      }
+      if (process.env.UPLOAD_WOFF2_SKIP === '1' || process.env.UPLOAD_WOFF2_SKIP === 'true') {
+        continue;
+      }
+      const compressed = await tryCompressToWoff2(
+        fs.readFileSync(local),
+        `${id}/${slot.weight}`
+      );
+      if (!compressed) continue;
+      const woff2Name = `${safeWeight(slot.weight)}.woff2`;
+      fs.writeFileSync(path.join(dir, woff2Name), compressed);
+      slot.woff2As = woff2Name;
+      woff2Count += 1;
+    }
+
     if (ossConfigured()) {
       for (const slot of record.files) {
         if (!slot.received || !slot.storedAs) continue;
-        const local = path.join(this.blobDir(id), slot.storedAs);
-        if (!fs.existsSync(local)) {
-          throw Object.assign(new Error(`缺少字重文件 ${slot.weight}`), {
-            status: 422,
-            code: 'validation_error',
+        const originals = [slot.storedAs, slot.woff2As].filter(
+          (n, i, arr): n is string => !!n && arr.indexOf(n) === i
+        );
+        for (const name of originals) {
+          const local = path.join(dir, name);
+          if (!fs.existsSync(local)) continue;
+          const objectKey = `${prefix}/${name}`;
+          const ct = name.endsWith('.woff2')
+            ? 'font/woff2'
+            : slot.contentType || 'application/octet-stream';
+          const put = await ossPutObject({
+            objectKey,
+            body: fs.readFileSync(local),
+            contentType: ct,
           });
-        }
-        const objectKey = `${prefix}/${slot.storedAs}`;
-        const put = await ossPutObject({
-          objectKey,
-          body: fs.readFileSync(local),
-          contentType: slot.contentType || 'application/octet-stream',
-        });
-        if (put) {
-          slot.ossKey = put.objectKey;
-          ossPushed = true;
+          if (put) {
+            if (name === slot.storedAs) slot.ossKey = put.objectKey;
+            ossPushed = true;
+          }
         }
       }
       if (record.proofReceived) {
-        const local = path.join(this.blobDir(id), 'proof.bin');
+        const local = path.join(dir, 'proof.bin');
         if (fs.existsSync(local)) {
           const objectKey = `${prefix}/proof.bin`;
           const put = await ossPutObject({
@@ -578,27 +620,33 @@ export class ConsoleUploadsService {
       if (ossPushed) record.ossPrefix = prefix;
     }
 
+    const bits: string[] = [];
+    if (woff2Count) bits.push(`WOFF2×${woff2Count}`);
+    if (ossPushed) bits.push(`OSS ${prefix}`);
+    if (!bits.length) bits.push('本地落盘');
+
     record.status = 'ready';
     record.review = {
       state: 'approved',
-      note:
-        note ||
-        (ossPushed
-          ? `已通过并推 OSS ${prefix}${who ? `（${who}）` : ''}`
-          : `已通过（本地落盘；OSS 未配置或跳过）${who ? `（${who}）` : ''}`),
+      note: note || `已通过（${bits.join(' · ')}）${who ? `（${who}）` : ''}`,
       reviewedAt: new Date().toISOString(),
     };
     this.writeStore(store);
     logger.info('[ConsoleUploadsService] review approved', {
       id,
       ossPushed,
+      woff2Count,
       actor: who || null,
     });
     return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed };
   }
 
-  /** Admin / project CSS: read a local blob part (weight name or "proof"). */
-  readBlob(id: string, part: string): { bytes: Buffer; contentType: string; filename: string; weight: string } {
+  /** Admin / project CSS: read a local blob part (weight name or "proof"). Prefer WOFF2. */
+  readBlob(
+    id: string,
+    part: string,
+    opts?: { preferWoff2?: boolean }
+  ): { bytes: Buffer; contentType: string; filename: string; weight: string } {
     const found = this.findById(id);
     if (!found) {
       throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
@@ -620,6 +668,16 @@ export class ConsoleUploadsService {
     const slot = matchUploadWeightSlot(record.files, part);
     if (!slot?.storedAs) {
       throw Object.assign(new Error('字重文件不存在'), { status: 404, code: 'not_found' });
+    }
+    const prefer = opts?.preferWoff2 !== false;
+    const woff2Path = slot.woff2As ? path.join(dir, slot.woff2As) : '';
+    if (prefer && woff2Path && fs.existsSync(woff2Path)) {
+      return {
+        bytes: fs.readFileSync(woff2Path),
+        contentType: 'font/woff2',
+        filename: slot.woff2As!.replace(/\.woff2$/i, '') + '.woff2',
+        weight: slot.weight,
+      };
     }
     const p = path.join(dir, slot.storedAs);
     if (!fs.existsSync(p)) {
