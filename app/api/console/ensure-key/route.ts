@@ -2,7 +2,7 @@ import { generateApiKey } from '@/lib/api/font-api-auth';
 import { createHash } from 'crypto';
 import { getSession } from '@/lib/auth/session';
 import { db } from '@/lib/db/client';
-import { apiKeys } from '@/lib/db/schema';
+import { apiKeys, apiPlans } from '@/lib/db/schema';
 import {
   decryptConsoleKey,
   deleteConsoleSessionKey,
@@ -79,6 +79,22 @@ async function revokeConsoleKeysForEmail(email: string): Promise<void> {
     .where(and(eq(apiKeys.ownerEmail, email), eq(apiKeys.name, CONSOLE_KEY_NAME), eq(apiKeys.status, 'active')));
 }
 
+
+async function resolveDefaultPlanId(): Promise<string | null> {
+  const rows = await db
+    .select({ id: apiPlans.id })
+    .from(apiPlans)
+    .where(and(eq(apiPlans.slug, 'free'), eq(apiPlans.isActive, true)))
+    .limit(1);
+  if (rows[0]?.id) return rows[0].id;
+  const any = await db
+    .select({ id: apiPlans.id })
+    .from(apiPlans)
+    .where(eq(apiPlans.isActive, true))
+    .limit(1);
+  return any[0]?.id || null;
+}
+
 async function insertKey(opts: {
   email: string;
   plaintext: string;
@@ -88,6 +104,7 @@ async function insertKey(opts: {
 }): Promise<string> {
   const now = new Date();
   const id = crypto.randomUUID();
+  const planId = await resolveDefaultPlanId();
   await db.insert(apiKeys).values({
     id,
     name: CONSOLE_KEY_NAME,
@@ -95,6 +112,7 @@ async function insertKey(opts: {
     keyHash: opts.keyHash,
     checksum: opts.checksum,
     ownerEmail: opts.email,
+    planId: planId || undefined,
     status: 'active',
     createdAt: now,
     updatedAt: now,
