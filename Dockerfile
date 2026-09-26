@@ -7,6 +7,9 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g; s/security.debian.org/mirrors
   && apt-get clean \
   && npm config set registry https://registry.npmmirror.com \
   && corepack enable && corepack prepare pnpm@9.15.9 --activate
+# 与 packageManager=pnpm@9.15.9 对齐；STRICT=0 防止 corepack 另拉高版本
+ENV COREPACK_ENABLE_STRICT=0
+ENV COREPACK_ENABLE_AUTO_PIN=0
 
 # 安装依赖阶段
 FROM base AS deps
@@ -14,8 +17,9 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 ARG PNPM_REGISTRY=https://registry.npmmirror.com
-RUN pnpm install --frozen-lockfile --registry="$PNPM_REGISTRY" \
-  && CN_FONT_SPLIT_GH_HOST=https://ik.imagekit.io/github node node_modules/cn-font-split/dist/cli.js i default || true
+RUN pnpm --version && pnpm install --frozen-lockfile --registry="$PNPM_REGISTRY"
+# 原生库下载失败不挡依赖；pack 阶段会再拉
+RUN CN_FONT_SPLIT_GH_HOST=https://ik.imagekit.io/github node node_modules/cn-font-split/dist/cli.js i default || true
 
 # 构建阶段
 FROM base AS builder
