@@ -115,9 +115,16 @@ function detectTargets() {
 async function ensureNativeBin(splitRoot) {
   const dist = path.join(splitRoot, 'dist');
   const existing = fs.readdirSync(dist).filter((n) => n.startsWith('libffi-'));
+  const wantMusl = fs.existsSync('/etc/alpine-release');
   if (existing.length) {
-    console.log('[pack] native already', existing.join(','));
-    return path.join(dist, existing[0]);
+    const preferred = wantMusl
+      ? existing.find((n) => n.includes('musl')) || null
+      : existing.find((n) => !n.includes('musl')) || existing[0];
+    if (preferred) {
+      console.log('[pack] native already', preferred);
+      return path.join(dist, preferred);
+    }
+    console.log('[pack] have', existing.join(','), 'but need musl — will download');
   }
   // version folder under dist/version or package
   let ver = '';
