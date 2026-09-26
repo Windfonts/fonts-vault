@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
   // Docker 部署配置
   output: 'standalone',
 
-  serverExternalPackages: ['wawoff2'],
+  serverExternalPackages: ['wawoff2', 'cn-font-split', 'koffi'],
 
   // 静态资源缓存
   async headers() {

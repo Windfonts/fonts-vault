@@ -8,6 +8,7 @@ import {
   fontFaceFormat,
   matchUploadWeightSlot,
 } from './console-uploads.service';
+import { rewriteSplitCss } from '@/lib/upload-split';
 import { cssService } from './css.service';
 import {
   projectManifestSchema,
@@ -162,11 +163,30 @@ export class ProjectService {
       if (!slot || !slot.received || !slot.storedAs) {
         throw new Error(`上传 ${uploadId} 缺少字重 ${want}`);
       }
+      const cssNum = cssWeightNumber(slot.weight);
+      if (slot.splitAs) {
+        const splitCss = consoleUploadsService.readSplitCssPath(uploadId, slot.weight);
+        if (splitCss) {
+          const shardBase =
+            `${base}/api/uploads/${encodeURIComponent(uploadId)}/files/` +
+            `${encodeURIComponent(slot.weight)}/shards`;
+          const raw = fs.readFileSync(splitCss, 'utf8');
+          chunks.push(
+            rewriteSplitCss(raw, {
+              family,
+              display: displayVal,
+              weightCss: cssNum,
+              shardBaseUrl: shardBase,
+              urlQuery: `?p=${encodeURIComponent(slug)}`,
+            })
+          );
+          continue;
+        }
+      }
       const useWoff2 = !!slot.woff2As;
       const fmt = useWoff2
         ? 'woff2'
         : fontFaceFormat(slot.filename, slot.contentType);
-      const cssNum = cssWeightNumber(slot.weight);
       const url =
         `${base}/api/uploads/${encodeURIComponent(uploadId)}/files/` +
         `${encodeURIComponent(slot.weight)}?p=${encodeURIComponent(slug)}`;
@@ -185,7 +205,7 @@ export class ProjectService {
     return chunks.join('\n');
   }
 
-  async bakeCss(manifest: ProjectManifest): Promise<{ css: string; etag: string }> {
+  async bakeCss  async bakeCss(manifest: ProjectManifest): Promise<{ css: string; etag: string }> {
     const chunks: string[] = [];
     chunks.push(
       `/* windfonts project · ${manifest.slug} · v${manifest.version}` +
