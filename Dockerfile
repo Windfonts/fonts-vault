@@ -10,6 +10,7 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g; s/security.debian.org/mirrors
 # 与 packageManager=pnpm@9.15.9 对齐；STRICT=0 防止 corepack 另拉高版本
 ENV COREPACK_ENABLE_STRICT=0
 ENV COREPACK_ENABLE_AUTO_PIN=0
+ENV CN_FONT_SPLIT_GH_HOST=https://ik.imagekit.io/github
 
 # 安装依赖阶段
 FROM base AS deps
