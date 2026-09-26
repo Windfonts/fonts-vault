@@ -164,6 +164,66 @@ function safeWeight(w: string): string {
     .slice(0, 40) || 'Regular';
 }
 
+const WEIGHT_CSS: Record<string, number> = {
+  thin: 100,
+  hairline: 100,
+  extralight: 200,
+  ultralight: 200,
+  light: 300,
+  regular: 400,
+  normal: 400,
+  book: 400,
+  medium: 500,
+  semibold: 600,
+  demibold: 600,
+  bold: 700,
+  extrabold: 800,
+  ultrabold: 800,
+  black: 900,
+  heavy: 900,
+};
+
+export function cssWeightNumber(raw: string): number {
+  const s = String(raw || '').trim();
+  const asNum = Number(s);
+  if (Number.isFinite(asNum) && asNum >= 1 && asNum <= 1000) return Math.round(asNum);
+  const key = s.toLowerCase().replace(/[\s_-]+/g, '');
+  return WEIGHT_CSS[key] || 400;
+}
+
+export function fontFaceFormat(filename: string, contentType?: string): string {
+  const ext = (filename.split('.').pop() || '').toLowerCase();
+  const ct = String(contentType || '').toLowerCase();
+  if (ext === 'woff2' || ct.includes('woff2')) return 'woff2';
+  if (ext === 'woff' || ct.includes('woff')) return 'woff';
+  if (ext === 'otf' || ct.includes('opentype')) return 'opentype';
+  if (ext === 'ttf' || ct.includes('truetype') || ct.includes('ttf')) return 'truetype';
+  return 'truetype';
+}
+
+function weightKey(raw: string): string {
+  return String(raw || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, '');
+}
+
+/** Match slot by weight name or CSS number (Regular ↔ regular ↔ 400). */
+export function matchUploadWeightSlot<T extends { weight: string }>(
+  files: T[],
+  want: string
+): T | undefined {
+  const wantSafe = safeWeight(want);
+  const exact = files.find((f) => f.weight === wantSafe || f.weight === want);
+  if (exact) return exact;
+  const wantKey = weightKey(want);
+  const wantNum = cssWeightNumber(want);
+  return files.find((f) => {
+    if (weightKey(f.weight) === wantKey) return true;
+    return cssWeightNumber(f.weight) === wantNum;
+  });
+}
+
 export class ConsoleUploadsService {
   private rootDir(): string {
     return path.join(process.cwd(), 'data', 'console-uploads');
@@ -537,8 +597,8 @@ export class ConsoleUploadsService {
     return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed };
   }
 
-  /** Admin: read a local blob part (weight name or "proof"). */
-  readBlob(id: string, part: string): { bytes: Buffer; contentType: string; filename: string } {
+  /** Admin / project CSS: read a local blob part (weight name or "proof"). */
+  readBlob(id: string, part: string): { bytes: Buffer; contentType: string; filename: string; weight: string } {
     const found = this.findById(id);
     if (!found) {
       throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
@@ -554,10 +614,10 @@ export class ConsoleUploadsService {
         bytes: fs.readFileSync(p),
         contentType: record.proofType || 'application/octet-stream',
         filename: record.proofName || 'proof.bin',
+        weight: 'proof',
       };
     }
-    const weight = safeWeight(decodeURIComponent(part));
-    const slot = record.files.find((f) => f.weight === weight);
+    const slot = matchUploadWeightSlot(record.files, part);
     if (!slot?.storedAs) {
       throw Object.assign(new Error('字重文件不存在'), { status: 404, code: 'not_found' });
     }
@@ -569,7 +629,35 @@ export class ConsoleUploadsService {
       bytes: fs.readFileSync(p),
       contentType: slot.contentType || 'application/octet-stream',
       filename: slot.filename,
+      weight: slot.weight,
     };
+  }
+
+  /** Ready-only blob for project CSS delivery. */
+  readReadyBlob(id: string, part: string) {
+    const found = this.findById(id);
+    if (!found) {
+      throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
+    }
+    if (found.record.status !== 'ready') {
+      throw Object.assign(new Error('字体尚未通过审核'), { status: 403, code: 'not_ready' });
+    }
+    return { ...this.readBlob(id, part), record: found.record, ownerKeyHash: found.hash };
+  }
+
+  /** Ready record for bakeCss (throws if missing / not ready). */
+  requireReady(id: string) {
+    const found = this.findById(id);
+    if (!found) {
+      throw Object.assign(new Error(`上传 ${id} 不存在`), { status: 404, code: 'not_found' });
+    }
+    if (found.record.status !== 'ready') {
+      throw Object.assign(new Error(`上传 ${id} 尚未通过审核（${found.record.status}）`), {
+        status: 422,
+        code: 'not_ready',
+      });
+    }
+    return found.record;
   }
 
   remove(apiKeyRaw: string, id: string) {

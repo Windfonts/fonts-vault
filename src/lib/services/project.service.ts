@@ -2,6 +2,12 @@ import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { logger } from '@/lib/logger';
+import {
+  consoleUploadsService,
+  cssWeightNumber,
+  fontFaceFormat,
+  matchUploadWeightSlot,
+} from './console-uploads.service';
 import { cssService } from './css.service';
 import {
   projectManifestSchema,
@@ -10,6 +16,14 @@ import {
 } from './validation';
 
 const DISPLAY_VALUES = new Set(['auto', 'block', 'swap', 'fallback', 'optional']);
+
+function publicAppBase(): string {
+  return (
+    process.env.NEXTAUTH_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'https://app.windfonts.com'
+  ).replace(/\/$/, '');
+}
 
 export class ProjectService {
   private rootDir(): string {
@@ -114,6 +128,60 @@ export class ProjectService {
     return css.replace(/font-display\s*:\s*[^;]+;/gi, `font-display: ${d};`);
   }
 
+  /** Whether a published project lists this upload id. */
+  projectUsesUpload(manifest: ProjectManifest, uploadId: string): boolean {
+    const id = String(uploadId || '').trim();
+    if (!id) return false;
+    return manifest.fonts.some(
+      (f) => f.source === 'upload' && String(f.uploadId || '').trim() === id
+    );
+  }
+
+  bakeUploadFaces(
+    font: ProjectManifest['fonts'][number],
+    slug: string,
+    display?: string
+  ): string {
+    const uploadId = String(font.uploadId || '').trim();
+    if (!uploadId) {
+      throw new Error(`upload 字体缺少 uploadId（family=${font.family}）`);
+    }
+    const record = consoleUploadsService.requireReady(uploadId);
+    const family = String(font.family || record.family || '').trim();
+    if (!family) throw new Error(`upload ${uploadId} 缺少 family`);
+
+    const base = publicAppBase();
+    const displayVal = DISPLAY_VALUES.has(String(display || '').toLowerCase())
+      ? String(display).toLowerCase()
+      : 'swap';
+    const wants = font.weights.length ? font.weights : record.weights;
+    const chunks: string[] = [];
+
+    for (const want of wants) {
+      const slot = matchUploadWeightSlot(record.files, want);
+      if (!slot || !slot.received || !slot.storedAs) {
+        throw new Error(`上传 ${uploadId} 缺少字重 ${want}`);
+      }
+      const fmt = fontFaceFormat(slot.filename, slot.contentType);
+      const cssNum = cssWeightNumber(slot.weight);
+      const url =
+        `${base}/api/uploads/${encodeURIComponent(uploadId)}/files/` +
+        `${encodeURIComponent(slot.weight)}?p=${encodeURIComponent(slug)}`;
+      chunks.push(
+        [
+          `@font-face{`,
+          `font-family:${JSON.stringify(family)};`,
+          `font-style:normal;`,
+          `font-weight:${cssNum};`,
+          `font-display:${displayVal};`,
+          `src:url(${JSON.stringify(url)}) format(${JSON.stringify(fmt)});`,
+          `}`,
+        ].join('')
+      );
+    }
+    return chunks.join('\n');
+  }
+
   async bakeCss(manifest: ProjectManifest): Promise<{ css: string; etag: string }> {
     const chunks: string[] = [];
     chunks.push(
@@ -123,6 +191,16 @@ export class ProjectService {
     );
 
     for (const font of manifest.fonts) {
+      if (font.source === 'upload') {
+        const css = this.bakeUploadFaces(font, manifest.slug, manifest.display);
+        chunks.push(
+          `\n/* upload ${font.uploadId} · ${font.family} · ${font.weights.join(',')}` +
+            ' */\n' +
+            css
+        );
+        continue;
+      }
+
       const weights = font.weights.length ? font.weights : ['regular'];
       for (const weight of weights) {
         const { css } = await cssService.generateCSS({
