@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { logger } from '@/lib/logger';
 import { ossConfigured, ossPutObject } from '@/lib/oss-put';
 import { tryCompressToWoff2 } from '@/lib/upload-woff2';
+import { trySplitFontToDir } from '@/lib/upload-split';
 
 const MAX_UPLOADS = 100;
 const MAX_FILE_BYTES = 30 * 1024 * 1024;
@@ -70,6 +71,10 @@ export type ConsoleUploadRecord = {
     storedAs?: string;
     /** WOFF2 衍生物文件名（与 storedAs 同目录） */
     woff2As?: string;
+    /** 相对 blob 目录的切包目录，如 split/Regular（内含 result.css + N.woff2） */
+    splitAs?: string;
+    /** 切包分片数 */
+    splitShards?: number;
     ossKey?: string;
   }>;
   proofReceived: boolean;
@@ -104,6 +109,8 @@ export type AdminUploadRow = {
     received: boolean;
     ossKey: string;
     woff2As: string;
+    splitAs: string;
+    splitShards: number;
   }>;
   proofReceived: boolean;
   proofOssKey: string;
@@ -274,7 +281,7 @@ export class ConsoleUploadsService {
     const { uploadToken: _t, tokenExpiresAt: _e, files, proofReceived, ...rest } = u;
     return {
       ...rest,
-      files: files.map(({ received, filename, size, contentType, weight, ossKey, woff2As }) => ({
+      files: files.map(({ received, filename, size, contentType, weight, ossKey, woff2As, splitAs, splitShards }) => ({
         filename,
         size,
         contentType,
@@ -282,6 +289,8 @@ export class ConsoleUploadsService {
         received,
         ossKey: ossKey || '',
         woff2As: woff2As || '',
+        splitAs: splitAs || '',
+        splitShards: splitShards || 0,
       })),
       proofReceived,
       proofOssKey: u.proofOssKey || '',
@@ -578,6 +587,35 @@ export class ConsoleUploadsService {
       woff2Count += 1;
     }
 
+    // cn-font-split：用原 TTF/OTF 切 unicode-range 分片（失败则保留整包 woff2）
+    let splitCount = 0;
+    let splitShardsTotal = 0;
+    if (!(process.env.UPLOAD_SPLIT_SKIP === '1' || process.env.UPLOAD_SPLIT_SKIP === 'true')) {
+      for (const slot of record.files) {
+        if (!slot.received || !slot.storedAs) continue;
+        const local = path.join(dir, slot.storedAs);
+        if (!fs.existsSync(local)) continue;
+        const ext = path.extname(slot.storedAs).toLowerCase();
+        if (!['.ttf', '.otf', '.ttc'].includes(ext) && !/truetype|opentype/i.test(slot.contentType || '')) {
+          // 已是整包 woff2 上传：跳过切包（cn-font-split 要源字形）
+          if (/\.woff2?$/i.test(ext) || /woff/i.test(slot.contentType || '')) continue;
+        }
+        const weightSafe = safeWeight(slot.weight);
+        const splitRel = `split/${weightSafe}`;
+        const splitDir = path.join(dir, splitRel);
+        const result = await trySplitFontToDir(fs.readFileSync(local), splitDir, {
+          family: record.family,
+          weightCss: cssWeightNumber(slot.weight),
+          label: `${id}/${slot.weight}`,
+        });
+        if (!result) continue;
+        slot.splitAs = splitRel;
+        slot.splitShards = result.shardCount;
+        splitCount += 1;
+        splitShardsTotal += result.shardCount;
+      }
+    }
+
     if (ossConfigured()) {
       for (const slot of record.files) {
         if (!slot.received || !slot.storedAs) continue;
@@ -601,6 +639,27 @@ export class ConsoleUploadsService {
             ossPushed = true;
           }
         }
+        if (slot.splitAs) {
+          const splitDir = path.join(dir, slot.splitAs);
+          if (fs.existsSync(splitDir)) {
+            for (const name of fs.readdirSync(splitDir)) {
+              const local = path.join(splitDir, name);
+              if (!fs.statSync(local).isFile()) continue;
+              const objectKey = `${prefix}/${slot.splitAs}/${name}`;
+              const ct = name.endsWith('.woff2')
+                ? 'font/woff2'
+                : name.endsWith('.css')
+                  ? 'text/css; charset=utf-8'
+                  : 'application/octet-stream';
+              const put = await ossPutObject({
+                objectKey,
+                body: fs.readFileSync(local),
+                contentType: ct,
+              });
+              if (put) ossPushed = true;
+            }
+          }
+        }
       }
       if (record.proofReceived) {
         const local = path.join(dir, 'proof.bin');
@@ -622,6 +681,7 @@ export class ConsoleUploadsService {
 
     const bits: string[] = [];
     if (woff2Count) bits.push(`WOFF2×${woff2Count}`);
+    if (splitCount) bits.push(`切包×${splitCount}(${splitShardsTotal}片)`);
     if (ossPushed) bits.push(`OSS ${prefix}`);
     if (!bits.length) bits.push('本地落盘');
 
@@ -636,6 +696,8 @@ export class ConsoleUploadsService {
       id,
       ossPushed,
       woff2Count,
+      splitCount,
+      splitShardsTotal,
       actor: who || null,
     });
     return { upload: { ...this.publicRow(record), ownerKeyHash: hash }, ossPushed };
@@ -701,6 +763,61 @@ export class ConsoleUploadsService {
       throw Object.assign(new Error('字体尚未通过审核'), { status: 403, code: 'not_ready' });
     }
     return { ...this.readBlob(id, part), record: found.record, ownerKeyHash: found.hash };
+  }
+
+
+
+  /** Absolute path to result.css for a weight, or null. */
+  readSplitCssPath(id: string, weight: string): string | null {
+    const found = this.findById(id);
+    if (!found || found.record.status !== 'ready') return null;
+    const slot = matchUploadWeightSlot(found.record.files, weight);
+    if (!slot?.splitAs) return null;
+    const p = path.join(this.blobDir(id), slot.splitAs, 'result.css');
+    return fs.existsSync(p) ? p : null;
+  }
+
+  /** Serve a cn-font-split shard (N.woff2 / result.css) for a ready upload weight. */
+  readSplitShard(
+    id: string,
+    weight: string,
+    file: string
+  ): { bytes: Buffer; contentType: string; filename: string; weight: string } {
+    const found = this.findById(id);
+    if (!found) {
+      throw Object.assign(new Error('上传不存在'), { status: 404, code: 'not_found' });
+    }
+    if (found.record.status !== 'ready') {
+      throw Object.assign(new Error('字体尚未通过审核'), { status: 403, code: 'not_ready' });
+    }
+    const slot = matchUploadWeightSlot(found.record.files, weight);
+    if (!slot?.splitAs) {
+      throw Object.assign(new Error('该字重无切包分片'), { status: 404, code: 'not_found' });
+    }
+    const base = path.basename(String(file || ''));
+    if (!base || base !== file || base.includes('..') || /[\\\/]/.test(file)) {
+      throw Object.assign(new Error('非法分片名'), { status: 400, code: 'validation_error' });
+    }
+    if (!/^(\d+\.(woff2|woff|ttf|otf)|result\.css)$/i.test(base)) {
+      throw Object.assign(new Error('非法分片名'), { status: 400, code: 'validation_error' });
+    }
+    const p = path.join(this.blobDir(id), slot.splitAs, base);
+    if (!fs.existsSync(p)) {
+      throw Object.assign(new Error('分片不存在'), { status: 404, code: 'not_found' });
+    }
+    const ct = /\.css$/i.test(base)
+      ? 'text/css; charset=utf-8'
+      : /\.woff2$/i.test(base)
+        ? 'font/woff2'
+        : /\.woff$/i.test(base)
+          ? 'font/woff'
+          : 'application/octet-stream';
+    return {
+      bytes: fs.readFileSync(p),
+      contentType: ct,
+      filename: base,
+      weight: slot.weight,
+    };
   }
 
   /** Ready record for bakeCss (throws if missing / not ready). */

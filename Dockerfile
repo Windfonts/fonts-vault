@@ -12,7 +12,8 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 ARG PNPM_REGISTRY=https://registry.npmmirror.com
-RUN pnpm install --frozen-lockfile --registry="$PNPM_REGISTRY"
+RUN pnpm install --frozen-lockfile --registry="$PNPM_REGISTRY" \
+  && CN_FONT_SPLIT_GH_HOST=https://ik.imagekit.io/github node node_modules/cn-font-split/dist/cli.js i default || true
 
 # 构建阶段
 FROM base AS builder
@@ -27,6 +28,8 @@ RUN mkdir -p /app/data && if [ ! -f /app/data/prod.db ]; then : > /app/data/prod
 # COPY . 会带上误名的 workspace 文件，构建前删掉
 RUN rm -f pnpm-workspace.yaml
 RUN pnpm run build
+# 为 standalone runner 打一份 cn-font-split 运行时树（含 koffi FFI）
+RUN CN_FONT_SPLIT_GH_HOST=https://ik.imagekit.io/github node scripts/pack-cn-font-split-runtime.mjs
 
 # 运行阶段 - 使用 standalone 输出
 FROM base AS runner
@@ -45,6 +48,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # serverExternalPackages：standalone 不内联，须拷入运行镜像
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/wawoff2 ./node_modules/wawoff2
+COPY --from=builder --chown=nextjs:nodejs /app/split-runtime/ ./node_modules/
+
 
 RUN mkdir -p /app/data /app/logs && chown -R nextjs:nodejs /app/data /app/logs
 
