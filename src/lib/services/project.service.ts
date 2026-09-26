@@ -8,7 +8,11 @@ import {
   fontFaceFormat,
   matchUploadWeightSlot,
 } from './console-uploads.service';
-import { rewriteSplitCss } from '@/lib/upload-split';
+import {
+  codePointsFromText,
+  rewriteSplitCss,
+  textSubsetKey,
+} from '@/lib/upload-split';
 import { cssService } from './css.service';
 import {
   projectManifestSchema,
@@ -138,11 +142,11 @@ export class ProjectService {
     );
   }
 
-  bakeUploadFaces(
+  async bakeUploadFaces(
     font: ProjectManifest['fonts'][number],
     slug: string,
     display?: string
-  ): string {
+  ): Promise<string> {
     const uploadId = String(font.uploadId || '').trim();
     if (!uploadId) {
       throw new Error(`upload 字体缺少 uploadId（family=${font.family}）`);
@@ -158,18 +162,57 @@ export class ProjectService {
     const wants = font.weights.length ? font.weights : record.weights;
     const chunks: string[] = [];
 
+    const textRaw = String(font.text || '').trim();
+    let textKey = '';
+    let codePoints: number[] = [];
+    if (textRaw) {
+      codePoints = codePointsFromText(textRaw);
+      if (codePoints.length) textKey = textSubsetKey(codePoints);
+    }
+
     for (const want of wants) {
       const slot = matchUploadWeightSlot(record.files, want);
       if (!slot || !slot.received || !slot.storedAs) {
         throw new Error(`上传 ${uploadId} 缺少字重 ${want}`);
       }
       const cssNum = cssWeightNumber(slot.weight);
+      const shardBase =
+        `${base}/api/uploads/${encodeURIComponent(uploadId)}/files/` +
+        `${encodeURIComponent(slot.weight)}/shards`;
+
+      if (textKey) {
+        await consoleUploadsService.ensureTextSubset({
+          uploadId,
+          weight: slot.weight,
+          textKey,
+          codePoints,
+          family,
+        });
+        const textCss = consoleUploadsService.readTextSubsetCssPath(
+          uploadId,
+          slot.weight,
+          textKey
+        );
+        if (!textCss) {
+          throw new Error(`按文字切包失败（${uploadId}/${slot.weight}）`);
+        }
+        const raw = fs.readFileSync(textCss, 'utf8');
+        chunks.push(
+          rewriteSplitCss(raw, {
+            family,
+            display: displayVal,
+            weightCss: cssNum,
+            shardBaseUrl: shardBase,
+            urlQuery:
+              `?p=${encodeURIComponent(slug)}&t=${encodeURIComponent(textKey)}`,
+          })
+        );
+        continue;
+      }
+
       if (slot.splitAs) {
         const splitCss = consoleUploadsService.readSplitCssPath(uploadId, slot.weight);
         if (splitCss) {
-          const shardBase =
-            `${base}/api/uploads/${encodeURIComponent(uploadId)}/files/` +
-            `${encodeURIComponent(slot.weight)}/shards`;
           const raw = fs.readFileSync(splitCss, 'utf8');
           chunks.push(
             rewriteSplitCss(raw, {
@@ -215,9 +258,11 @@ export class ProjectService {
 
     for (const font of manifest.fonts) {
       if (font.source === 'upload') {
-        const css = this.bakeUploadFaces(font, manifest.slug, manifest.display);
+        const css = await this.bakeUploadFaces(font, manifest.slug, manifest.display);
+        const textNote = String(font.text || '').trim() ? ' · text' : '';
         chunks.push(
           `\n/* upload ${font.uploadId} · ${font.family} · ${font.weights.join(',')}` +
+            textNote +
             ' */\n' +
             css
         );

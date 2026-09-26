@@ -1,6 +1,12 @@
+import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { logger } from '@/lib/logger';
+
+/** 按文字子集：去重码点上限（防滥用 / 超长切包） */
+export const MAX_TEXT_CODEPOINTS = 2000;
+/** 原始 text 字段长度上限 */
+export const MAX_TEXT_CHARS = 8000;
 
 function ensureCnFontSplitBin(): void {
   if (process.env.CN_FONT_SPLIT_BIN && fs.existsSync(process.env.CN_FONT_SPLIT_BIN)) return;
@@ -15,11 +21,57 @@ function ensureCnFontSplitBin(): void {
   }
 }
 
+/**
+ * 从正文抽出去重 Unicode 码点（跳过空白），升序。
+ * 超限抛 validation_error。
+ */
+export function codePointsFromText(text: string): number[] {
+  const raw = String(text || '');
+  if (raw.length > MAX_TEXT_CHARS) {
+    throw Object.assign(new Error(`按文字最多 ${MAX_TEXT_CHARS} 字符`), {
+      status: 422,
+      code: 'validation_error',
+    });
+  }
+  const seen = new Set<number>();
+  const out: number[] = [];
+  for (const ch of raw) {
+    if (/\s/u.test(ch)) continue;
+    const cp = ch.codePointAt(0);
+    if (cp === undefined || seen.has(cp)) continue;
+    seen.add(cp);
+    out.push(cp);
+    if (out.length > MAX_TEXT_CODEPOINTS) {
+      throw Object.assign(new Error(`按文字最多 ${MAX_TEXT_CODEPOINTS} 个不重复字符`), {
+        status: 422,
+        code: 'validation_error',
+      });
+    }
+  }
+  out.sort((a, b) => a - b);
+  return out;
+}
+
+/** 稳定短哈希，用作 text-subset/{key}/ 目录名 */
+export function textSubsetKey(codePoints: number[]): string {
+  return createHash('sha256').update(codePoints.join(',')).digest('hex').slice(0, 16);
+}
 
 export type SplitResult = {
   outDir: string;
   cssFile: string;
   shardCount: number;
+};
+
+export type SplitFontOpts = {
+  family: string;
+  weightCss?: number;
+  chunkKb?: number;
+  /**
+   * 按文字：仅保留这些码点（cn-font-split subsets + subsetRemainChars:false）。
+   * 缺省走语言分区全切。
+   */
+  codePoints?: number[];
 };
 
 /**
@@ -29,7 +81,7 @@ export type SplitResult = {
 export async function splitFontToDir(
   input: Buffer,
   outDir: string,
-  opts: { family: string; weightCss?: number; chunkKb?: number }
+  opts: SplitFontOpts
 ): Promise<SplitResult> {
   fs.mkdirSync(outDir, { recursive: true });
   for (const name of fs.readdirSync(outDir)) {
@@ -44,6 +96,8 @@ export async function splitFontToDir(
 
   const chunkKb = opts.chunkKb && opts.chunkKb > 0 ? opts.chunkKb : 70;
   const weight = opts.weightCss && opts.weightCss > 0 ? String(opts.weightCss) : '400';
+  const cps = Array.isArray(opts.codePoints) ? opts.codePoints.filter((n) => Number.isFinite(n)) : [];
+  const textMode = cps.length > 0;
 
   await fontSplit({
     input,
@@ -51,7 +105,13 @@ export async function splitFontToDir(
     chunkSize: chunkKb * 1024,
     testHtml: false,
     reporter: false,
-    languageAreas: true,
+    languageAreas: !textMode,
+    ...(textMode
+      ? {
+          subsets: [cps],
+          subsetRemainChars: false,
+        }
+      : {}),
     renameOutputFont: '[index].[ext]',
     silent: true,
     css: {
@@ -79,7 +139,7 @@ export async function splitFontToDir(
 export async function trySplitFontToDir(
   input: Buffer,
   outDir: string,
-  opts: { family: string; weightCss?: number; label?: string; chunkKb?: number }
+  opts: SplitFontOpts & { label?: string }
 ): Promise<SplitResult | null> {
   try {
     return await splitFontToDir(input, outDir, opts);
