@@ -25,10 +25,26 @@ const claimSchema = z.object({
 
 export type ConsoleClaim = z.infer<typeof claimSchema>;
 
+export type ClaimWithOwner = ConsoleClaim & { ownerKeyHash: string };
+
+export type FoundryClaimStatus = {
+  claimed: boolean;
+  claimId: string;
+  slug: string;
+  name: string;
+  approvedAt: string;
+  email?: string;
+};
+
 type StoreFile = {
   ownerKeyHash: string;
   updatedAt: string;
   claims: ConsoleClaim[];
+};
+
+type StatusFile = {
+  updatedAt: string;
+  bySlug: Record<string, FoundryClaimStatus>;
 };
 
 const createBodySchema = z.object({
@@ -41,6 +57,11 @@ const createBodySchema = z.object({
   licenseUrl: z.string().max(500).optional(),
   proofUrl: z.string().max(500).optional(),
   platformNoteUrl: z.string().max(500).optional(),
+});
+
+const reviewBodySchema = z.object({
+  status: z.enum(['approved', 'rejected']),
+  reviewNote: z.string().max(500).optional(),
 });
 
 function keyHash(raw: string): string {
@@ -67,6 +88,10 @@ function normalizeClaims(raw: unknown): ConsoleClaim[] {
 export class ConsoleClaimsService {
   private rootDir(): string {
     return path.join(process.cwd(), 'data', 'console-claims');
+  }
+
+  private statusPath(): string {
+    return path.join(process.cwd(), 'data', 'foundry-claim-status.json');
   }
 
   private filePath(hash: string): string {
@@ -102,8 +127,80 @@ export class ConsoleClaimsService {
     fs.writeFileSync(this.filePath(store.ownerKeyHash), JSON.stringify(store, null, 2) + '\n', 'utf8');
   }
 
+  private readStatusFile(): StatusFile {
+    const file = this.statusPath();
+    if (!fs.existsSync(file)) {
+      return { updatedAt: new Date().toISOString(), bySlug: {} };
+    }
+    try {
+      const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as StatusFile;
+      return {
+        updatedAt: raw.updatedAt || new Date().toISOString(),
+        bySlug: raw.bySlug && typeof raw.bySlug === 'object' ? raw.bySlug : {},
+      };
+    } catch (error) {
+      logger.error('[ConsoleClaimsService] status file corrupt', { error });
+      return { updatedAt: new Date().toISOString(), bySlug: {} };
+    }
+  }
+
+  private writeStatusFile(status: StatusFile): void {
+    const dir = path.dirname(this.statusPath());
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    status.updatedAt = new Date().toISOString();
+    fs.writeFileSync(this.statusPath(), JSON.stringify(status, null, 2) + '\n', 'utf8');
+  }
+
+  /** 可选：回写前台 foundries.json 的 claimed（FOUNDRIES_JSON_PATH）。 */
+  private patchFoundriesJson(slug: string, claimed: boolean): { patched: boolean; path?: string } {
+    const file = String(process.env.FOUNDRIES_JSON_PATH || '').trim();
+    if (!file || !fs.existsSync(file)) return { patched: false };
+    try {
+      const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+        foundries?: Array<Record<string, unknown>>;
+      };
+      const list = Array.isArray(raw.foundries) ? raw.foundries : [];
+      let hit = false;
+      for (const row of list) {
+        const id = String(row.id || '');
+        if (id === slug || id.toLowerCase() === slug.toLowerCase()) {
+          row.claimed = claimed;
+          hit = true;
+          break;
+        }
+      }
+      if (!hit) return { patched: false, path: file };
+      fs.writeFileSync(file, JSON.stringify(raw, null, 2) + '\n', 'utf8');
+      return { patched: true, path: file };
+    } catch (error) {
+      logger.error('[ConsoleClaimsService] foundries.json patch failed', { file, error });
+      return { patched: false, path: file };
+    }
+  }
+
   list(apiKeyRaw: string): ConsoleClaim[] {
     return this.readStore(this.ownerHash(apiKeyRaw)).claims.slice();
+  }
+
+  listAll(filter?: { status?: ConsoleClaim['status'] }): ClaimWithOwner[] {
+    const dir = this.rootDir();
+    if (!fs.existsSync(dir)) return [];
+    const out: ClaimWithOwner[] = [];
+    for (const name of fs.readdirSync(dir)) {
+      if (!name.endsWith('.json') || name.startsWith('_')) continue;
+      const hash = name.replace(/\.json$/, '');
+      const store = this.readStore(hash);
+      for (const c of store.claims) {
+        if (filter?.status && c.status !== filter.status) continue;
+        out.push({ ...c, ownerKeyHash: hash });
+      }
+    }
+    out.sort((a, b) => String(b.submittedAt).localeCompare(String(a.submittedAt)));
+    return out;
+  }
+
+  claimStatusMap(): StatusFile {
+    return this.readStatusFile();
   }
 
   create(apiKeyRaw: string, body: unknown): ConsoleClaim {
@@ -144,6 +241,73 @@ export class ConsoleClaimsService {
     store.claims.unshift(claim);
     this.writeStore(store);
     return claim;
+  }
+
+  review(
+    claimId: string,
+    body: unknown,
+    actor?: { email?: string | null }
+  ): {
+    claim: ClaimWithOwner;
+    foundriesPatched: boolean;
+  } {
+    const parsed = reviewBodySchema.parse(body);
+    const all = this.listAll();
+    const hit = all.find((c) => c.id === claimId);
+    if (!hit) {
+      throw Object.assign(new Error('工单不存在'), { status: 404, code: 'not_found' });
+    }
+    if (hit.status !== 'pending') {
+      throw Object.assign(new Error('工单已审核，不能重复处理'), {
+        status: 409,
+        code: 'conflict',
+      });
+    }
+    const store = this.readStore(hit.ownerKeyHash);
+    const idx = store.claims.findIndex((c) => c.id === claimId);
+    if (idx < 0) {
+      throw Object.assign(new Error('工单不存在'), { status: 404, code: 'not_found' });
+    }
+    const now = new Date().toISOString();
+    const note = parsed.reviewNote || '';
+    store.claims[idx] = {
+      ...store.claims[idx],
+      status: parsed.status,
+      reviewedAt: now,
+      reviewNote: note,
+    };
+    this.writeStore(store);
+
+    const updated: ClaimWithOwner = { ...store.claims[idx], ownerKeyHash: hit.ownerKeyHash };
+    let foundriesPatched = false;
+
+    if (parsed.status === 'approved') {
+      const status = this.readStatusFile();
+      status.bySlug[updated.slug] = {
+        claimed: true,
+        claimId: updated.id,
+        slug: updated.slug,
+        name: updated.name,
+        approvedAt: now,
+        email: updated.email || undefined,
+      };
+      this.writeStatusFile(status);
+      foundriesPatched = this.patchFoundriesJson(updated.slug, true).patched;
+      logger.info('[ConsoleClaimsService] claim approved', {
+        claimId,
+        slug: updated.slug,
+        actor: actor?.email || null,
+        foundriesPatched,
+      });
+    } else {
+      logger.info('[ConsoleClaimsService] claim rejected', {
+        claimId,
+        slug: updated.slug,
+        actor: actor?.email || null,
+      });
+    }
+
+    return { claim: updated, foundriesPatched };
   }
 }
 
