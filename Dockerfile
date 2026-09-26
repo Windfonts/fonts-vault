@@ -7,7 +7,7 @@ RUN sed -i 's#https\?://dl-cdn.alpinelinux.org#https://mirrors.aliyun.com#g' /et
 
 # 安装依赖阶段
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache bash libc6-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
