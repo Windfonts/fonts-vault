@@ -45,6 +45,9 @@ describe('ConsoleFontCertsService', () => {
       expect(svc2.hasApprovedGrant('wf_test_key_aaaaaaaaaaaaaaaaaaaaaa', 'wenfeng-jlyhmht')).toBe(true);
       expect(svc2.hasApprovedGrant('wf_test_key_aaaaaaaaaaaaaaaaaaaaaa', 'shmgt')).toBe(false);
       expect(svc2.listApprovedKeys('wf_test_key_aaaaaaaaaaaaaaaaaaaaaa')).toContain('jlyhmht');
+      const blob = svc2.readProofBlob(created.id);
+      expect(blob.bytes.length).toBeGreaterThan(5);
+      expect(blob.contentType).toContain('pdf');
     } finally {
       (ConsoleFontCertsService.prototype as unknown as { rootDir: () => string }).rootDir = orig;
       process.chdir(prev);

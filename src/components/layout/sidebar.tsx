@@ -20,6 +20,7 @@ import {
   Tag,
   Type,
   Upload,
+  FileCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -84,6 +85,11 @@ const sidebarItems: SidebarItem[] = [
     title: '上传审核',
     href: '/admin/uploads',
     icon: Upload,
+  },
+  {
+    title: '证书开引用',
+    href: '/admin/font-certs',
+    icon: FileCheck,
   },
   {
     title: '分类管理',
