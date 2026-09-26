@@ -286,6 +286,8 @@ const bootstrapApiTables = async (client: ReturnType<typeof createClient>) => {
       key_id text,
       domain text NOT NULL,
       family text NOT NULL,
+      weight text DEFAULT 'regular' NOT NULL,
+      status text DEFAULT '200' NOT NULL,
       count integer DEFAULT 0 NOT NULL,
       bytes integer DEFAULT 0 NOT NULL,
       updated_at integer NOT NULL,
@@ -295,12 +297,32 @@ const bootstrapApiTables = async (client: ReturnType<typeof createClient>) => {
     `CREATE INDEX IF NOT EXISTS api_usage_delivery_subject_idx ON api_usage_delivery (subject);`,
     `CREATE INDEX IF NOT EXISTS api_usage_delivery_domain_idx ON api_usage_delivery (domain);`,
     `CREATE INDEX IF NOT EXISTS api_usage_delivery_family_idx ON api_usage_delivery (family);`,
-    `CREATE UNIQUE INDEX IF NOT EXISTS api_usage_delivery_subject_day_domain_family_unique ON api_usage_delivery (subject, day, domain, family);`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS api_usage_delivery_subject_day_domain_family_weight_status_unique ON api_usage_delivery (subject, day, domain, family, weight, status);`,
   ];
 
   for (const sql of statements) {
     await executeWithRetry(sql);
   }
+
+  // 旧表：补 weight/status，换唯一键（含字重×状态）
+  const deliveryCols = await executeWithRetry(`PRAGMA table_info(api_usage_delivery);`);
+  const deliveryNames = new Set(deliveryCols.rows.map((r) => String(r.name)));
+  if (!deliveryNames.has('weight')) {
+    await executeWithRetry(
+      `ALTER TABLE api_usage_delivery ADD COLUMN weight text NOT NULL DEFAULT 'regular';`
+    );
+  }
+  if (!deliveryNames.has('status')) {
+    await executeWithRetry(
+      `ALTER TABLE api_usage_delivery ADD COLUMN status text NOT NULL DEFAULT '200';`
+    );
+  }
+  await executeWithRetry(
+    `DROP INDEX IF EXISTS api_usage_delivery_subject_day_domain_family_unique;`
+  );
+  await executeWithRetry(
+    `CREATE UNIQUE INDEX IF NOT EXISTS api_usage_delivery_subject_day_domain_family_weight_status_unique ON api_usage_delivery (subject, day, domain, family, weight, status);`
+  );
 
   const usageColumns = await executeWithRetry(`PRAGMA table_info(api_usage_daily);`);
   const hasSubject = usageColumns.rows.some((r) => r.name === 'subject');

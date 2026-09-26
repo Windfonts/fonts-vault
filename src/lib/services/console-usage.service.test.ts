@@ -114,7 +114,7 @@ describe('buildUsageOverview', () => {
     expect(out.groups[0]?.key).toBe('p1');
   });
 
-  it('aggregates delivery rows with bytes and byFont', () => {
+  it('aggregates delivery rows with bytes, byFont, weights and status', () => {
     const projects = [
       project({
         id: 'p1',
@@ -134,6 +134,8 @@ describe('buildUsageOverview', () => {
           day: '2026-09-20',
           domain: 'blog.xizhiyu.com',
           family: 'wenfeng-albbpht',
+          weight: 'regular',
+          status: '200',
           count: 10,
           bytes: 1000,
         },
@@ -141,13 +143,17 @@ describe('buildUsageOverview', () => {
           day: '2026-09-21',
           domain: 'blog.xizhiyu.com',
           family: 'wenfeng-albbpht',
+          weight: 'bold',
+          status: '304',
           count: 5,
-          bytes: 500,
+          bytes: 0,
         },
         {
           day: '2026-09-21',
           domain: 'blog.xizhiyu.com',
           family: 'SourceHanSansSC',
+          weight: 'regular',
+          status: '200',
           count: 2,
           bytes: 200,
         },
@@ -156,13 +162,15 @@ describe('buildUsageOverview', () => {
     });
     expect(out.dimensions.bytes).toBe(true);
     expect(out.dimensions.byFont).toBe(true);
+    expect(out.dimensions.status).toBe(true);
     expect(out.totals.requests).toBe(17);
-    expect(out.totals.bytes).toBe(1700);
+    expect(out.totals.bytes).toBe(1200);
+    expect(out.status).toEqual({ '200': 12, '304': 5, '403': 0 });
     expect(out.byFont).toHaveLength(2);
     expect(out.byFont[0]?.family).toBe('wenfeng-albbpht');
     expect(out.byFont[0]?.requests30d).toBe(15);
-    expect(out.byFont[0]?.bytes30d).toBe(1500);
-    expect(out.byFont[0]?.projects[0]?.projectId).toBe('p1');
-    expect(out.byDomain[0]?.bytes).toBe(1700);
+    expect(out.byFont[0]?.weights).toEqual({ regular: 10, bold: 5 });
+    expect(out.groups[0]?.hitRate).toBeCloseTo(5 / 17);
+    expect(out.byDomain[0]?.bytes).toBe(1200);
   });
 });

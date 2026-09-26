@@ -535,7 +535,7 @@ export const apiUsageWindow = sqliteTable(
   })
 );
 
-/** CSS 投递明细：按天×域名×字体记请求与响应字节（控制台用量） */
+/** CSS 投递明细：按天×域名×字体×字重×状态记请求与响应字节（控制台用量） */
 export const apiUsageDelivery = sqliteTable(
   'api_usage_delivery',
   {
@@ -547,6 +547,8 @@ export const apiUsageDelivery = sqliteTable(
     keyId: text('key_id').references(() => apiKeys.id, { onDelete: 'set null' }),
     domain: text('domain').notNull(),
     family: text('family').notNull(),
+    weight: text('weight').notNull().default('regular'),
+    status: text('status').notNull().default('200'),
     count: integer('count').notNull().default(0),
     bytes: integer('bytes').notNull().default(0),
     updatedAt: integer('updated_at', { mode: 'timestamp' })
@@ -558,9 +560,9 @@ export const apiUsageDelivery = sqliteTable(
     bySubjectIdx: index('api_usage_delivery_subject_idx').on(table.subject),
     byDomainIdx: index('api_usage_delivery_domain_idx').on(table.domain),
     byFamilyIdx: index('api_usage_delivery_family_idx').on(table.family),
-    uniqueSubjectDayDomainFamilyIdx: uniqueIndex(
-      'api_usage_delivery_subject_day_domain_family_unique'
-    ).on(table.subject, table.day, table.domain, table.family),
+    uniqueSubjectDayDomainFamilyWeightStatusIdx: uniqueIndex(
+      'api_usage_delivery_subject_day_domain_family_weight_status_unique'
+    ).on(table.subject, table.day, table.domain, table.family, table.weight, table.status),
   })
 );
 
