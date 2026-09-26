@@ -262,6 +262,44 @@ export class ConsoleFontCertsService {
     return this.list(apiKeyRaw).some((c) => c.status === 'approved' && c.fontKey === want);
   }
 
+  /** Admin: read stored proof blob for a cert id. */
+  readProofBlob(certId: string): {
+    bytes: Buffer;
+    contentType: string;
+    filename: string;
+    cert: FontCertWithOwner;
+  } {
+    const all = this.listAll();
+    const hit = all.find((c) => c.id === certId);
+    if (!hit) {
+      throw Object.assign(new Error('工单不存在'), { status: 404, code: 'not_found' });
+    }
+    if (!hit.storedAs) {
+      throw Object.assign(new Error('尚未上传证明文件'), { status: 404, code: 'not_found' });
+    }
+    const p = path.join(this.blobDir(hit.id), hit.storedAs);
+    if (!fs.existsSync(p)) {
+      throw Object.assign(new Error('证明文件缺失'), { status: 404, code: 'not_found' });
+    }
+    const ct =
+      hit.mime ||
+      (/\.pdf$/i.test(hit.storedAs)
+        ? 'application/pdf'
+        : /\.png$/i.test(hit.storedAs)
+          ? 'image/png'
+          : /\.jpe?g$/i.test(hit.storedAs)
+            ? 'image/jpeg'
+            : /\.webp$/i.test(hit.storedAs)
+              ? 'image/webp'
+              : 'application/octet-stream');
+    return {
+      bytes: fs.readFileSync(p),
+      contentType: ct,
+      filename: hit.fileName || hit.storedAs,
+      cert: hit,
+    };
+  }
+
   review(
     certId: string,
     body: unknown,
