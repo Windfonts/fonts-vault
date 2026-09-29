@@ -1,5 +1,6 @@
 import { withFontApiAuth, type FontApiAuthContext } from '@/lib/api/font-api-auth';
 import { recordDeliveryUsage } from '@/lib/api/usage-delivery';
+import { cssTextParamForbidden } from '@/lib/css-text-param';
 import { logger } from '@/lib/logger';
 import { cssService } from '@/lib/services/css.service';
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,7 +12,8 @@ import { ZodError } from 'zod';
  *
  * 查询参数:
  * - family: 字体短码 / fontFamily（主款）
- * - weight / subset|lang
+ * - weight / subset|lang（zh-common|zh|full|en；缺省 full）
+ * - 不认 text=（出现即 400）。项目切字走 /p/{slug}?t=
  * - fallback: 可选，谱系或简繁补全款；响应内补全 @font-face 仅含主款缺口 unicode-range
  * - fallbackWeight: 可选，补全款字重名；缺省按 font_weight 与主款对齐
  * - localeFallback: 可选 off|auto|sc|tc；有配对且未传 fallback 时展开简繁兄弟
@@ -29,6 +31,17 @@ export const GET = withFontApiAuth(
     const nextRequest = request as NextRequest;
     try {
       const searchParams = nextRequest.nextUrl.searchParams;
+      if (cssTextParamForbidden(searchParams)) {
+        return NextResponse.json(
+          {
+            code: 400,
+            message: 'text= 不支持匿名请求，请使用 subset=zh-common|zh|full|en',
+            status: 'fail',
+          },
+          { status: 400, headers: { 'Cache-Control': 'no-store' } }
+        );
+      }
+
       const family = searchParams.get('family');
       const subset = searchParams.get('subset') || undefined;
       const lang = searchParams.get('lang') || undefined;

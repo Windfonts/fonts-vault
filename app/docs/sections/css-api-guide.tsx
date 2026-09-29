@@ -26,7 +26,12 @@ export function CssApiGuide() {
           </p>
           <div>
             <h3 className="mb-3 font-semibold">API 端点</h3>
-            <code className="bg-muted block rounded-md p-4">{`GET /api/css?family=字体名称`}</code>
+            <code className="bg-muted block rounded-md p-4">{`GET /api/css?family=字体名称&subset=zh-common`}</code>
+            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              具名 subset：<code>zh-common</code> / <code>zh</code> / <code>full</code> /{' '}
+              <code>en</code>。不认 Google 式 <code>text=</code>（出现即 400）。项目切字走{' '}
+              <code>{'/p/{slug}?t='}</code>，登录后编译。
+            </p>
           </div>
         </div>
       </div>
