@@ -1,5 +1,5 @@
 {
-  "note": "2026-09-23: same-product aliases + opsa/systcnl legacy; Source Han regionals restored as own fonts",
+  "note": "2026-09-23 legacy + 2026-09-29 dual-register: shop short → vault published long. Shop catalog family stays frozen; CSS /api/css?family=wenfeng-hlbs resolves here.",
   "aliases": {
     "wenfeng-hxbsbt": "wenfeng-hxbsb",
     "hxbsbt": "wenfeng-hxbsb",
@@ -20,6 +20,28 @@
     "wenfeng-light": "wenfeng-systcnl",
     "light": "wenfeng-systcnl",
     "wenfeng-lmqylsrht": "wenfeng-lmqylszrht",
-    "lmqylsrht": "wenfeng-lmqylszrht"
+    "lmqylsrht": "wenfeng-lmqylszrht",
+    "wenfeng-hlbs": "wenfeng-hongleibanshu",
+    "hlbs": "wenfeng-hongleibanshu",
+    "wenfeng-hlxzt": "wenfeng-hongleixiaozhitiao",
+    "hlxzt": "wenfeng-hongleixiaozhitiao",
+    "wenfeng-hlbszs": "wenfeng-hongleibanshuformal",
+    "hlbszs": "wenfeng-hongleibanshuformal",
+    "wenfeng-hlxs": "wenfeng-hongleixingshu",
+    "hlxs": "wenfeng-hongleixingshu",
+    "wenfeng-hlzs": "wenfeng-hongleizhuoshu",
+    "hlzs": "wenfeng-hongleizhuoshu",
+    "wenfeng-smht": "wenfeng-mizukigothic",
+    "smht": "wenfeng-mizukigothic",
+    "wenfeng-zlcs": "wenfeng-zoomlacusong",
+    "zlcs": "wenfeng-zoomlacusong",
+    "wenfeng-zlmeng": "wenfeng-zoomlamengyas",
+    "zlmeng": "wenfeng-zoomlamengyas",
+    "wenfeng-eqhi": "wenfeng-howlingeqhisans",
+    "eqhi": "wenfeng-howlingeqhisans",
+    "wenfeng-matc": "wenfeng-mksjhtc",
+    "matc": "wenfeng-mksjhtc",
+    "wenfeng-xcws": "wenfeng-xczzsch",
+    "xcws": "wenfeng-xczzsch"
   }
 }
