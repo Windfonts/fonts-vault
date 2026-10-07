@@ -1,6 +1,6 @@
 # 文风字库 (WindFonts)
 
-> **生产真源：本仓 `fonts-vault`（Next 16）→ https://app.windfonts.com**  
+> **过时，不要照这句做：** 本仓不是 `https://app.windfonts.com` 的页面。app 静态站是 `fonts-front`，桶是杭州 `wenfeng-web-hz`。本仓是字体库和 `/api/css`。边界见 `AGENTS.md`。  
 > `next-windfonts` 为遗留归档，请勿双线演进。
 
 

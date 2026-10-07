@@ -287,7 +287,9 @@ export class CSSService {
 
     const ossEndpoint =
       process.env.OSS_ENDPOINT || 'https://wenfeng-fonts.oss-cn-guangzhou.aliyuncs.com';
-    const cssUrl = `${ossEndpoint}/fonts-packages/${font.normalizedName}/${actualWeightName}/${version}/result.css`;
+    // 公开桶只保留小写目录；库里 normalizedName 仍是 CamelCase。
+    const ossDir = String(font.normalizedName || '').toLowerCase();
+    const cssUrl = `${ossEndpoint}/fonts-packages/${ossDir}/${actualWeightName}/${version}/result.css`;
 
     try {
       logger.debug('[CSSService] 正在获取CSS', {
@@ -317,7 +319,7 @@ export class CSSService {
         length: css.length,
       });
 
-      const basePath = `fonts-packages/${font.normalizedName}/${actualWeightName}/${version}`;
+      const basePath = `fonts-packages/${ossDir}/${actualWeightName}/${version}`;
       const targetBase = this.cdnBaseUrl || this.proxyBaseUrl;
 
       css = css.replace(/url\(['"]?\.\/([^'")\s]+)['"]?\)/g, (_match, filename) => {

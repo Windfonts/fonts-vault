@@ -1,0 +1,4952 @@
+[
+  {
+    "old": "wenfeng-851-gochikakutto",
+    "new": "wenfeng-851gjp",
+    "how": "norm",
+    "shop": "851ゴチカクット",
+    "status": "published",
+    "norm": "851Gochikakutto",
+    "id": "a214aa12-979c-4511-94bc-af9cb710fc78",
+    "vault_name": "851ゴチカクット"
+  },
+  {
+    "old": "wenfeng-851-chikara-dzuyoku",
+    "new": "wenfeng-851ckrdzyk",
+    "how": "norm",
+    "shop": "851チカラヅヨク",
+    "status": "published",
+    "norm": "851ChikaraDzuyoku",
+    "id": "0126a51e-3a5e-4f6b-84d7-f31535d8580e",
+    "vault_name": "851チカラヅヨク"
+  },
+  {
+    "old": "wenfeng-851-chikara-yowaku",
+    "new": "wenfeng-851ckrywk",
+    "how": "norm",
+    "shop": "851チカラヨワク",
+    "status": "published",
+    "norm": "851ChikaraYowaku",
+    "id": "2a668185-5edf-44d4-a01f-f87980e80060",
+    "vault_name": "851チカラヨワク"
+  },
+  {
+    "old": "wenfeng-851-tegaki-kakutto",
+    "new": "wenfeng-851hkt",
+    "how": "norm",
+    "shop": "851テガキカクット",
+    "status": "published",
+    "norm": "851TegakiKakutto",
+    "id": "bf0ae57e-5560-4ee8-85e4-710b59d70729",
+    "vault_name": "851テガキカクット"
+  },
+  {
+    "old": "wenfeng-851-mkpop",
+    "new": "wenfeng-851mkp",
+    "how": "norm",
+    "shop": "851マカポップ",
+    "status": "published",
+    "norm": "851MkPOP",
+    "id": "42d313a4-f688-42b2-9059-534ff36a585c",
+    "vault_name": "851マカポップ"
+  },
+  {
+    "old": "wenfeng-851-tegaki-zatsu",
+    "new": "wenfeng-851tgkzt",
+    "how": "norm",
+    "shop": "851手書き雑フォント",
+    "status": "published",
+    "norm": "851TegakiZatsu",
+    "id": "bf90bc32-df05-49d8-aac2-f982feb0321c",
+    "vault_name": "851手書き雑フォント"
+  },
+  {
+    "old": "wenfeng-975marusc",
+    "new": "wenfeng-975yt",
+    "how": "norm",
+    "shop": "975 圆体",
+    "status": "published",
+    "norm": "975MaruSCRegular",
+    "id": "0fdfb7de-e250-41d6-abb1-19da94b05f12",
+    "vault_name": "975 圆体"
+  },
+  {
+    "old": "wenfeng-975hei",
+    "new": "wenfeng-975ht",
+    "how": "norm",
+    "shop": "975 黑体",
+    "status": "published",
+    "norm": "Hei975",
+    "id": "5fef04ae-027b-475e-8e35-867085897ae5",
+    "vault_name": "975 黑体"
+  },
+  {
+    "old": "wenfeng-acy",
+    "new": "wenfeng-acyjp",
+    "how": "norm",
+    "shop": "Acy",
+    "status": "published",
+    "norm": "AcyBold",
+    "id": "f24beedc-94cf-440c-950e-eabbd949642f",
+    "vault_name": "Acy"
+  },
+  {
+    "old": "wenfeng-albertella",
+    "new": "wenfeng-albjp",
+    "how": "norm",
+    "shop": "Albertella",
+    "status": "published",
+    "norm": "Albertella",
+    "id": "1eccc1f3-74ab-4d09-8344-c602f16defd0",
+    "vault_name": "Albertella"
+  },
+  {
+    "old": "wenfeng-awroit",
+    "new": "wenfeng-awrjp",
+    "how": "norm",
+    "shop": "Awroit",
+    "status": "published",
+    "norm": "Awroit",
+    "id": "248417bf-8e2a-42d3-a89f-db75edd104dc",
+    "vault_name": "Awroit"
+  },
+  {
+    "old": "wenfeng-mxhn",
+    "new": "wenfeng-b2hy",
+    "how": "norm",
+    "shop": "B2花园",
+    "status": "published",
+    "norm": "Mxhn",
+    "id": "a6a848f0-7d03-4d30-9f52-2d8c809fa2b8",
+    "vault_name": "B2花园"
+  },
+  {
+    "old": "wenfeng-bizingothic",
+    "new": "wenfeng-bzgjp",
+    "how": "norm",
+    "shop": "Bizin Gothic",
+    "status": "published",
+    "norm": "BizinGothic",
+    "id": "41229b97-8429-4016-83c9-4eb4fafd2156",
+    "vault_name": "Bizin Gothic"
+  },
+  {
+    "old": "wenfeng-cjkfqlt",
+    "new": "wenfeng-cjksxz",
+    "how": "norm",
+    "shop": "CJK手写字",
+    "status": "published",
+    "norm": "Cjkfqlt",
+    "id": "3efb5b84-658f-4f0c-8647-a6c4b1bb1b48",
+    "vault_name": "CJK手写字"
+  },
+  {
+    "old": "wenfeng-code2003",
+    "new": "wenfeng-c2003",
+    "how": "norm",
+    "shop": "Code2003",
+    "status": "published",
+    "norm": "Code2003",
+    "id": "184b6e0a-2f85-4f23-a877-2597441a0c52",
+    "vault_name": "Code2003"
+  },
+  {
+    "old": "wenfeng-cyroit",
+    "new": "wenfeng-cyrjp",
+    "how": "norm",
+    "shop": "Cyroit",
+    "status": "published",
+    "norm": "Cyroit",
+    "id": "ce25d554-16f7-49b4-a6d8-c5f95f52c099",
+    "vault_name": "Cyroit"
+  },
+  {
+    "old": "wenfeng-diningmessage",
+    "new": "wenfeng-dnmjp",
+    "how": "norm",
+    "shop": "Dining Message",
+    "status": "published",
+    "norm": "DiningMessage",
+    "id": "e1ff4679-12fd-401e-bc26-8a7db566a9ff",
+    "vault_name": "Dining Message"
+  },
+  {
+    "old": "wenfeng-dotgothic",
+    "new": "wenfeng-dg16jp",
+    "how": "norm",
+    "shop": "DotGothic16",
+    "status": "published",
+    "norm": "Dotgothic",
+    "id": "699bb2a4-2005-4fde-8dfa-9d0e93c23650",
+    "vault_name": "DotGothic16"
+  },
+  {
+    "old": "wenfeng-azbzzwzt",
+    "new": "wenfeng-dshbt",
+    "how": "norm",
+    "shop": "Droid Sans 后备体",
+    "status": "published",
+    "norm": "Azbzzwzt",
+    "id": "8a8e2c91-f8b5-4025-ab4f-ecae780c78ca",
+    "vault_name": "Droid Sans 后备体"
+  },
+  {
+    "old": "wenfeng-qzkswjz",
+    "new": "wenfeng-ebaswcxt",
+    "how": "norm",
+    "shop": "EBAS 无衬线体",
+    "status": "published",
+    "norm": "Qzkswjz",
+    "id": "5cb8fa8c-d837-4b95-abe9-0ce4b7637f8a",
+    "vault_name": "EBAS 无衬线体"
+  },
+  {
+    "old": "wenfeng-escumasia",
+    "new": "wenfeng-escjp",
+    "how": "norm",
+    "shop": "ESCUMASIA",
+    "status": "published",
+    "norm": "Escumasia",
+    "id": "fcb69b46-a0b4-4e99-bd94-1a147ef8535b",
+    "vault_name": "ESCUMASIA"
+  },
+  {
+    "old": "wenfeng-explex",
+    "new": "wenfeng-expjp",
+    "how": "norm",
+    "shop": "Explex",
+    "status": "published",
+    "norm": "Explex",
+    "id": "8fd988df-c50d-4ed2-9a1f-247fba1fd711",
+    "vault_name": "Explex"
+  },
+  {
+    "old": "wenfeng-fz-imokenpi",
+    "new": "wenfeng-fzijp",
+    "how": "norm",
+    "shop": "FZイモケンピ",
+    "status": "published",
+    "norm": "FZImokenpi",
+    "id": "8d50d2df-5ce4-4faa-af29-edee0a8af133",
+    "vault_name": "FZイモケンピ"
+  },
+  {
+    "old": "wenfeng-firple",
+    "new": "wenfeng-firjp",
+    "how": "norm",
+    "shop": "Firple",
+    "status": "published",
+    "norm": "Firple",
+    "id": "2987c01a-782a-4ac4-b17f-ca7a8694e085",
+    "vault_name": "Firple"
+  },
+  {
+    "old": "wenfeng-glcurulminamoto",
+    "new": "wenfeng-glcmjp",
+    "how": "norm",
+    "shop": "GL-CurulMinamoto",
+    "status": "published",
+    "norm": "GlCurulMinamoto",
+    "id": "6d319371-590b-4d7b-9f0b-c8ea8bf1c133",
+    "vault_name": "GL-CurulMinamoto"
+  },
+  {
+    "old": "wenfeng-glnovantiquaminamoto",
+    "new": "wenfeng-glnmjp",
+    "how": "norm",
+    "shop": "GL-NovantiquaMinamoto",
+    "status": "published",
+    "norm": "GlNovantiquaMinamoto",
+    "id": "eb4b0369-601a-495d-9fe8-8e0b1673f6b8",
+    "vault_name": "GL-NovantiquaMinamoto"
+  },
+  {
+    "old": "wenfeng-glantiqueplus",
+    "new": "wenfeng-glapjp",
+    "how": "norm",
+    "shop": "GL-アンチックPlus",
+    "status": "published",
+    "norm": "GlAntiquePlus",
+    "id": "4c0428f6-1593-4325-a9b3-55a9ba949ab2",
+    "vault_name": "GL-アンチックPlus"
+  },
+  {
+    "old": "wenfeng-unfdzh",
+    "new": "wenfeng-gnuuf",
+    "how": "norm",
+    "shop": "GNU Unifont",
+    "status": "published",
+    "norm": "Unfdzh",
+    "id": "54303525-660d-4296-8efc-a3b85c5f4df0",
+    "vault_name": "GNU Unifont"
+  },
+  {
+    "old": "wenfeng-gugurusanscode",
+    "new": "wenfeng-gscjp",
+    "how": "norm",
+    "shop": "Guguru Sans Code",
+    "status": "published",
+    "norm": "GuguruSansCode",
+    "id": "a7c0d894-3442-44d3-a83e-13a6b9a50cf1",
+    "vault_name": "Guguru Sans Code"
+  },
+  {
+    "old": "wenfeng-hachimarupop",
+    "new": "wenfeng-hmpjp",
+    "how": "norm",
+    "shop": "Hachi Maru Pop",
+    "status": "published",
+    "norm": "Hachimarupop",
+    "id": "b9b00c6f-5f64-459f-be71-56c57af4bd48",
+    "vault_name": "Hachi Maru Pop"
+  },
+  {
+    "old": "wenfeng-harmony",
+    "new": "wenfeng-harmsa",
+    "how": "norm",
+    "shop": "HarmonyOS Sans",
+    "status": "published",
+    "norm": "Harmony",
+    "id": "11c57445-29f9-423f-9da1-fb4f005a1f70",
+    "vault_name": "HarmonyOS Sans"
+  },
+  {
+    "old": "wenfeng-klsyt",
+    "new": "wenfeng-inkslyt",
+    "how": "norm",
+    "shop": "I.Ngaan刻石录颜体",
+    "status": "published",
+    "norm": "Klsyt",
+    "id": "8dc66b77-e776-48f6-b94f-e4fa46787044",
+    "vault_name": "I.Ngaan刻石录颜体"
+  },
+  {
+    "old": "wenfeng-ibmplexsanstc",
+    "new": "wenfeng-ibmpstc",
+    "how": "norm",
+    "shop": "IBM Plex Sans TC",
+    "status": "published",
+    "norm": "IBMPlexSansTC",
+    "id": "24feb8ac-6921-4e78-89f5-481e48fda330",
+    "vault_name": "IBM Plex Sans TC"
+  },
+  {
+    "old": "wenfeng-ipaexmincho",
+    "new": "wenfeng-ipamjp",
+    "how": "norm",
+    "shop": "IPAexMincho",
+    "status": "published",
+    "norm": "IPAexMincho",
+    "id": "11e5dc5a-def9-4333-8fcd-01db63011525",
+    "vault_name": "IPAexMincho"
+  },
+  {
+    "old": "wenfeng-idroit",
+    "new": "wenfeng-idrjp",
+    "how": "norm",
+    "shop": "Idroit",
+    "status": "published",
+    "norm": "Idroit",
+    "id": "5cade917-a17c-4f9e-addc-0674daf91c3d",
+    "vault_name": "Idroit"
+  },
+  {
+    "old": "wenfeng-jfdotayu",
+    "new": "wenfeng-jfdajp",
+    "how": "norm",
+    "shop": "JFドットAyu",
+    "status": "published",
+    "norm": "JfDotAyu",
+    "id": "796674a7-da51-586f-80d6-54e305c6a210",
+    "vault_name": "JFドットAyu"
+  },
+  {
+    "old": "wenfeng-jfdotk12",
+    "new": "wenfeng-jfdk12",
+    "how": "norm",
+    "shop": "JFドットK12",
+    "status": "published",
+    "norm": "JfDotK12",
+    "id": "a90f6a4a-183c-5c91-be88-23a640c5ebf6",
+    "vault_name": "JFドットK12"
+  },
+  {
+    "old": "wenfeng-jfdotk14",
+    "new": "wenfeng-jfdk14",
+    "how": "norm",
+    "shop": "JFドットK14",
+    "status": "published",
+    "norm": "JfDotK14",
+    "id": "8cb58e97-a8b5-586b-8db4-142dd6d72525",
+    "vault_name": "JFドットK14"
+  },
+  {
+    "old": "wenfeng-jfdotkappa20",
+    "new": "wenfeng-jfdk20",
+    "how": "norm",
+    "shop": "JFドットKappa20",
+    "status": "published",
+    "norm": "JfDotKappa20",
+    "id": "03c09175-cf59-567b-8f5d-6f201695656d",
+    "vault_name": "JFドットKappa20"
+  },
+  {
+    "old": "wenfeng-jfdotmplus",
+    "new": "wenfeng-jfdmjp",
+    "how": "norm",
+    "shop": "JFドットM+",
+    "status": "published",
+    "norm": "JfDotMplus",
+    "id": "b4048cc9-1e7b-5a53-a75f-3151c6eb2ba1",
+    "vault_name": "JFドットM+"
+  },
+  {
+    "old": "wenfeng-jfdotjiskan16",
+    "new": "wenfeng-jfdj16",
+    "how": "norm",
+    "shop": "JFドットjiskan16",
+    "status": "published",
+    "norm": "JfDotJiskan16",
+    "id": "06ff7493-67e4-5f27-85d1-d66f96828cde",
+    "vault_name": "JFドットjiskan16"
+  },
+  {
+    "old": "wenfeng-jfdotjiskan16s",
+    "new": "wenfeng-jfdj16s",
+    "how": "norm",
+    "shop": "JFドットjiskan16s",
+    "status": "published",
+    "norm": "JfDotJiskan16s",
+    "id": "fa4d9ee6-e32c-54f7-a454-b2c8c3c9519b",
+    "vault_name": "JFドットjiskan16s"
+  },
+  {
+    "old": "wenfeng-jfdotjiskan24",
+    "new": "wenfeng-jfdj24",
+    "how": "norm",
+    "shop": "JFドットjiskan24",
+    "status": "published",
+    "norm": "JfDotJiskan24",
+    "id": "068d8c4d-23bd-5fef-9aa7-b20921bea45f",
+    "vault_name": "JFドットjiskan24"
+  },
+  {
+    "old": "wenfeng-jfdotjiskan24h",
+    "new": "wenfeng-jfdj24h",
+    "how": "norm",
+    "shop": "JFドットjiskan24h",
+    "status": "published",
+    "norm": "JfDotJiskan24h",
+    "id": "0918cc51-b1a7-5023-8d78-0e3b233ee9ef",
+    "vault_name": "JFドットjiskan24h"
+  },
+  {
+    "old": "wenfeng-jfdotk12x10",
+    "new": "wenfeng-jfdk12x10",
+    "how": "norm",
+    "shop": "JFドットk12x10",
+    "status": "published",
+    "norm": "JfDotK12x10",
+    "id": "036ee530-7b71-5856-848c-f042a2d50041",
+    "vault_name": "JFドットk12x10"
+  },
+  {
+    "old": "wenfeng-jfdotmilkjf16",
+    "new": "wenfeng-jfdm16",
+    "how": "norm",
+    "shop": "JFドットmilkjf16",
+    "status": "published",
+    "norm": "JfDotMilkjf16",
+    "id": "fe855dcc-d99c-523e-b3be-472cb422ff31",
+    "vault_name": "JFドットmilkjf16"
+  },
+  {
+    "old": "wenfeng-jfdotizumi",
+    "new": "wenfeng-jfdig",
+    "how": "norm",
+    "shop": "JFドット出水ゴシック",
+    "status": "published",
+    "norm": "JfDotIzumi",
+    "id": "248e131f-595a-57f0-a7bc-c0ebf4269686",
+    "vault_name": "JFドット出水ゴシック"
+  },
+  {
+    "old": "wenfeng-jfdotshinonome",
+    "new": "wenfeng-jfdsjp",
+    "how": "norm",
+    "shop": "JFドット東雲",
+    "status": "published",
+    "norm": "JfDotShinonome",
+    "id": "4bf21dd1-c627-51c4-98df-157541c1dffb",
+    "vault_name": "JFドット東雲"
+  },
+  {
+    "old": "wenfeng-jfdotkaname",
+    "new": "wenfeng-jfdkjp",
+    "how": "norm",
+    "shop": "JFドット要町",
+    "status": "published",
+    "norm": "JfDotKaname",
+    "id": "d0c2768a-7bab-5c31-aa91-4b2b0190b975",
+    "vault_name": "JFドット要町"
+  },
+  {
+    "old": "wenfeng-jkgothicl",
+    "new": "wenfeng-jkgljp",
+    "how": "norm",
+    "shop": "JKゴシックL",
+    "status": "published",
+    "norm": "JKGothicL",
+    "id": "b682e1af-4e60-4b81-9b07-040f259b8b59",
+    "vault_name": "JKゴシックL"
+  },
+  {
+    "old": "wenfeng-kalo",
+    "new": "wenfeng-khtsa",
+    "how": "norm",
+    "shop": "Kalo 黑体",
+    "status": "published",
+    "norm": "Kalo",
+    "id": "2c8e7530-ee1f-4731-9963-243acab4af81",
+    "vault_name": "Kalo 黑体"
+  },
+  {
+    "old": "wenfeng-kanji-stroke-orders",
+    "new": "wenfeng-ksojp",
+    "how": "norm",
+    "shop": "KanjiStrokeOrders",
+    "status": "published",
+    "norm": "KanjiStrokeOrders",
+    "id": "20643ea5-95f9-4ac9-935a-c19250317ea7",
+    "vault_name": "漢字の筆順のフォント"
+  },
+  {
+    "old": "wenfeng-kiwimaru",
+    "new": "wenfeng-kwmrjp",
+    "how": "norm",
+    "shop": "Kiwi Maru",
+    "status": "published",
+    "norm": "Kiwimaru",
+    "id": "c33bff3a-dd1c-4699-859a-b881e50fa98f",
+    "vault_name": "Kiwi Maru"
+  },
+  {
+    "old": "wenfeng-klee",
+    "new": "wenfeng-klojp",
+    "how": "norm",
+    "shop": "Klee One",
+    "status": "published",
+    "norm": "Klee",
+    "id": "712a0d21-9a9d-4e4b-ba3c-0400d3269e14",
+    "vault_name": "Klee One"
+  },
+  {
+    "old": "wenfeng-kosugi",
+    "new": "wenfeng-ksgjp",
+    "how": "norm",
+    "shop": "Kosugi",
+    "status": "published",
+    "norm": "Kosugi",
+    "id": "078a562c-97e5-4ab9-8b31-89f8669bd54a",
+    "vault_name": "Kosugi"
+  },
+  {
+    "old": "wenfeng-kosugimaru",
+    "new": "wenfeng-ksgmr",
+    "how": "norm",
+    "shop": "Kosugi Maru",
+    "status": "published",
+    "norm": "Kosugimaru",
+    "id": "c7ce9b68-3f03-4c34-96d2-5ee125029368",
+    "vault_name": "Kosugi Maru"
+  },
+  {
+    "old": "wenfeng-lnsw",
+    "new": "wenfeng-linestw",
+    "how": "norm",
+    "shop": "LINE Seed TW",
+    "status": "published",
+    "norm": "Lnsw",
+    "id": "25430e57-734e-4d70-b8f5-dcb5de01e8ff",
+    "vault_name": "LINE Seed TW"
+  },
+  {
+    "old": "wenfeng-mplus1",
+    "new": "wenfeng-mp1jp",
+    "how": "norm",
+    "shop": "M+ 1",
+    "status": "published",
+    "norm": "Mplus1",
+    "id": "582ac067-1275-4635-8eb5-0abd4be4fd7a",
+    "vault_name": "M+ 1"
+  },
+  {
+    "old": "wenfeng-mplus1code",
+    "new": "wenfeng-mp1cjp",
+    "how": "norm",
+    "shop": "M+ 1 Code",
+    "status": "published",
+    "norm": "Mplus1Code",
+    "id": "355355d2-2ed2-4250-9e4f-c81a25107769",
+    "vault_name": "M+ 1 Code"
+  },
+  {
+    "old": "wenfeng-mplus1c",
+    "new": "wenfeng-m1cjp",
+    "how": "norm",
+    "shop": "M+ 1c",
+    "status": "published",
+    "norm": "Mplus1c",
+    "id": "4601e7c0-8ccd-43b5-a174-63e96236f163",
+    "vault_name": "M+ 1c"
+  },
+  {
+    "old": "wenfeng-mplus1m",
+    "new": "wenfeng-mp1mjp",
+    "how": "norm",
+    "shop": "M+ 1m",
+    "status": "published",
+    "norm": "Mplus1m",
+    "id": "8bc9cb21-26a4-49dd-b2f0-9978bea7cae2",
+    "vault_name": "M+ 1m"
+  },
+  {
+    "old": "wenfeng-mplus1mn",
+    "new": "wenfeng-mp1mn",
+    "how": "norm",
+    "shop": "M+ 1mn",
+    "status": "published",
+    "norm": "Mplus1mn",
+    "id": "9a45b26c-543b-42f0-9bb0-cdcde6536233",
+    "vault_name": "M+ 1mn"
+  },
+  {
+    "old": "wenfeng-mplus1p",
+    "new": "wenfeng-mp1pjp",
+    "how": "norm",
+    "shop": "M+ 1p",
+    "status": "published",
+    "norm": "Mplus1p",
+    "id": "638ddaae-a87e-463b-a15a-920dd69c2906",
+    "vault_name": "M+ 1p"
+  },
+  {
+    "old": "wenfeng-mplus2",
+    "new": "wenfeng-mp2jp",
+    "how": "norm",
+    "shop": "M+ 2",
+    "status": "published",
+    "norm": "Mplus2",
+    "id": "8ec431a2-ab0a-4cf1-9ce8-98dd43d800ce",
+    "vault_name": "M+ 2"
+  },
+  {
+    "old": "wenfeng-mplus2c",
+    "new": "wenfeng-mp2cjp",
+    "how": "norm",
+    "shop": "M+ 2c",
+    "status": "published",
+    "norm": "Mplus2c",
+    "id": "560228cb-9dba-4f9f-bd07-de5c0f0393ec",
+    "vault_name": "M+ 2c"
+  },
+  {
+    "old": "wenfeng-mplus2m",
+    "new": "wenfeng-mp2mjp",
+    "how": "norm",
+    "shop": "M+ 2m",
+    "status": "published",
+    "norm": "Mplus2m",
+    "id": "b01159a0-b67c-423d-a667-1891c8e3c856",
+    "vault_name": "M+ 2m"
+  },
+  {
+    "old": "wenfeng-mplus2p",
+    "new": "wenfeng-mp2pjp",
+    "how": "norm",
+    "shop": "M+ 2p",
+    "status": "published",
+    "norm": "Mplus2p",
+    "id": "f9333c87-05e3-4225-9e02-85afdab3a8d7",
+    "vault_name": "M+ 2p"
+  },
+  {
+    "old": "wenfeng-mplusu",
+    "new": "wenfeng-mpujp",
+    "how": "norm",
+    "shop": "M+ U",
+    "status": "published",
+    "norm": "MplusU",
+    "id": "816e18d0-d1b8-4e1e-9d38-995c48cacfbb",
+    "vault_name": "M+ U"
+  },
+  {
+    "old": "wenfeng-mp12",
+    "new": "wenfeng-mpg12jp",
+    "how": "norm",
+    "shop": "M+ gothic 12r",
+    "status": "published",
+    "norm": "Mp12",
+    "id": "88c48eb4-ed74-48a9-b28b-1fbcd613464b",
+    "vault_name": "M+ gothic 12r"
+  },
+  {
+    "old": "wenfeng-meroit",
+    "new": "wenfeng-merjp",
+    "how": "norm",
+    "shop": "Meroit",
+    "status": "published",
+    "norm": "Meroit",
+    "id": "d56708f9-1ec7-4bad-aa6a-e35382746f70",
+    "vault_name": "Meroit"
+  },
+  {
+    "old": "wenfeng-mintmono",
+    "new": "wenfeng-minmjp",
+    "how": "norm",
+    "shop": "Mint Mono",
+    "status": "published",
+    "norm": "MintMono",
+    "id": "1b093c0f-1708-4f23-a333-d76bbe1080d9",
+    "vault_name": "Mint Mono"
+  },
+  {
+    "old": "wenfeng-notonoto",
+    "new": "wenfeng-ntntjp",
+    "how": "norm",
+    "shop": "NOTONOTO",
+    "status": "published",
+    "norm": "NOTONOTO",
+    "id": "ad8ca28e-d71c-4f0a-acf4-b5beefb4511c",
+    "vault_name": "NOTONOTO"
+  },
+  {
+    "old": "wenfeng-notoserifhentaigana",
+    "new": "wenfeng-nshjp",
+    "how": "norm",
+    "shop": "Noto Serif Hentaigana",
+    "status": "published",
+    "norm": "NotoSerifHentaigana",
+    "id": "cc287171-77ce-4dc3-8a7f-4af0dc87cdc0",
+    "vault_name": "Noto Serif Hentaigana"
+  },
+  {
+    "old": "wenfeng-pendingmono",
+    "new": "wenfeng-pdmnjp",
+    "how": "norm",
+    "shop": "Pending Mono",
+    "status": "published",
+    "norm": "PendingMono",
+    "id": "7686dfb6-2406-4272-99ee-f5e9dafd3ac8",
+    "vault_name": "Pending Mono"
+  },
+  {
+    "old": "wenfeng-pleckjp",
+    "new": "wenfeng-plejp",
+    "how": "norm",
+    "shop": "PleckJP",
+    "status": "published",
+    "norm": "PleckJP",
+    "id": "2be86d68-1498-49bd-92e6-15e21bba3767",
+    "vault_name": "PleckJP"
+  },
+  {
+    "old": "wenfeng-pretendardjp",
+    "new": "wenfeng-prejp",
+    "how": "norm",
+    "shop": "Pretendard JP",
+    "status": "published",
+    "norm": "PretendardJP",
+    "id": "bb3d14c5-ec80-47a1-9f19-44f64fd27f14",
+    "vault_name": "Pretendard JP"
+  },
+  {
+    "old": "wenfeng-rampart",
+    "new": "wenfeng-ramojp",
+    "how": "norm",
+    "shop": "Rampart One",
+    "status": "published",
+    "norm": "Rampart",
+    "id": "f95eaf68-a8fb-4c36-bebb-2982fd721277",
+    "vault_name": "Rampart One"
+  },
+  {
+    "old": "wenfeng-reggae",
+    "new": "wenfeng-regojp",
+    "how": "norm",
+    "shop": "Reggae One",
+    "status": "published",
+    "norm": "Reggae",
+    "id": "2d03f841-631f-4c47-9bdd-a04de0de4b1b",
+    "vault_name": "Reggae One"
+  },
+  {
+    "old": "wenfeng-rnro",
+    "new": "wenfeng-rrojp",
+    "how": "norm",
+    "shop": "RocknRoll",
+    "status": "published",
+    "norm": "RocknRoll",
+    "id": "3cefdc20-af59-4f53-819d-dfbfcd46b608",
+    "vault_name": "RocknRoll"
+  },
+  {
+    "old": "wenfeng-roundedmgenplus",
+    "new": "wenfeng-rmgpjp",
+    "how": "norm",
+    "shop": "Rounded Mgen+",
+    "status": "published",
+    "norm": "RoundedMgenPlus",
+    "id": "0b3fde72-9fd0-4b83-a7f6-fa8c0cd3daaa",
+    "vault_name": "Rounded Mgen+"
+  },
+  {
+    "old": "wenfeng-scriptwidesanscjk",
+    "new": "wenfeng-sscjk",
+    "how": "norm",
+    "shop": "Scriptwide Sans CJK",
+    "status": "published",
+    "norm": "ScriptwideSansCJK",
+    "id": "6cf91f9e-0750-4325-9398-0e5fa08ba97c",
+    "vault_name": "Scriptwide Sans CJK"
+  },
+  {
+    "old": "wenfeng-shipporiantique",
+    "new": "wenfeng-spatq",
+    "how": "norm",
+    "shop": "Shippori Antique",
+    "status": "published",
+    "norm": "Shipporiantique",
+    "id": "654ecc84-0cb7-40b7-b932-e60540591995",
+    "vault_name": "Shippori Antique"
+  },
+  {
+    "old": "wenfeng-shipporiantiqueb1",
+    "new": "wenfeng-sab1jp",
+    "how": "norm",
+    "shop": "Shippori Antique B1",
+    "status": "published",
+    "norm": "Shipporiantiqueb1",
+    "id": "a5440c6b-b62f-4dcf-876f-20e63ed917bb",
+    "vault_name": "Shippori Antique B1"
+  },
+  {
+    "old": "wenfeng-shipporimincho",
+    "new": "wenfeng-shimjp",
+    "how": "norm",
+    "shop": "Shippori Mincho",
+    "status": "published",
+    "norm": "Shipporimincho",
+    "id": "8f4e1b67-e015-4cd0-b04d-c4d00956c66c",
+    "vault_name": "Shippori Mincho"
+  },
+  {
+    "old": "wenfeng-shipporiminchob1",
+    "new": "wenfeng-smb1jp",
+    "how": "norm",
+    "shop": "Shippori Mincho B1",
+    "status": "published",
+    "norm": "Shipporiminchob1",
+    "id": "f0b8a48e-0301-4dd9-b8d7-ded316861fcf",
+    "vault_name": "Shippori Mincho B1"
+  },
+  {
+    "old": "wenfeng-soroit",
+    "new": "wenfeng-sorjp",
+    "how": "norm",
+    "shop": "Soroit",
+    "status": "published",
+    "norm": "Soroit",
+    "id": "3fc4e06e-5da5-4b85-a3d2-bfae49624940",
+    "vault_name": "Soroit"
+  },
+  {
+    "old": "wenfeng-stick",
+    "new": "wenfeng-stijp",
+    "how": "norm",
+    "shop": "Stick",
+    "status": "published",
+    "norm": "Stick",
+    "id": "27572d41-59a1-49a4-8587-b02f7397cb13",
+    "vault_name": "Stick"
+  },
+  {
+    "old": "wenfeng-train",
+    "new": "wenfeng-traojp",
+    "how": "norm",
+    "shop": "Train One",
+    "status": "published",
+    "norm": "Train",
+    "id": "6b79cf4f-1446-4fbf-8388-3aa736866423",
+    "vault_name": "Train One"
+  },
+  {
+    "old": "wenfeng-ubroit",
+    "new": "wenfeng-ubrjp",
+    "how": "norm",
+    "shop": "Ubroit",
+    "status": "published",
+    "norm": "Ubroit",
+    "id": "9d331e5e-18b8-4fe2-b294-239b0a860840",
+    "vault_name": "Ubroit"
+  },
+  {
+    "old": "wenfeng-gnuunifontfull",
+    "new": "wenfeng-unijp",
+    "how": "norm",
+    "shop": "Unifont",
+    "status": "published",
+    "norm": "GNUUnifontFull",
+    "id": "59e74091-499e-409b-9fd0-fdb96a024cde",
+    "vault_name": "Unifont"
+  },
+  {
+    "old": "wenfeng-xanomincho",
+    "new": "wenfeng-xanomc",
+    "how": "norm",
+    "shop": "XANO明朝",
+    "status": "published",
+    "norm": "XanoMincho",
+    "id": "97b563a5-a7ba-45c0-84fc-2ba732510635",
+    "vault_name": "XANO明朝"
+  },
+  {
+    "old": "wenfeng-ydwbnnsp",
+    "new": "wenfeng-ydwxjhxt",
+    "how": "norm",
+    "shop": "YDW 香蕉滑行++体",
+    "status": "published",
+    "norm": "Ydwbnnsp",
+    "id": "4bfa37fe-e7ed-4285-b87d-0082856b43bb",
+    "vault_name": "YDW 香蕉滑行++体"
+  },
+  {
+    "old": "wenfeng-yozf",
+    "new": "wenfeng-yofjp",
+    "how": "norm",
+    "shop": "YozFont",
+    "status": "published",
+    "norm": "Yozf",
+    "id": "ca8187f5-c38d-4f38-b6d9-f626c6a0c44c",
+    "vault_name": "YozFont"
+  },
+  {
+    "old": "wenfeng-yuseimagic",
+    "new": "wenfeng-ysmjp",
+    "how": "norm",
+    "shop": "Yusei Magic",
+    "status": "published",
+    "norm": "Yuseimagic",
+    "id": "142d5897-9fbb-4b78-afdd-940f1f7d5d07",
+    "vault_name": "Yusei Magic"
+  },
+  {
+    "old": "wenfeng-zlx12",
+    "new": "wenfeng-zlxs12",
+    "how": "norm",
+    "shop": "Z Labs 像素 12px",
+    "status": "published",
+    "norm": "Zlx12",
+    "id": "44b47aa3-26d5-48a9-b58b-c90c1a448d9e",
+    "vault_name": "Z Labs 像素 12px"
+  },
+  {
+    "old": "wenfeng-zlrp12",
+    "new": "wenfeng-zlyxs12",
+    "how": "norm",
+    "shop": "Z Labs 圆像素 12px",
+    "status": "published",
+    "norm": "Zlrp12",
+    "id": "53c4afc6-b085-4d5f-a8d6-0db15961ba95",
+    "vault_name": "Z Labs 圆像素 12px"
+  },
+  {
+    "old": "wenfeng-zlrp16",
+    "new": "wenfeng-zlyxs16",
+    "how": "norm",
+    "shop": "Z Labs 圆像素 16px",
+    "status": "published",
+    "norm": "Zlrp16",
+    "id": "d3619f90-b4f3-4885-9c93-6a698700cb09",
+    "vault_name": "Z Labs 圆像素 16px"
+  },
+  {
+    "old": "wenfeng-zljp",
+    "new": "wenfeng-zldzjp",
+    "how": "norm",
+    "shop": "Z Labs 点阵 日标",
+    "status": "published",
+    "norm": "Zljp",
+    "id": "687beac0-04d8-4a52-b5fc-b07e7a198645",
+    "vault_name": "Z Labs 点阵 日标"
+  },
+  {
+    "old": "wenfeng-zlhc",
+    "new": "wenfeng-zldzhk",
+    "how": "norm",
+    "shop": "Z Labs 点阵 港标",
+    "status": "published",
+    "norm": "Zlhc",
+    "id": "ab854e07-e257-4bfb-a749-a5d45d1d4621",
+    "vault_name": "Z Labs 点阵 港标"
+  },
+  {
+    "old": "wenfeng-zenantique",
+    "new": "wenfeng-zenajp",
+    "how": "norm",
+    "shop": "Zen Antique",
+    "status": "published",
+    "norm": "Zenantique",
+    "id": "ddac4009-7f87-4870-b2ea-14c33ff8af6b",
+    "vault_name": "Zen Antique"
+  },
+  {
+    "old": "wenfeng-zenantiquesoft",
+    "new": "wenfeng-zasjp",
+    "how": "norm",
+    "shop": "Zen Antique Soft",
+    "status": "published",
+    "norm": "Zenantiquesoft",
+    "id": "97fac648-58d7-4d6e-8cde-ae607010cb06",
+    "vault_name": "Zen Antique Soft"
+  },
+  {
+    "old": "wenfeng-zenkakuantique",
+    "new": "wenfeng-zkgajp",
+    "how": "norm",
+    "shop": "Zen Kaku Gothic Antique",
+    "status": "published",
+    "norm": "Zenkakuantique",
+    "id": "d4b634ee-0f89-470b-89c2-6c317d723219",
+    "vault_name": "Zen Kaku Gothic Antique"
+  },
+  {
+    "old": "wenfeng-zenkakunew",
+    "new": "wenfeng-zkgnjp",
+    "how": "norm",
+    "shop": "Zen Kaku Gothic New",
+    "status": "published",
+    "norm": "Zenkakunew",
+    "id": "7cbd365c-87bd-4c58-8a25-0cd2403dbdf0",
+    "vault_name": "Zen Kaku Gothic New"
+  },
+  {
+    "old": "wenfeng-zenkurenaido",
+    "new": "wenfeng-zenkjp",
+    "how": "norm",
+    "shop": "Zen Kurenaido",
+    "status": "published",
+    "norm": "Zenkurenaido",
+    "id": "e2a64d3f-f06e-469a-8b59-17f6ca8b38b8",
+    "vault_name": "Zen Kurenaido"
+  },
+  {
+    "old": "wenfeng-zenmaru",
+    "new": "wenfeng-zmgjp",
+    "how": "norm",
+    "shop": "Zen Maru Gothic",
+    "status": "published",
+    "norm": "Zenmaru",
+    "id": "756bf2aa-1b34-4b3e-ad5e-7589cc6e7d05",
+    "vault_name": "Zen Maru Gothic"
+  },
+  {
+    "old": "wenfeng-zenoldmincho",
+    "new": "wenfeng-zomjp",
+    "how": "norm",
+    "shop": "Zen Old Mincho",
+    "status": "published",
+    "norm": "Zenoldmincho",
+    "id": "2828e507-6090-4ec9-8cb2-fb5fa39b046f",
+    "vault_name": "Zen Old Mincho"
+  },
+  {
+    "old": "wenfeng-allseto",
+    "new": "wenfeng-cjkfqlt",
+    "how": "norm",
+    "shop": "cjkFonts 全濑体",
+    "status": "published",
+    "norm": "AllSeto",
+    "id": "15d74d21-d00d-4fc3-9245-79b2f1b90dfb",
+    "vault_name": "cjkFonts 全濑体"
+  },
+  {
+    "old": "wenfeng-jfophy",
+    "new": "wenfeng-jfofy",
+    "how": "norm",
+    "shop": "jf open 粉圆",
+    "status": "published",
+    "norm": "JfOpenHuninn",
+    "id": "f0da370a-a587-4d7d-bcd3-f81bf9a1fd13",
+    "vault_name": "jf open 粉圆"
+  },
+  {
+    "old": "wenfeng-zwxszt",
+    "new": "wenfeng-mhzk12",
+    "how": "norm",
+    "shop": "mplus hzk 12 像素字体",
+    "status": "published",
+    "norm": "Zwxszt",
+    "id": "5246cd86-282e-41a2-a59d-e1f380bfc6c8",
+    "vault_name": "mplus hzk 12 像素字体"
+  },
+  {
+    "old": "wenfeng-asatte",
+    "new": "wenfeng-astjp",
+    "how": "norm",
+    "shop": "あさって",
+    "status": "published",
+    "norm": "Asatte",
+    "id": "a4c5963d-42bd-4cc8-b47b-f662fc7292d7",
+    "vault_name": "あさって"
+  },
+  {
+    "old": "wenfeng-irohamaru",
+    "new": "wenfeng-iromr",
+    "how": "norm",
+    "shop": "いろはマル",
+    "status": "published",
+    "norm": "IrohaMaru",
+    "id": "ab32f7e0-187c-4e99-9b27-ef84bf7df956",
+    "vault_name": "いろはマル"
+  },
+  {
+    "old": "wenfeng-irohamochi",
+    "new": "wenfeng-iromc",
+    "how": "norm",
+    "shop": "いろはモチ",
+    "status": "published",
+    "norm": "IrohaMochi",
+    "id": "b9377b14-94bb-4c28-8164-83ea08c94801",
+    "vault_name": "いろはモチ"
+  },
+  {
+    "old": "wenfeng-otsutome",
+    "new": "wenfeng-ottmjp",
+    "how": "norm",
+    "shop": "おつとめ",
+    "status": "published",
+    "norm": "Otsutome",
+    "id": "28616bd2-0a4c-432f-8255-5f9a637e24cc",
+    "vault_name": "おつとめ"
+  },
+  {
+    "old": "wenfeng-kazesawa",
+    "new": "wenfeng-kzswjp",
+    "how": "norm",
+    "shop": "かぜさわ",
+    "status": "published",
+    "norm": "Kazesawa",
+    "id": "8118bd97-8502-40f6-a0e3-32c4174a005a",
+    "vault_name": "かぜさわ"
+  },
+  {
+    "old": "wenfeng-kiloji",
+    "new": "wenfeng-kljjp",
+    "how": "norm",
+    "shop": "きろ字",
+    "status": "published",
+    "norm": "Kiloji",
+    "id": "c842a58c-6022-4bfd-a6a9-4a5f20b88b7f",
+    "vault_name": "きろ字"
+  },
+  {
+    "old": "wenfeng-gyate-luminescence",
+    "new": "wenfeng-gytljp",
+    "how": "norm",
+    "shop": "ぎゃーてーるみねっせんす",
+    "status": "published",
+    "norm": "GyateLuminescence",
+    "id": "ecd53e7c-eb04-4ade-a45b-30ec0e525f34",
+    "vault_name": "ぎゃーてーるみねっせんす"
+  },
+  {
+    "old": "wenfeng-keifont",
+    "new": "wenfeng-keifjp",
+    "how": "norm",
+    "shop": "けいふぉんと",
+    "status": "published",
+    "norm": "KeiFont",
+    "id": "530aa7a9-8c5f-4999-adc0-2380e3306c3a",
+    "vault_name": "けいふぉんと"
+  },
+  {
+    "old": "wenfeng-shiasatte",
+    "new": "wenfeng-sastjp",
+    "how": "norm",
+    "shop": "しあさって",
+    "status": "published",
+    "norm": "Shiasatte",
+    "id": "c641c7eb-6df2-4046-89f9-107f375fe6c6",
+    "vault_name": "しあさって"
+  },
+  {
+    "old": "wenfeng-cinecaption",
+    "new": "wenfeng-cinjp",
+    "how": "norm",
+    "shop": "しねきゃぷしょん",
+    "status": "published",
+    "norm": "Cinecaption",
+    "id": "c2aafac1-be20-4d06-8ec4-f4612bcf1f8f",
+    "vault_name": "しねきゃぷしょん"
+  },
+  {
+    "old": "wenfeng-jiyucho",
+    "new": "wenfeng-jycjp",
+    "how": "norm",
+    "shop": "じゆうちょうフォント",
+    "status": "published",
+    "norm": "Jiyucho",
+    "id": "246c2f34-fe9c-4a08-9f3c-deb88ae7b91a",
+    "vault_name": "じゆうちょうフォント"
+  },
+  {
+    "old": "wenfeng-sukimagothic",
+    "new": "wenfeng-skmgjp",
+    "how": "norm",
+    "shop": "すきまゴシック",
+    "status": "published",
+    "norm": "SukimaGothic",
+    "id": "52ee5e59-cd59-4a70-96d8-6bd27d9f971c",
+    "vault_name": "すきまゴシック"
+  },
+  {
+    "old": "wenfeng-senobigothic",
+    "new": "wenfeng-snbgjp",
+    "how": "norm",
+    "shop": "せのびゴシック",
+    "status": "published",
+    "norm": "SenobiGothic",
+    "id": "5daa45cc-3348-49e1-ad45-36a7ae6b3aa4",
+    "vault_name": "せのびゴシック"
+  },
+  {
+    "old": "wenfeng-tanukimagic",
+    "new": "wenfeng-tpmjp",
+    "how": "norm",
+    "shop": "たぬき油性マジック",
+    "status": "published",
+    "norm": "TanukiMagic",
+    "id": "b8ada530-e4de-499f-a965-f8981c983a6c",
+    "vault_name": "たぬき油性マジック"
+  },
+  {
+    "old": "wenfeng-tanugo",
+    "new": "wenfeng-tngjp",
+    "how": "norm",
+    "shop": "たぬゴ",
+    "status": "published",
+    "norm": "Tanugo",
+    "id": "c852cc77-040f-4613-bb0e-05a55fa9bf69",
+    "vault_name": "たぬゴ"
+  },
+  {
+    "old": "wenfeng-nishikiteki",
+    "new": "wenfeng-nsktk",
+    "how": "norm",
+    "shop": "にしき的フォント",
+    "status": "published",
+    "norm": "NishikiTeki",
+    "id": "5124b309-d2f2-4b7c-a227-bab7a7b194d4",
+    "vault_name": "にしき的フォント"
+  },
+  {
+    "old": "wenfeng-harutegaki",
+    "new": "wenfeng-hartgk",
+    "how": "norm",
+    "shop": "はる手書きフォント",
+    "status": "published",
+    "norm": "HaruTegaki",
+    "id": "279bec04-c83a-4f0a-8d1d-7c33cd748e63",
+    "vault_name": "はる手書きフォント"
+  },
+  {
+    "old": "wenfeng-honokamarugothic",
+    "new": "wenfeng-hmgjp",
+    "how": "norm",
+    "shop": "ほのか丸ゴシック",
+    "status": "published",
+    "norm": "HonokaMaruGothic",
+    "id": "07637d7e-05f6-46bf-a537-6e88999268f3",
+    "vault_name": "ほのか丸ゴシック"
+  },
+  {
+    "old": "wenfeng-honokaantiquemaru",
+    "new": "wenfeng-hamjp",
+    "how": "norm",
+    "shop": "ほのか新アンティーク丸",
+    "status": "published",
+    "norm": "HonokaAntiqueMaru",
+    "id": "b1e5e59a-9e9f-4f20-9c6f-266d77695d33",
+    "vault_name": "ほのか新アンティーク丸"
+  },
+  {
+    "old": "wenfeng-honokaantiquakaku",
+    "new": "wenfeng-hsakjp",
+    "how": "norm",
+    "shop": "ほのか新アンティーク角",
+    "status": "published",
+    "norm": "HonokaAntiqueKaku",
+    "id": "118aa9f4-afc2-4fc6-a2aa-62f7404e7d22",
+    "vault_name": "ほのか新アンティーク角"
+  },
+  {
+    "old": "wenfeng-manabiya",
+    "new": "wenfeng-mnbyjp",
+    "how": "norm",
+    "shop": "まなびや",
+    "status": "published",
+    "norm": "Manabiya",
+    "id": "25ae0fe1-1cdd-4ec3-89ad-63ba4174b795",
+    "vault_name": "まなびや"
+  },
+  {
+    "old": "wenfeng-mikachan",
+    "new": "wenfeng-mkcjp",
+    "how": "norm",
+    "shop": "みかちゃん",
+    "status": "published",
+    "norm": "Mikachan",
+    "id": "553fb614-1a47-417c-87cf-280654f09c7c",
+    "vault_name": "みかちゃん"
+  },
+  {
+    "old": "wenfeng-memoir",
+    "new": "wenfeng-memjp",
+    "how": "norm",
+    "shop": "めもわーる",
+    "status": "published",
+    "norm": "Memoir",
+    "id": "2f819f14-38bc-4c2d-8af4-454cdf6e0798",
+    "vault_name": "めもわーる"
+  },
+  {
+    "old": "wenfeng-yutaponcoding",
+    "new": "wenfeng-yutcd",
+    "how": "norm",
+    "shop": "ゆたぽんコーディング",
+    "status": "published",
+    "norm": "YutaponCoding",
+    "id": "a395f398-d818-44ae-a673-ab62a658567e",
+    "vault_name": "ゆたぽんコーディング"
+  },
+  {
+    "old": "wenfeng-yutacoco",
+    "new": "wenfeng-yutcc",
+    "how": "norm",
+    "shop": "ゆたココ",
+    "status": "published",
+    "norm": "YutaCoco",
+    "id": "107a8b79-e8b7-4d7b-9fdd-ddcd6cae90ac",
+    "vault_name": "ゆたココ"
+  },
+  {
+    "old": "wenfeng-kaiso",
+    "new": "wenfeng-kisjp",
+    "how": "norm",
+    "shop": "カイソウ",
+    "status": "published",
+    "norm": "Kaiso",
+    "id": "68a951f1-c727-42c7-831c-5e89c950911b",
+    "vault_name": "カイソウ"
+  },
+  {
+    "old": "wenfeng-kinkaku",
+    "new": "wenfeng-knkkjp",
+    "how": "norm",
+    "shop": "キンカク",
+    "status": "published",
+    "norm": "Kinkaku",
+    "id": "87940150-d2a2-4b0c-8561-5761acf41a4b",
+    "vault_name": "キンカク"
+  },
+  {
+    "old": "wenfeng-koruri",
+    "new": "wenfeng-krrjp",
+    "how": "norm",
+    "shop": "コルリ",
+    "status": "published",
+    "norm": "Koruri",
+    "id": "a59faed3-e796-4736-ae3d-7dd1d39e980c",
+    "vault_name": "コルリ"
+  },
+  {
+    "old": "wenfeng-corpyawamin3",
+    "new": "wenfeng-cyv3jp",
+    "how": "norm",
+    "shop": "コーポレートやわ明 ver3",
+    "status": "published",
+    "norm": "CorpYawamin3",
+    "id": "50c31c12-8c89-4ce1-a224-76558f1a56a1",
+    "vault_name": "コーポレートやわ明 ver3"
+  },
+  {
+    "old": "wenfeng-corplogoround3",
+    "new": "wenfeng-clrv3",
+    "how": "norm",
+    "shop": "コーポレート・ロゴ（ラウンド）ver3",
+    "status": "published",
+    "norm": "CorplogoRound3",
+    "id": "99f4367e-a0c4-4ceb-88bc-0179a04d3fb5",
+    "vault_name": "コーポレート・ロゴ（ラウンド）ver3"
+  },
+  {
+    "old": "wenfeng-corpmincho",
+    "new": "wenfeng-cormc",
+    "how": "norm",
+    "shop": "コーポレート明朝 ver3",
+    "status": "published",
+    "norm": "CorpMincho",
+    "id": "49044e31-d657-4ac8-a07c-358b53df6d93",
+    "vault_name": "コーポレート明朝 ver3"
+  },
+  {
+    "old": "wenfeng-samasan",
+    "new": "wenfeng-smsnjp",
+    "how": "norm",
+    "shop": "サマサン",
+    "status": "published",
+    "norm": "Samasan",
+    "id": "a100683c-c2c8-4422-95b0-776fddd5328b",
+    "vault_name": "サマサン"
+  },
+  {
+    "old": "wenfeng-timemachinewa",
+    "new": "wenfeng-tmmcwjp",
+    "how": "norm",
+    "shop": "タイムマシンわ号",
+    "status": "published",
+    "norm": "TimemachineWa",
+    "id": "56389830-25cf-4d9b-bf9e-27cc5cbab09b",
+    "vault_name": "タイムマシンわ号"
+  },
+  {
+    "old": "wenfeng-checkpoint-font",
+    "new": "wenfeng-cpfjp",
+    "how": "norm",
+    "shop": "チェックポイントフォント",
+    "status": "published",
+    "norm": "CheckpointFont",
+    "id": "6da1efac-9ce0-4a6d-8256-8be51ff2a2f8",
+    "vault_name": "チェックポイントフォント"
+  },
+  {
+    "old": "wenfeng-togalite",
+    "new": "wenfeng-tgltjp",
+    "how": "norm",
+    "shop": "トガリテ",
+    "status": "published",
+    "norm": "Togalite",
+    "id": "7268c902-8d7b-45a7-a3fc-b99491035501",
+    "vault_name": "トガリテ"
+  },
+  {
+    "old": "wenfeng-nicokaku",
+    "new": "wenfeng-nckkjp",
+    "how": "norm",
+    "shop": "ニコ角",
+    "status": "published",
+    "norm": "NicoKaku",
+    "id": "9ec90f5b-516a-4829-8d85-a5767e0f180d",
+    "vault_name": "ニコ角"
+  },
+  {
+    "old": "wenfeng-pigmo00",
+    "new": "wenfeng-p00jp",
+    "how": "norm",
+    "shop": "ピグモ00",
+    "status": "published",
+    "norm": "Pigmo00",
+    "id": "6bdb5a96-6871-427c-a40d-04866cb7707f",
+    "vault_name": "ピグモ00"
+  },
+  {
+    "old": "wenfeng-pigmo01",
+    "new": "wenfeng-p01jp",
+    "how": "norm",
+    "shop": "ピグモ01",
+    "status": "published",
+    "norm": "Pigmo01",
+    "id": "e073e8d1-5c78-43fe-985e-cf2048c25d5b",
+    "vault_name": "ピグモ01"
+  },
+  {
+    "old": "wenfeng-poprumcute",
+    "new": "wenfeng-prcjp",
+    "how": "norm",
+    "shop": "ポプらむ☆キュート",
+    "status": "published",
+    "norm": "PopRumCute",
+    "id": "f2a975b4-7e86-4668-be2d-090743e9eac6",
+    "vault_name": "ポプらむ☆キュート"
+  },
+  {
+    "old": "wenfeng-makinas4",
+    "new": "wenfeng-mkn4jp",
+    "how": "norm",
+    "shop": "マキナス4",
+    "status": "published",
+    "norm": "Makinas4",
+    "id": "28a062a5-5ece-45fd-8c62-8f8bd5e8f7f2",
+    "vault_name": "マキナス4"
+  },
+  {
+    "old": "wenfeng-mamelon",
+    "new": "wenfeng-mmlnjp",
+    "how": "norm",
+    "shop": "マメロン",
+    "status": "published",
+    "norm": "Mamelon",
+    "id": "85d95a5d-ed5b-4dd4-b5b0-a2b62a689f90",
+    "vault_name": "マメロン"
+  },
+  {
+    "old": "wenfeng-rondebsquare",
+    "new": "wenfeng-rbsjp",
+    "how": "norm",
+    "shop": "ロンド B スクエア",
+    "status": "published",
+    "norm": "RondeBSquare",
+    "id": "303732b8-79bc-4878-935d-d13b126051dc",
+    "vault_name": "ロンド B スクエア"
+  },
+  {
+    "old": "wenfeng-kslyt",
+    "new": "wenfeng-ydmt",
+    "how": "norm",
+    "shop": "一点明体",
+    "status": "published",
+    "norm": "Kslyt",
+    "id": "3c19eaab-50dd-4eaf-b9f6-4ebb77f393d9",
+    "vault_name": "一点明体"
+  },
+  {
+    "old": "wenfeng-syma",
+    "new": "wenfeng-symca",
+    "how": "norm",
+    "shop": "上元明朝 A",
+    "status": "published",
+    "norm": "Syma",
+    "id": "0c16b32d-1ea9-44ed-93c5-254f1e6ea406",
+    "vault_name": "上元明朝 A"
+  },
+  {
+    "old": "wenfeng-symb",
+    "new": "wenfeng-symcb",
+    "how": "norm",
+    "shop": "上元明朝 B",
+    "status": "published",
+    "norm": "Symb",
+    "id": "c88acc0d-0b7f-404f-bc40-6299372aa11d",
+    "vault_name": "上元明朝 B"
+  },
+  {
+    "old": "wenfeng-shmgt",
+    "new": "wenfeng-shmdt",
+    "how": "norm",
+    "shop": "上海摩登体",
+    "status": "published",
+    "norm": "Shmgt",
+    "id": "b7e4d5c2-1a0f-4c8b-9e3d-6f8a2b4c5d70",
+    "vault_name": "上海摩登体"
+  },
+  {
+    "old": "wenfeng-lhls",
+    "new": "wenfeng-lhtt",
+    "how": "norm",
+    "shop": "临海体",
+    "status": "published",
+    "norm": "Lhls",
+    "id": "b904874a-04aa-4e01-a2ec-6094c333e36c",
+    "vault_name": "临海体"
+  },
+  {
+    "old": "wenfeng-mkgh",
+    "new": "wenfeng-wzht",
+    "how": "norm",
+    "shop": "丸子黑",
+    "status": "published",
+    "norm": "Mkgh",
+    "id": "aad7a159-43a8-46d5-b940-74786a627933",
+    "vault_name": "丸子黑"
+  },
+  {
+    "old": "wenfeng-stfytz",
+    "new": "wenfeng-stfyt",
+    "how": "norm",
+    "shop": "书体坊颜体",
+    "status": "published",
+    "norm": "Stfytz",
+    "id": "b8d40e14-81de-41b3-9dae-c49f839406d1",
+    "vault_name": "书体坊颜体"
+  },
+  {
+    "old": "wenfeng-qrpx",
+    "new": "wenfeng-ewmxs",
+    "how": "norm",
+    "shop": "二维码像素",
+    "status": "published",
+    "norm": "QRpx",
+    "id": "d7beec02-fbb2-47fb-8a06-e1ad5d01ecf2",
+    "vault_name": "二维码像素"
+  },
+  {
+    "old": "wenfeng-cqscbbt",
+    "new": "wenfeng-yfzkzqscbbt",
+    "how": "norm",
+    "shop": "云峰字库重庆山城棒棒体",
+    "status": "published",
+    "norm": "Cqscbbt",
+    "id": "001dd279-8021-4284-b75c-4751b59026a2",
+    "vault_name": "云峰字库重庆山城棒棒体"
+  },
+  {
+    "old": "wenfeng-renoufangsong16",
+    "new": "wenfeng-rofs16",
+    "how": "norm",
+    "shop": "人偶仿宋 16",
+    "status": "published",
+    "norm": "RenOuFangSong16",
+    "id": "8c2ef23b-9c1e-476c-8a65-687d51154fcc",
+    "vault_name": "人偶仿宋 16"
+  },
+  {
+    "old": "wenfeng-ceym1",
+    "new": "wenfeng-ceymw01",
+    "how": "norm",
+    "shop": "仓耳与墨 W01",
+    "status": "published",
+    "norm": "TsangerYuMoW01",
+    "id": "2f857187-d1c7-450a-a309-648326071a5b",
+    "vault_name": "仓耳与墨 W01"
+  },
+  {
+    "old": "wenfeng-ceym2",
+    "new": "wenfeng-ceymw02",
+    "how": "norm",
+    "shop": "仓耳与墨 W02",
+    "status": "published",
+    "norm": "TsangerYuMoW02",
+    "id": "e09968b8-0a28-4de5-afa7-38d6416886de",
+    "vault_name": "仓耳与墨 W02"
+  },
+  {
+    "old": "wenfeng-ceym3",
+    "new": "wenfeng-ceymw03",
+    "how": "norm",
+    "shop": "仓耳与墨 W03",
+    "status": "published",
+    "norm": "TsangerYuMoW03",
+    "id": "46ae858c-dd84-41ed-b9f5-de6a17506dac",
+    "vault_name": "仓耳与墨 W03"
+  },
+  {
+    "old": "wenfeng-ceym4",
+    "new": "wenfeng-ceymw04",
+    "how": "norm",
+    "shop": "仓耳与墨 W04",
+    "status": "published",
+    "norm": "TsangerYuMoW04",
+    "id": "397d5a62-9b3a-4a78-9035-30c05df754a4",
+    "vault_name": "仓耳与墨 W04"
+  },
+  {
+    "old": "wenfeng-ceym5",
+    "new": "wenfeng-ceymw05",
+    "how": "norm",
+    "shop": "仓耳与墨 W05",
+    "status": "published",
+    "norm": "TsangerYuMoW05",
+    "id": "2a6e445c-4572-4d84-b8e3-ad2626f1cdc5",
+    "vault_name": "仓耳与墨 W05"
+  },
+  {
+    "old": "wenfeng-ceyyt1",
+    "new": "wenfeng-ceyytw01",
+    "how": "norm",
+    "shop": "仓耳渔阳体 W01",
+    "status": "published",
+    "norm": "TsangerYuYangTW01",
+    "id": "fc18c914-d6ff-4459-ba13-280d6c72dce4",
+    "vault_name": "仓耳渔阳体 W01"
+  },
+  {
+    "old": "wenfeng-ceyyt2",
+    "new": "wenfeng-ceyytw02",
+    "how": "norm",
+    "shop": "仓耳渔阳体 W02",
+    "status": "published",
+    "norm": "TsangerYuYangTW02",
+    "id": "58bd58cb-3e1a-4f3c-8503-b8ff8d44fefa",
+    "vault_name": "仓耳渔阳体 W02"
+  },
+  {
+    "old": "wenfeng-ceyyt3",
+    "new": "wenfeng-ceyytw03",
+    "how": "norm",
+    "shop": "仓耳渔阳体 W03",
+    "status": "published",
+    "norm": "TsangerYuYangTW03",
+    "id": "214cb4fe-a4ee-4d84-99c2-8c30f8b49b59",
+    "vault_name": "仓耳渔阳体 W03"
+  },
+  {
+    "old": "wenfeng-ceyyt4",
+    "new": "wenfeng-ceyytw04",
+    "how": "norm",
+    "shop": "仓耳渔阳体 W04",
+    "status": "published",
+    "norm": "TsangerYuYangTW04",
+    "id": "11ac699e-3f0e-4d04-8f33-ed59bd58cbfa",
+    "vault_name": "仓耳渔阳体 W04"
+  },
+  {
+    "old": "wenfeng-ceyyt5",
+    "new": "wenfeng-ceyytw05",
+    "how": "norm",
+    "shop": "仓耳渔阳体 W05",
+    "status": "published",
+    "norm": "TsangerYuYangTW05",
+    "id": "867189a5-84ea-46b2-b039-fc2b353c65c6",
+    "vault_name": "仓耳渔阳体 W05"
+  },
+  {
+    "old": "wenfeng-cesyt2",
+    "new": "wenfeng-cesytw02",
+    "how": "norm",
+    "shop": "仓耳舒圆体 W02",
+    "status": "published",
+    "norm": "TsangerShuYuanTW02",
+    "id": "475babd4-ff01-4451-b3dc-d0906953807a",
+    "vault_name": "仓耳舒圆体 W02"
+  },
+  {
+    "old": "wenfeng-cesyt3",
+    "new": "wenfeng-cesytw03",
+    "how": "norm",
+    "shop": "仓耳舒圆体 W03",
+    "status": "published",
+    "norm": "TsangerShuYuanTW03",
+    "id": "31560b0e-c845-4b28-a0b0-8c7d3e8cab0f",
+    "vault_name": "仓耳舒圆体 W03"
+  },
+  {
+    "old": "wenfeng-cesyt4",
+    "new": "wenfeng-cesytw04",
+    "how": "norm",
+    "shop": "仓耳舒圆体 W04",
+    "status": "published",
+    "norm": "TsangerShuYuanTW04",
+    "id": "ceb78de7-a297-4258-b38b-35214173cebf",
+    "vault_name": "仓耳舒圆体 W04"
+  },
+  {
+    "old": "wenfeng-cesyt5",
+    "new": "wenfeng-cesytw05",
+    "how": "norm",
+    "shop": "仓耳舒圆体 W05",
+    "status": "published",
+    "norm": "TsangerShuYuanTW05",
+    "id": "b245f77e-c63e-444b-88ac-d54ea51b0381",
+    "vault_name": "仓耳舒圆体 W05"
+  },
+  {
+    "old": "wenfeng-cefb1",
+    "new": "wenfeng-cefbw01",
+    "how": "norm",
+    "shop": "仓耳非白 W01",
+    "status": "published",
+    "norm": "TsangerFeiBaiW01",
+    "id": "5922b656-f028-4aa6-b893-196ae96fa5c2",
+    "vault_name": "仓耳非白 W01"
+  },
+  {
+    "old": "wenfeng-cefb2",
+    "new": "wenfeng-cefbw02",
+    "how": "norm",
+    "shop": "仓耳非白 W02",
+    "status": "published",
+    "norm": "TsangerFeiBaiW02",
+    "id": "3f907936-3c3c-4832-9572-6e283f5e0be7",
+    "vault_name": "仓耳非白 W02"
+  },
+  {
+    "old": "wenfeng-cefb3",
+    "new": "wenfeng-cefbw03",
+    "how": "norm",
+    "shop": "仓耳非白 W03",
+    "status": "published",
+    "norm": "TsangerFeiBaiW03",
+    "id": "f8d64f7b-8ac3-4cae-8904-a140b51acd76",
+    "vault_name": "仓耳非白 W03"
+  },
+  {
+    "old": "wenfeng-cefb4",
+    "new": "wenfeng-cefbw04",
+    "how": "norm",
+    "shop": "仓耳非白 W04",
+    "status": "published",
+    "norm": "TsangerFeiBaiW04",
+    "id": "9742eef9-8511-4ea5-a76c-21d29ee92aba",
+    "vault_name": "仓耳非白 W04"
+  },
+  {
+    "old": "wenfeng-cefb5",
+    "new": "wenfeng-cefbw05",
+    "how": "norm",
+    "shop": "仓耳非白 W05",
+    "status": "published",
+    "norm": "TsangerFeiBaiW05",
+    "id": "e58216ad-8b55-4a7b-8440-5e4d4e8c2ed5",
+    "vault_name": "仓耳非白 W05"
+  },
+  {
+    "old": "wenfeng-cactus-classical-serif",
+    "new": "wenfeng-xrzmt",
+    "how": "norm",
+    "shop": "仙人掌明体",
+    "status": "published",
+    "norm": "CactusClassicalSerif",
+    "id": "1d7047dc-a663-452a-b220-0c97c01f1641",
+    "vault_name": "仙人掌明體"
+  },
+  {
+    "old": "wenfeng-chuanqu",
+    "new": "wenfeng-cqcqt",
+    "how": "norm",
+    "shop": "传趣",
+    "status": "published",
+    "norm": "Chuanqu",
+    "id": "14f283ee-ecb7-4fa2-aa4c-8d0761b39ac8",
+    "vault_name": "传趣"
+  },
+  {
+    "old": "wenfeng-yjsu",
+    "new": "wenfeng-yzst",
+    "how": "norm",
+    "shop": "佑字肃",
+    "status": "published",
+    "norm": "Yjsu",
+    "id": "189de06f-e76b-4f6a-ba33-3402d7633071",
+    "vault_name": "佑字肃"
+  },
+  {
+    "old": "wenfeng-nani",
+    "new": "wenfeng-hmsxt",
+    "how": "norm",
+    "shop": "何某手写体",
+    "status": "published",
+    "norm": "Nani",
+    "id": "35d930c6-c7fd-4a3a-952b-bfe7377f464a",
+    "vault_name": "何某手写体"
+  },
+  {
+    "old": "wenfeng-yuzl",
+    "new": "wenfeng-yzzyp",
+    "how": "norm",
+    "shop": "余珍珠",
+    "status": "published",
+    "norm": "Yuzl",
+    "id": "98e1c36d-e139-4b0c-b302-7b1a13329dc4",
+    "vault_name": "余珍珠"
+  },
+  {
+    "old": "wenfeng-yydq",
+    "new": "wenfeng-yfdqs",
+    "how": "norm",
+    "shop": "余繁丹青宋",
+    "status": "published",
+    "norm": "Yydq",
+    "id": "9905f62f-6607-4c91-a064-0f91f98fee6c",
+    "vault_name": "余繁丹青宋"
+  },
+  {
+    "old": "wenfeng-yyxy",
+    "new": "wenfeng-yfxy",
+    "how": "norm",
+    "shop": "余繁新语",
+    "status": "published",
+    "norm": "Yyxy",
+    "id": "4ba03b48-f4c8-4891-8996-926695950f8b",
+    "vault_name": "余繁新语"
+  },
+  {
+    "old": "wenfeng-yyzs",
+    "new": "wenfeng-yfzs",
+    "how": "norm",
+    "shop": "余繁真素",
+    "status": "published",
+    "norm": "Yyzs",
+    "id": "163b895c-2ae3-4253-85cd-cde98cf8b645",
+    "vault_name": "余繁真素"
+  },
+  {
+    "old": "wenfeng-yufanlixing",
+    "new": "wenfeng-yflxt",
+    "how": "norm",
+    "shop": "余繁离形体",
+    "status": "published",
+    "norm": "YuFanLixing",
+    "id": "dc245f99-6360-4019-9626-f666c5b2089a",
+    "vault_name": "余繁离形体"
+  },
+  {
+    "old": "wenfeng-yyxl",
+    "new": "wenfeng-yfxl",
+    "how": "norm",
+    "shop": "余繁细柳",
+    "status": "published",
+    "norm": "Yyxl",
+    "id": "fa9d9c2e-1014-42dc-b553-75d06830ab5c",
+    "vault_name": "余繁细柳"
+  },
+  {
+    "old": "wenfeng-lftsyh",
+    "new": "wenfeng-lft11h",
+    "how": "norm",
+    "shop": "俐方体11号",
+    "status": "published",
+    "norm": "Lftsyh",
+    "id": "49d19bf6-af45-42e3-a9a6-f39fca300b4d",
+    "vault_name": "俐方体11号"
+  },
+  {
+    "old": "wenfeng-fkzl",
+    "new": "wenfeng-jzzt",
+    "how": "norm",
+    "shop": "假珍珠",
+    "status": "published",
+    "norm": "Fkzl",
+    "id": "2f94ed24-9395-48cc-80dc-ea50981d519c",
+    "vault_name": "假珍珠"
+  },
+  {
+    "old": "wenfeng-ckbf",
+    "new": "wenfeng-pwdhqt",
+    "how": "norm",
+    "shop": "偏歪的黑趣体",
+    "status": "published",
+    "norm": "Ckbf",
+    "id": "9254fc10-768b-4828-bc27-5ce76e9d974e",
+    "vault_name": "偏歪的黑趣体"
+  },
+  {
+    "old": "wenfeng-xsslv",
+    "new": "wenfeng-xsszt",
+    "how": "norm",
+    "shop": "像素Silver字体",
+    "status": "published",
+    "norm": "Xsslv",
+    "id": "4047ea44-46aa-445a-88f2-1789da18598e",
+    "vault_name": "像素Silver字体"
+  },
+  {
+    "old": "wenfeng-motomachi",
+    "new": "wenfeng-ytmtmc",
+    "how": "norm",
+    "shop": "元町",
+    "status": "published",
+    "norm": "Motomachi",
+    "id": "be3b4fca-5589-461f-b297-28754832392b",
+    "vault_name": "元町"
+  },
+  {
+    "old": "wenfeng-qzss",
+    "new": "wenfeng-qzkzst",
+    "how": "norm",
+    "shop": "全字库正宋体",
+    "status": "published",
+    "norm": "Qzss",
+    "id": "090f94e8-b1cc-4c16-aa21-f6693de0c0fc",
+    "vault_name": "全字库正宋体"
+  },
+  {
+    "old": "wenfeng-qzkt",
+    "new": "wenfeng-qzkzkt",
+    "how": "norm",
+    "shop": "全字库正楷体",
+    "status": "published",
+    "norm": "Qzkt",
+    "id": "a6cd7642-0003-469f-83ce-666955f4b492",
+    "vault_name": "全字库正楷体"
+  },
+  {
+    "old": "wenfeng-bading16",
+    "new": "wenfeng-bdswt16",
+    "how": "norm",
+    "shop": "八丁饰尾体 16",
+    "status": "published",
+    "norm": "BaDing16",
+    "id": "2909eef0-9629-4817-aafe-9b322ff22233",
+    "vault_name": "八丁饰尾体 16"
+  },
+  {
+    "old": "wenfeng-dejimamincho",
+    "new": "wenfeng-cdmc",
+    "how": "norm",
+    "shop": "出岛明朝",
+    "status": "published",
+    "norm": "DejimaMincho",
+    "id": "87aaef81-0a2f-4187-ae11-b0d1eb0b139b",
+    "vault_name": "出島明朝"
+  },
+  {
+    "old": "wenfeng-cxmc",
+    "new": "wenfeng-cxmct",
+    "how": "norm",
+    "shop": "初夏明朝体",
+    "status": "published",
+    "norm": "Cxmc",
+    "id": "ac780be4-e2bb-4511-894e-bf3da7958d06",
+    "vault_name": "初夏明朝体"
+  },
+  {
+    "old": "wenfeng-taipeisanstc",
+    "new": "wenfeng-tbht",
+    "how": "norm",
+    "shop": "台北黑體",
+    "status": "published",
+    "norm": "TaipeiSansTC",
+    "id": "05e70706-e7a0-4514-b776-c08aa9fcdf35",
+    "vault_name": "台北黑體"
+  },
+  {
+    "old": "wenfeng-twzl",
+    "new": "wenfeng-twzz",
+    "how": "norm",
+    "shop": "台湾珍珠",
+    "status": "published",
+    "norm": "Twzl",
+    "id": "8ecb574f-c586-4f2f-b464-b2ae4796b1e7",
+    "vault_name": "台湾珍珠"
+  },
+  {
+    "old": "wenfeng-wadalab-maru-gothic",
+    "new": "wenfeng-wlmg2004e",
+    "how": "norm",
+    "shop": "和田研細丸ゴシック2004絵文字",
+    "status": "published",
+    "norm": "WadaLabMaruGothic",
+    "id": "983c4129-a5fc-4d1d-a0b1-96b8e6e2861f",
+    "vault_name": "和田研細丸ゴシック2004絵文字"
+  },
+  {
+    "old": "wenfeng-howlingeqhisans",
+    "new": "wenfeng-awdgt",
+    "how": "name",
+    "shop": "嗷呜等高体",
+    "status": "published",
+    "norm": "HowlingEqHiSans",
+    "id": "c278cb6a-4816-471c-9246-7296de4313ba",
+    "vault_name": "嗷呜等高体"
+  },
+  {
+    "old": "wenfeng-ngz",
+    "new": "wenfeng-yzfdz",
+    "how": "norm",
+    "shop": "夜照飞点阵",
+    "status": "published",
+    "norm": "Ngz",
+    "id": "c2ac252e-ded6-4737-9a45-4903da2cb34e",
+    "vault_name": "夜照飞点阵"
+  },
+  {
+    "old": "wenfeng-urx",
+    "new": "wenfeng-twxxs",
+    "how": "norm",
+    "shop": "天王星像素",
+    "status": "published",
+    "norm": "Urx",
+    "id": "e6d9dff3-95d8-4403-ba40-585a892ce2b6",
+    "vault_name": "天王星像素"
+  },
+  {
+    "old": "wenfeng-nk",
+    "new": "wenfeng-nkakf",
+    "how": "norm",
+    "shop": "奈楷",
+    "status": "published",
+    "norm": "Nk",
+    "id": "b52f6da4-db67-4839-a70a-ec45bbcfe15c",
+    "vault_name": "奈楷"
+  },
+  {
+    "old": "wenfeng-nsfx",
+    "new": "wenfeng-nsfq",
+    "how": "norm",
+    "shop": "女書鳳栖",
+    "status": "published",
+    "norm": "Nsfx",
+    "id": "0439f87c-70f4-4b62-9b4a-0e744b681e05",
+    "vault_name": "女書鳳栖"
+  },
+  {
+    "old": "wenfeng-sisterfont",
+    "new": "wenfeng-mmsft",
+    "how": "norm",
+    "shop": "妹フォント / Sister Font",
+    "status": "published",
+    "norm": "SisterFont",
+    "id": "9b76d77a-d0ea-40c0-a905-947b25d9f980",
+    "vault_name": "妹フォント / Sister Font"
+  },
+  {
+    "old": "wenfeng-taigi-huninn",
+    "new": "wenfeng-zhfy",
+    "how": "norm",
+    "shop": "字咍粉圆",
+    "status": "published",
+    "norm": "TaigiHuninn",
+    "id": "df9c334a-9152-4f25-801f-22ef87057517",
+    "vault_name": "字咍粉圓"
+  },
+  {
+    "old": "wenfeng-bpmf-zihi-serif",
+    "new": "wenfeng-zhzys",
+    "how": "norm",
+    "shop": "字嗨注音宋",
+    "status": "published",
+    "norm": "BpmfZihiSerif",
+    "id": "853deff9-9f38-4757-811b-add31df30fa6",
+    "vault_name": "ㄅ字嗨注音宋體"
+  },
+  {
+    "old": "wenfeng-bpmf-zihi-kai-std",
+    "new": "wenfeng-zhzybk",
+    "how": "norm",
+    "shop": "字嗨注音标楷",
+    "status": "published",
+    "norm": "BpmfZihiKaiStd",
+    "id": "4560d0ca-1c4e-49a5-9dc1-f6afb6996664",
+    "vault_name": "字嗨注音標楷"
+  },
+  {
+    "old": "wenfeng-bpmf-zihi-sans",
+    "new": "wenfeng-zhzyh",
+    "how": "norm",
+    "shop": "字嗨注音黑",
+    "status": "published",
+    "norm": "BpmfZihiSans",
+    "id": "40a2f2f3-be30-4904-b19d-5fb2dfa629bf",
+    "vault_name": "ㄅ字嗨注音黑體"
+  },
+  {
+    "old": "wenfeng-zzft",
+    "new": "wenfeng-zzjftt",
+    "how": "norm",
+    "shop": "宅在家粉条甜",
+    "status": "published",
+    "norm": "Zzft",
+    "id": "3d87e3c5-b9d0-4c96-834d-3cc6f5693dca",
+    "vault_name": "宅在家粉条甜"
+  },
+  {
+    "old": "wenfeng-zzzd",
+    "new": "wenfeng-zzjzdb",
+    "how": "norm",
+    "shop": "宅在家自动笔",
+    "status": "published",
+    "norm": "Zzzd",
+    "id": "7d5e9267-3888-4904-8f58-c54d19860c42",
+    "vault_name": "宅在家自动笔"
+  },
+  {
+    "old": "wenfeng-zzmk",
+    "new": "wenfeng-zzjmkb",
+    "how": "norm",
+    "shop": "宅在家麦克笔",
+    "status": "published",
+    "norm": "Zzmk",
+    "id": "82545127-96c6-4063-8419-ec0c7e9f2f46",
+    "vault_name": "宅在家麦克笔"
+  },
+  {
+    "old": "wenfeng-uoqmunthenkhung",
+    "new": "wenfeng-ywtq",
+    "how": "norm",
+    "shop": "宇文天穹",
+    "status": "published",
+    "norm": "UoqMunThenKhung",
+    "id": "fab54489-4764-4043-9e34-334dfaecfad0",
+    "vault_name": "宇文天穹"
+  },
+  {
+    "old": "wenfeng-hcdin",
+    "new": "wenfeng-hcdingt",
+    "how": "norm",
+    "shop": "寒蝉 DIN 哥特",
+    "status": "published",
+    "norm": "Hcdin",
+    "id": "bbe84e03-bc16-4746-a4f3-9e720df9fcb4",
+    "vault_name": "寒蝉 DIN 哥特"
+  },
+  {
+    "old": "wenfeng-hctyt",
+    "new": "wenfeng-hctyts",
+    "how": "norm",
+    "shop": "寒蝉团圆体 Sans",
+    "status": "published",
+    "norm": "Hctyt",
+    "id": "85ff8d4a-e70f-4e60-8264-185e53b143f2",
+    "vault_name": "寒蝉团圆体 Sans"
+  },
+  {
+    "old": "wenfeng-hcrym",
+    "new": "wenfeng-hcytm",
+    "how": "norm",
+    "shop": "寒蝉圆体 M",
+    "status": "published",
+    "norm": "Hcrym",
+    "id": "7f6e82da-7453-429f-950c-c967b102a7f9",
+    "vault_name": "寒蝉圆体 M"
+  },
+  {
+    "old": "wenfeng-cldin",
+    "new": "wenfeng-hcdh",
+    "how": "norm",
+    "shop": "寒蝉德黑",
+    "status": "published",
+    "norm": "Cldin",
+    "id": "a9588c46-5493-4825-bae1-3380db4b25fb",
+    "vault_name": "寒蝉德黑"
+  },
+  {
+    "old": "wenfeng-hcth",
+    "new": "wenfeng-hcyjt",
+    "how": "norm",
+    "shop": "寒蝉有机体",
+    "status": "published",
+    "norm": "Hcth",
+    "id": "2b7561ea-edc0-4f55-85ec-18303243f156",
+    "vault_name": "寒蝉有机体"
+  },
+  {
+    "old": "wenfeng-clhfs",
+    "new": "wenfeng-hchzfs",
+    "how": "norm",
+    "shop": "寒蝉活字仿宋",
+    "status": "published",
+    "norm": "Clhfs",
+    "id": "1da4f318-3d8c-4f92-8dfb-84c743caaa15",
+    "vault_name": "寒蝉活字仿宋"
+  },
+  {
+    "old": "wenfeng-cltan",
+    "new": "wenfeng-hcth",
+    "how": "norm",
+    "shop": "寒蝉潭黑",
+    "status": "published",
+    "norm": "Cltan",
+    "id": "cf666fa4-aab8-4baa-854b-5163bef7e5ce",
+    "vault_name": "寒蝉潭黑"
+  },
+  {
+    "old": "wenfeng-clg",
+    "new": "wenfeng-hcgh",
+    "how": "norm",
+    "shop": "寒蝉高黑",
+    "status": "published",
+    "norm": "Clg",
+    "id": "23c746ef-3b93-44de-930c-128462b62323",
+    "vault_name": "寒蝉高黑"
+  },
+  {
+    "old": "wenfeng-hclck2",
+    "new": "wenfeng-hclcks",
+    "how": "norm",
+    "shop": "寒蝉龙藏楷书",
+    "status": "published",
+    "norm": "Hclck2",
+    "id": "174edcee-4b4e-4116-8d53-adf158608403",
+    "vault_name": "寒蝉龙藏楷书"
+  },
+  {
+    "old": "wenfeng-kosefontjp",
+    "new": "wenfeng-xlztjp",
+    "how": "norm",
+    "shop": "小濑字体 JP",
+    "status": "published",
+    "norm": "KosefontJP",
+    "id": "aaf73f29-5918-4bb1-b008-8828b5d81823",
+    "vault_name": "小濑字体 JP"
+  },
+  {
+    "old": "wenfeng-xiaolaisc",
+    "new": "wenfeng-xlztsc",
+    "how": "norm",
+    "shop": "小赖字体 SC",
+    "status": "published",
+    "norm": "XiaolaiSC",
+    "id": "760d154d-2bd3-4bcf-bae1-778458a80e66",
+    "vault_name": "小赖字体 SC"
+  },
+  {
+    "old": "wenfeng-xiaolaimonosc",
+    "new": "wenfeng-xlztdksc",
+    "how": "norm",
+    "shop": "小赖字体等宽 SC",
+    "status": "published",
+    "norm": "XiaolaiMonoSC",
+    "id": "512906dc-e812-48f1-a9f8-ef91f3735815",
+    "vault_name": "小赖字体等宽 SC"
+  },
+  {
+    "old": "wenfeng-writeright",
+    "new": "wenfeng-jsbczb",
+    "how": "norm",
+    "shop": "就是不错字（吧）",
+    "status": "published",
+    "norm": "WriteRight",
+    "id": "33eeb1d3-b2e1-4532-badb-85f0cf797d2c",
+    "vault_name": "就是不错字（吧）"
+  },
+  {
+    "old": "wenfeng-pangzhenguipmzd",
+    "new": "wenfeng-pmzdzgkt",
+    "how": "norm",
+    "shop": "庞门正道真贵楷体",
+    "status": "published",
+    "norm": "PangZhenGuiPMZD",
+    "id": "6b5fa63f-6f44-41f3-a715-6c7f09295df6",
+    "vault_name": "庞门正道真贵楷体"
+  },
+  {
+    "old": "wenfeng-pmzdcsd",
+    "new": "wenfeng-pmzdcst",
+    "how": "norm",
+    "shop": "庞门正道粗书体",
+    "status": "published",
+    "norm": "Pmzdcsd",
+    "id": "528c89d5-af53-4ac7-bca1-b3c23e28a4df",
+    "vault_name": "庞门正道粗书体"
+  },
+  {
+    "old": "wenfeng-pengli",
+    "new": "wenfeng-plwkpe",
+    "how": "norm",
+    "shop": "彭蠡文楷",
+    "status": "published",
+    "norm": "Pengli",
+    "id": "df06ddee-aae2-4ca6-84cf-7637ecad953d",
+    "vault_name": "彭蠡文楷"
+  },
+  {
+    "old": "wenfeng-zhi-mang-xing",
+    "new": "wenfeng-zmxs",
+    "how": "norm",
+    "shop": "志莽行书",
+    "status": "published",
+    "norm": "ZhiMangXing",
+    "id": "6f6f636c-ddc5-481c-b7e5-4dd082d7c9fa",
+    "vault_name": "志莽行书"
+  },
+  {
+    "old": "wenfeng-ceffontscjk",
+    "new": "wenfeng-kqxzy",
+    "how": "norm",
+    "shop": "快去寫作業-CJK",
+    "status": "published",
+    "norm": "CEFFontsCJK",
+    "id": "de52b83c-72f5-462a-9220-717f7201a48d",
+    "vault_name": "快去寫作業-CJK"
+  },
+  {
+    "old": "wenfeng-sypscn",
+    "new": "wenfeng-sypxzscn",
+    "how": "norm",
+    "shop": "思源屏显臻宋 CN",
+    "status": "published",
+    "norm": "SourceHanSerifCNforDisplay",
+    "id": "e7a8f58e-c48e-4c60-9b02-818e63a6a520",
+    "vault_name": "思源屏显臻宋 CN"
+  },
+  {
+    "old": "wenfeng-sykd",
+    "new": "wenfeng-sydksc",
+    "how": "norm",
+    "shop": "思源等宽",
+    "status": "published",
+    "norm": "Sykd",
+    "id": "8868591a-6679-469b-8574-568df61c5e8d",
+    "vault_name": "思源等宽"
+  },
+  {
+    "old": "wenfeng-sourcehanmonohk",
+    "new": "wenfeng-sydkhk",
+    "how": "norm",
+    "shop": "思源等宽 HK",
+    "status": "published",
+    "norm": "SourceHanMonoHK",
+    "id": "2b4a4851-19cf-48e3-8597-45e49765b03a",
+    "vault_name": "思源等宽 HK"
+  },
+  {
+    "old": "wenfeng-syhtcjk",
+    "new": "wenfeng-syhtr",
+    "how": "norm",
+    "shop": "思源黑体 Regular",
+    "status": "published",
+    "norm": "Syhtcjk",
+    "id": "dabfdb8a-7eb3-4102-8087-6b404eac7def",
+    "vault_name": "思源黑体 Regular"
+  },
+  {
+    "old": "wenfeng-shp",
+    "new": "wenfeng-syhtxs",
+    "how": "norm",
+    "shop": "思源黑体 像素",
+    "status": "published",
+    "norm": "Shp",
+    "id": "dd17fb9e-fcac-48d8-9744-a3ccdee9d592",
+    "vault_name": "思源黑体 像素"
+  },
+  {
+    "old": "wenfeng-yozai",
+    "new": "wenfeng-yzztyz",
+    "how": "norm",
+    "shop": "悠哉字体",
+    "status": "published",
+    "norm": "Yozai",
+    "id": "eaa5e51b-0f11-4de3-b8a5-a1d0c4b85041",
+    "vault_name": "悠哉字体"
+  },
+  {
+    "old": "wenfeng-swzh",
+    "new": "wenfeng-swzh16",
+    "how": "norm",
+    "shop": "扇尾胄黑 16",
+    "status": "published",
+    "norm": "Swzh",
+    "id": "6f3fe34e-b62b-4b2a-b621-78fd823f13a0",
+    "vault_name": "扇尾胄黑"
+  },
+  {
+    "old": "wenfeng-subsung",
+    "new": "wenfeng-szst",
+    "how": "norm",
+    "shop": "拾字宋体",
+    "status": "published",
+    "norm": "SubSung",
+    "id": "be46c531-6c6a-4d51-92c4-933bf1539c60",
+    "vault_name": "拾字宋体"
+  },
+  {
+    "old": "wenfeng-subhei",
+    "new": "wenfeng-szht",
+    "how": "norm",
+    "shop": "拾字黑体",
+    "status": "published",
+    "norm": "SubHei",
+    "id": "0c4070bb-e91e-4cc6-96c2-76ed73c9ace2",
+    "vault_name": "拾字黑体"
+  },
+  {
+    "old": "wenfeng-symdxft",
+    "new": "wenfeng-stmdxft",
+    "how": "norm",
+    "shop": "摄图摩登小方体",
+    "status": "published",
+    "norm": "Symdxft",
+    "id": "f641bdcc-8011-445e-902b-d322ce5edabb",
+    "vault_name": "摄图摩登小方体"
+  },
+  {
+    "old": "wenfeng-twjybbzst",
+    "new": "wenfeng-jybbzstun",
+    "how": "norm",
+    "shop": "教育部标准宋体UN",
+    "status": "published",
+    "norm": "Twjybbzst",
+    "id": "424f5f22-ccfb-44c3-bc2e-1e568f5bb943",
+    "vault_name": "教育部标准宋体UN"
+  },
+  {
+    "old": "wenfeng-twjybbzjs",
+    "new": "wenfeng-jybbzks",
+    "how": "norm",
+    "shop": "教育部標準楷書",
+    "status": "published",
+    "norm": "Twjybbzjs",
+    "id": "db87f2ab-4475-48c1-a6ae-5088ed3c60df",
+    "vault_name": "教育部標準楷書"
+  },
+  {
+    "old": "wenfeng-wqyzh",
+    "new": "wenfeng-wqyzht",
+    "how": "norm",
+    "shop": "文泉驿正黑体",
+    "status": "published",
+    "norm": "Wqyzh",
+    "id": "ca4673b7-7924-4bfa-ba22-23b24673d41e",
+    "vault_name": "文泉驿正黑体"
+  },
+  {
+    "old": "wenfeng-wqydkzh",
+    "new": "wenfeng-wqyzhdk",
+    "how": "norm",
+    "shop": "文泉驿正黑等宽",
+    "status": "published",
+    "norm": "Wqydkzh",
+    "id": "bae917ae-fcaa-48ab-bb73-ac8ce62df648",
+    "vault_name": "文泉驿正黑等宽"
+  },
+  {
+    "old": "wenfeng-wqys",
+    "new": "wenfeng-wqydzst",
+    "how": "norm",
+    "shop": "文泉驿点阵宋体",
+    "status": "published",
+    "norm": "Wqys",
+    "id": "99dd4638-1d63-48ec-aab4-ed4d80bf2dde",
+    "vault_name": "文泉驿点阵宋体"
+  },
+  {
+    "old": "wenfeng-wjmp",
+    "new": "wenfeng-wjst",
+    "how": "norm",
+    "shop": "文津宋体",
+    "status": "published",
+    "norm": "Wjmp",
+    "id": "04cb78d9-4b57-4b5c-8c6c-5667e0637c99",
+    "vault_name": "文津宋体"
+  },
+  {
+    "old": "wenfeng-wjm2",
+    "new": "wenfeng-wjstp2",
+    "how": "norm",
+    "shop": "文津宋体 P2",
+    "status": "published",
+    "norm": "Wjm2",
+    "id": "a695c18e-ded5-4021-a7c1-f6810a2b3b3a",
+    "vault_name": "文津宋体 P2"
+  },
+  {
+    "old": "wenfeng-wysf",
+    "new": "wenfeng-wyst",
+    "how": "norm",
+    "shop": "文渊宋体",
+    "status": "published",
+    "norm": "Wysf",
+    "id": "c43e2385-b520-473b-bccc-eb270a0763d3",
+    "vault_name": "文渊宋体"
+  },
+  {
+    "old": "wenfeng-wyhk",
+    "new": "wenfeng-wyht",
+    "how": "norm",
+    "shop": "文渊黑体",
+    "status": "published",
+    "norm": "Wyhk",
+    "id": "85701037-308a-4b00-bf7d-21cfbb4c53be",
+    "vault_name": "文渊黑体"
+  },
+  {
+    "old": "wenfeng-twjybxxmt",
+    "new": "wenfeng-xxmttw",
+    "how": "norm",
+    "shop": "新细明体 (台湾版)",
+    "status": "published",
+    "norm": "Twjybxxmt",
+    "id": "3c2e3003-0ef4-4245-8258-c5033e0e5828",
+    "vault_name": "新细明体 (台湾版)"
+  },
+  {
+    "old": "wenfeng-fzss",
+    "new": "wenfeng-fzssjt",
+    "how": "norm",
+    "shop": "方正书宋简体",
+    "status": "published",
+    "norm": "Fzss",
+    "id": "6edd444a-6ad8-4900-aa2a-fe39767a6ede",
+    "vault_name": "方正书宋简体"
+  },
+  {
+    "old": "wenfeng-fzfs",
+    "new": "wenfeng-fzfsjt",
+    "how": "norm",
+    "shop": "方正仿宋简体",
+    "status": "published",
+    "norm": "Fzfs",
+    "id": "0e4a6f1a-d579-44f5-bd20-64d035050b1e",
+    "vault_name": "方正仿宋简体"
+  },
+  {
+    "old": "wenfeng-fzkt",
+    "new": "wenfeng-fzktjt",
+    "how": "norm",
+    "shop": "方正楷体简体",
+    "status": "published",
+    "norm": "Fzkt",
+    "id": "80a76c8e-d7e2-428f-a3a4-f6abad4c5168",
+    "vault_name": "方正楷体简体"
+  },
+  {
+    "old": "wenfeng-fzht",
+    "new": "wenfeng-fzhtjt",
+    "how": "norm",
+    "shop": "方正黑体简体",
+    "status": "published",
+    "norm": "Fzht",
+    "id": "b4dd542d-d378-4357-bc81-9254a41d35fb",
+    "vault_name": "方正黑体简体"
+  },
+  {
+    "old": "wenfeng-arkp",
+    "new": "wenfeng-fzxs10",
+    "how": "norm",
+    "shop": "方舟像素",
+    "status": "published",
+    "norm": "Arkp",
+    "id": "801d24d1-b4f8-4e14-8038-fcf605c2433e",
+    "vault_name": "方舟像素"
+  },
+  {
+    "old": "wenfeng-arkpixel12",
+    "new": "wenfeng-fzxs12",
+    "how": "norm",
+    "shop": "方舟像素 12",
+    "status": "published",
+    "norm": "ArkPixel12",
+    "id": "ce7c5584-b594-4470-b295-30d8f255a2d0",
+    "vault_name": "方舟像素 12"
+  },
+  {
+    "old": "wenfeng-gatasousho",
+    "new": "wenfeng-fcgtss",
+    "how": "norm",
+    "shop": "方草",
+    "status": "published",
+    "norm": "GataSousho",
+    "id": "9f564a99-a740-49e0-ac41-581d2343b881",
+    "vault_name": "があた草書"
+  },
+  {
+    "old": "wenfeng-ubss",
+    "new": "wenfeng-wjht",
+    "how": "norm",
+    "shop": "无界黑",
+    "status": "published",
+    "norm": "Ubss",
+    "id": "9254d228-a329-483e-89ed-702f6d8622ba",
+    "vault_name": "无界黑"
+  },
+  {
+    "old": "wenfeng-minhnguyen",
+    "new": "wenfeng-myngy",
+    "how": "norm",
+    "shop": "明源",
+    "status": "published",
+    "norm": "MinhNguyen",
+    "id": "c03c1f10-c35b-4532-9816-8282856a0e67",
+    "vault_name": "明源"
+  },
+  {
+    "old": "wenfeng-xstq",
+    "new": "wenfeng-xstqj",
+    "how": "norm",
+    "shop": "晓声通秋茄",
+    "status": "published",
+    "norm": "Xstq",
+    "id": "236c9c51-8993-44c7-8e1e-fd392b236e9e",
+    "vault_name": "晓声通秋茄"
+  },
+  {
+    "old": "wenfeng-zyss",
+    "new": "wenfeng-zysst",
+    "how": "norm",
+    "shop": "智勇手书体",
+    "status": "published",
+    "norm": "Zyss",
+    "id": "f5d41a64-e342-44b0-908a-1183805c64b2",
+    "vault_name": "智勇手书体"
+  },
+  {
+    "old": "wenfeng-kwgh",
+    "new": "wenfeng-mhkrwg",
+    "how": "norm",
+    "shop": "暮黑",
+    "status": "published",
+    "norm": "Kwgh",
+    "id": "1f397d73-0b08-432b-aaa5-fabb2393bf70",
+    "vault_name": "暮黑"
+  },
+  {
+    "old": "wenfeng-sarasauihc",
+    "new": "wenfeng-gsuihk",
+    "how": "norm",
+    "shop": "更纱 UI HK",
+    "status": "published",
+    "norm": "SarasaUiHC",
+    "id": "5cb7aefc-3a00-4f85-99a9-f9b0c5bae2cd",
+    "vault_name": "更纱 UI HK"
+  },
+  {
+    "old": "wenfeng-sarasauitc",
+    "new": "wenfeng-gsuitc",
+    "how": "norm",
+    "shop": "更纱 UI TC",
+    "status": "published",
+    "norm": "SarasaUiTC",
+    "id": "9afd5acc-20e8-4bf1-9967-9e82f4af4ddd",
+    "vault_name": "更纱 UI TC"
+  },
+  {
+    "old": "wenfeng-gskd",
+    "new": "wenfeng-gsdk",
+    "how": "norm",
+    "shop": "更纱等宽",
+    "status": "published",
+    "norm": "Gskd",
+    "id": "54420da0-04a5-472c-941e-a3820a7dbeba",
+    "vault_name": "更纱等宽"
+  },
+  {
+    "old": "wenfeng-sarasagothictc",
+    "new": "wenfeng-gshttc",
+    "how": "norm",
+    "shop": "更纱黑体 TC",
+    "status": "published",
+    "norm": "SarasaGothicTC",
+    "id": "59a4f78a-50cf-4fdc-a07f-90f06fdd2097",
+    "vault_name": "更纱黑体 TC"
+  },
+  {
+    "old": "wenfeng-komorebigothic",
+    "new": "wenfeng-kmrbg",
+    "how": "norm",
+    "shop": "木漏れ日ゴシック",
+    "status": "published",
+    "norm": "KomorebiGothic",
+    "id": "798dc9ca-1c01-4f13-9eaf-b3afac638248",
+    "vault_name": "木漏れ日ゴシック"
+  },
+  {
+    "old": "wenfeng-wlhxh",
+    "new": "wenfeng-wlyh",
+    "how": "norm",
+    "shop": "未来荧黑",
+    "status": "published",
+    "norm": "Wlhxh",
+    "id": "d3c0dc51-2e04-42f5-af55-d349dec4bd64",
+    "vault_name": "未来荧黑"
+  },
+  {
+    "old": "wenfeng-glowsansjp",
+    "new": "wenfeng-wlyhjp",
+    "how": "norm",
+    "shop": "未来荧黑 JP",
+    "status": "published",
+    "norm": "GlowSansJP",
+    "id": "e599649b-037f-4dd8-8422-cf4eddb17783",
+    "vault_name": "未来荧黑 JP"
+  },
+  {
+    "old": "wenfeng-glowsanstc",
+    "new": "wenfeng-wlyhtc",
+    "how": "norm",
+    "shop": "未来荧黑 TC",
+    "status": "published",
+    "norm": "GlowSansTC",
+    "id": "14c56610-8372-4af8-abd9-cf695952d47e",
+    "vault_name": "未来荧黑 TC"
+  },
+  {
+    "old": "wenfeng-chocolate-classical-sans",
+    "new": "wenfeng-zglht",
+    "how": "norm",
+    "shop": "朱古力黑体",
+    "status": "published",
+    "norm": "ChocolateClassicalSans",
+    "id": "7ab80ebf-fe78-4d51-a8c5-e2774ae7603e",
+    "vault_name": "朱古力黑體"
+  },
+  {
+    "old": "wenfeng-qhddl",
+    "new": "wenfeng-qhdlt",
+    "how": "norm",
+    "shop": "权衡度量体",
+    "status": "published",
+    "norm": "Qhddl",
+    "id": "2c4d462b-e2ba-4b5d-adf9-8243be8030b8",
+    "vault_name": "权衡度量体"
+  },
+  {
+    "old": "wenfeng-jlpx",
+    "new": "wenfeng-gdxs12",
+    "how": "norm",
+    "shop": "果冻像素",
+    "status": "published",
+    "norm": "Jlpx",
+    "id": "ce1a9f33-9458-402f-a8d9-20652694f517",
+    "vault_name": "果冻像素"
+  },
+  {
+    "old": "wenfeng-ummc",
+    "new": "wenfeng-mmct",
+    "how": "norm",
+    "shop": "梅明朝",
+    "status": "published",
+    "norm": "Ummc",
+    "id": "493bb04f-2944-47ec-a556-6584e926e02b",
+    "vault_name": "梅明朝"
+  },
+  {
+    "old": "wenfeng-umgh",
+    "new": "wenfeng-mhtug",
+    "how": "norm",
+    "shop": "梅黑体",
+    "status": "published",
+    "norm": "Umgh",
+    "id": "5ba1a6ca-4713-4624-87c7-4a266b568e93",
+    "vault_name": "梅黑体"
+  },
+  {
+    "old": "wenfeng-mspyt",
+    "new": "wenfeng-myst",
+    "how": "norm",
+    "shop": "梦源宋体",
+    "status": "published",
+    "norm": "Mspyt",
+    "id": "5fafd9ed-f9dc-4dde-846b-25f20e738cfc",
+    "vault_name": "梦源宋体"
+  },
+  {
+    "old": "wenfeng-dreamhanserif",
+    "new": "wenfeng-mystp3l",
+    "how": "norm",
+    "shop": "梦源宋体·Pal3love",
+    "status": "published",
+    "norm": "DreamHanSerif",
+    "id": "77a9780c-f2dc-434f-b81e-215a0b5a7799",
+    "vault_name": "梦源宋体·Pal3love"
+  },
+  {
+    "old": "wenfeng-dreamhansans",
+    "new": "wenfeng-myhtp3l",
+    "how": "norm",
+    "shop": "梦源黑体（Pal3love）",
+    "status": "published",
+    "norm": "DreamHanSans",
+    "id": "6ec60dce-32d6-4e71-ac0b-5eaea359e16a",
+    "vault_name": "梦源黑体（Pal3love）"
+  },
+  {
+    "old": "wenfeng-frexsans",
+    "new": "wenfeng-xhfsa",
+    "how": "norm",
+    "shop": "械黑",
+    "status": "published",
+    "norm": "Frexsans",
+    "id": "0d1fe847-e5d2-4f66-85db-2a4eee74fdb6",
+    "vault_name": "械黑"
+  },
+  {
+    "old": "wenfeng-masa",
+    "new": "wenfeng-zfmb",
+    "how": "norm",
+    "shop": "正风毛笔",
+    "status": "published",
+    "norm": "Masa",
+    "id": "23068a19-d256-4f1d-b70d-57c0c933ee79",
+    "vault_name": "正风毛笔"
+  },
+  {
+    "old": "wenfeng-mizukigothic",
+    "new": "wenfeng-smht",
+    "how": "name",
+    "shop": "水木黑体",
+    "status": "published",
+    "norm": "MizukiGothic",
+    "id": "58c3fe9d-41fb-4507-95b5-b203233c3018",
+    "vault_name": "水木黑体"
+  },
+  {
+    "old": "wenfeng-zdicqx",
+    "new": "wenfeng-hdqxwzt",
+    "how": "norm",
+    "shop": "汉典秦系文字体",
+    "status": "published",
+    "norm": "Zdicqx",
+    "id": "63cce015-7746-44bf-a9e3-deffc26c1b37",
+    "vault_name": "汉典秦系文字体"
+  },
+  {
+    "old": "wenfeng-hzpy",
+    "new": "wenfeng-hzpyt",
+    "how": "norm",
+    "shop": "汉字拼音体",
+    "status": "published",
+    "norm": "Hzpy",
+    "id": "ab67bcf5-2c52-4e7f-823e-03710771ce49",
+    "vault_name": "汉字拼音体"
+  },
+  {
+    "old": "wenfeng-jxzk",
+    "new": "wenfeng-jxzkt",
+    "how": "norm",
+    "shop": "江西拙楷体",
+    "status": "published",
+    "norm": "Jxzk",
+    "id": "3d6697db-260c-4dcb-a8d9-c9c74cb8e7c9",
+    "vault_name": "江西拙楷体"
+  },
+  {
+    "old": "wenfeng-jgma",
+    "new": "wenfeng-jgmta",
+    "how": "norm",
+    "shop": "汲古明体A",
+    "status": "published",
+    "norm": "Jgma",
+    "id": "9a773962-c79c-4b70-a208-723df6354afa",
+    "vault_name": "汲古明体A"
+  },
+  {
+    "old": "wenfeng-jgmb",
+    "new": "wenfeng-jgmtb",
+    "how": "norm",
+    "shop": "汲古明体B",
+    "status": "published",
+    "norm": "Jgmb",
+    "id": "c5ae4a80-63bf-4dcd-b2e9-1ff1b78e4d04",
+    "vault_name": "汲古明体B"
+  },
+  {
+    "old": "wenfeng-jgmc",
+    "new": "wenfeng-jgmtc",
+    "how": "norm",
+    "shop": "汲古明体C",
+    "status": "published",
+    "norm": "Jgmc",
+    "id": "075ba134-255f-485a-a53d-5e9438ad9610",
+    "vault_name": "汲古明体C"
+  },
+  {
+    "old": "wenfeng-mysxt",
+    "new": "wenfeng-myrbsxt",
+    "how": "norm",
+    "shop": "沐瑶软笔手写体",
+    "status": "published",
+    "norm": "Mysxt",
+    "id": "03b5f7cd-e75d-4e31-86d1-28fbd473737c",
+    "vault_name": "沐瑶软笔手写体"
+  },
+  {
+    "old": "wenfeng-bpmf-huninn",
+    "new": "wenfeng-zyfy",
+    "how": "norm",
+    "shop": "注音粉圆",
+    "status": "published",
+    "norm": "BpmfHuninn",
+    "id": "58f8aabd-99cc-4cf0-a35a-4dbb33fcadb0",
+    "vault_name": "注音粉圓"
+  },
+  {
+    "old": "wenfeng-bpmf-iansui",
+    "new": "wenfeng-zyys",
+    "how": "norm",
+    "shop": "注音芫荽",
+    "status": "published",
+    "norm": "BpmfIansui",
+    "id": "c5ee1001-c6dd-463f-aca8-0f642fb08c26",
+    "vault_name": "注音芫荽"
+  },
+  {
+    "old": "wenfeng-fb16",
+    "new": "wenfeng-lxdzt16",
+    "how": "norm",
+    "shop": "流行点阵体16",
+    "status": "published",
+    "norm": "Fb16",
+    "id": "e900c5aa-ebea-4d9e-99a0-a4bd97b8e278",
+    "vault_name": "流行点阵体16"
+  },
+  {
+    "old": "wenfeng-popgh",
+    "new": "wenfeng-lxhtpop",
+    "how": "norm",
+    "shop": "流行黑",
+    "status": "published",
+    "norm": "Popgh",
+    "id": "fafd8dbe-7035-4ca0-b82c-d4cc28ec6c5b",
+    "vault_name": "流行黑"
+  },
+  {
+    "old": "wenfeng-hxwk",
+    "new": "wenfeng-hcxk",
+    "how": "norm",
+    "shop": "混菜写楷",
+    "status": "published",
+    "norm": "Hxwk",
+    "id": "0205db20-330a-4fe1-950c-2cac8ef1f340",
+    "vault_name": "混菜写楷"
+  },
+  {
+    "old": "wenfeng-qssxt",
+    "new": "wenfeng-qssxt2",
+    "how": "norm",
+    "shop": "清松手写体2",
+    "status": "published",
+    "norm": "Qssxt",
+    "id": "bd19635e-d2d4-47c5-b0d9-d31b81c09c4a",
+    "vault_name": "清松手写体2"
+  },
+  {
+    "old": "wenfeng-yunmt",
+    "new": "wenfeng-yymttw",
+    "how": "norm",
+    "shop": "源云明体",
+    "status": "published",
+    "norm": "Yunmt",
+    "id": "b5692270-ee4d-4ffc-b12e-c8690c246685",
+    "vault_name": "源云明体"
+  },
+  {
+    "old": "wenfeng-bpmf-genwan-min",
+    "new": "wenfeng-yyzybgm",
+    "how": "norm",
+    "shop": "源云注音明",
+    "status": "published",
+    "norm": "BpmfGenWanMin",
+    "id": "23600e68-bc33-48b1-b89f-7835b082de91",
+    "vault_name": "ㄅ源雲注音明體"
+  },
+  {
+    "old": "wenfeng-bpmf-genyo-min",
+    "new": "wenfeng-yyzym",
+    "how": "norm",
+    "shop": "源样注音明",
+    "status": "published",
+    "norm": "BpmfGenYoMin",
+    "id": "1f28da2c-1d48-4ab3-b9f0-ba2da6b481b3",
+    "vault_name": "ㄅ源樣注音明體"
+  },
+  {
+    "old": "wenfeng-bpmf-genyo-gothic",
+    "new": "wenfeng-yyzyh",
+    "how": "norm",
+    "shop": "源样注音黑",
+    "status": "published",
+    "norm": "BpmfGenYoGothic",
+    "id": "b954e0b8-2ff4-4959-a824-5bd69406c9bf",
+    "vault_name": "ㄅ源樣注音黑體"
+  },
+  {
+    "old": "wenfeng-genyogothicpjp",
+    "new": "wenfeng-gygpjp",
+    "how": "norm",
+    "shop": "源様ゴシックP",
+    "status": "published",
+    "norm": "GenYoGothicPJP",
+    "id": "ca28cc46-b7bb-4cab-9493-afed1455f699",
+    "vault_name": "源様ゴシックP"
+  },
+  {
+    "old": "wenfeng-genyominpjp",
+    "new": "wenfeng-yymcpgym",
+    "how": "norm",
+    "shop": "源様明朝P",
+    "status": "published",
+    "norm": "GenYoMinPJP",
+    "id": "e9dda540-737a-4a68-a3ad-24bdb14686aa",
+    "vault_name": "源様明朝P"
+  },
+  {
+    "old": "wenfeng-gensenroundedjp",
+    "new": "wenfeng-gsrjp",
+    "how": "norm",
+    "shop": "源泉丸ゴシック",
+    "status": "published",
+    "norm": "GenSenRoundedJP",
+    "id": "1bb8b158-465b-4424-a9f7-00b4b6220800",
+    "vault_name": "源泉丸ゴシック"
+  },
+  {
+    "old": "wenfeng-gensenroundedpjp",
+    "new": "wenfeng-gsrpjp",
+    "how": "norm",
+    "shop": "源泉丸ゴシックP",
+    "status": "published",
+    "norm": "GenSenRoundedPJP",
+    "id": "d04bb6c1-c39f-4859-b9b4-ae4eec4d6917",
+    "vault_name": "源泉丸ゴシックP"
+  },
+  {
+    "old": "wenfeng-gensenroundedtc",
+    "new": "wenfeng-yqytd",
+    "how": "norm",
+    "shop": "源泉圆体丹",
+    "status": "published",
+    "norm": "GenSenRoundedTC",
+    "id": "e2c025fb-0dff-4b00-9ce1-34fb49183c42",
+    "vault_name": "源泉圆体丹"
+  },
+  {
+    "old": "wenfeng-bpmf-gensen-rounded",
+    "new": "wenfeng-yqzyy",
+    "how": "norm",
+    "shop": "源泉注音圆",
+    "status": "published",
+    "norm": "BpmfGenSenRounded",
+    "id": "55757ed4-58e0-4b42-bb91-e4dc87d3277a",
+    "vault_name": "ㄅ源泉注音圓體"
+  },
+  {
+    "old": "wenfeng-genryuminpjp",
+    "new": "wenfeng-ylmcp",
+    "how": "norm",
+    "shop": "源流明朝P",
+    "status": "published",
+    "norm": "GenRyuMinPJP",
+    "id": "784d5bcc-0d48-4387-9ca7-18a759eff7d5",
+    "vault_name": "源流明朝P"
+  },
+  {
+    "old": "wenfeng-bpmf-genryu-min",
+    "new": "wenfeng-ylzym",
+    "how": "norm",
+    "shop": "源流注音明",
+    "status": "published",
+    "norm": "BpmfGenRyuMin",
+    "id": "050909ee-6b95-435a-96cc-90d6ba059f5a",
+    "vault_name": "ㄅ源流注音明體"
+  },
+  {
+    "old": "wenfeng-yjmct",
+    "new": "wenfeng-yjmc",
+    "how": "norm",
+    "shop": "源界明朝",
+    "status": "published",
+    "norm": "Yjmct",
+    "id": "2081dd92-3875-498a-9f70-d1c6cea8f8ae",
+    "vault_name": "源界明朝"
+  },
+  {
+    "old": "wenfeng-gensekigothicpjp",
+    "new": "wenfeng-gsgpjp",
+    "how": "norm",
+    "shop": "源石ゴシックP",
+    "status": "published",
+    "norm": "GenSekiGothicPJP",
+    "id": "2797d573-8c00-4d40-8093-7a9591a335f5",
+    "vault_name": "源石ゴシックP"
+  },
+  {
+    "old": "wenfeng-bpmf-genseki-gothic",
+    "new": "wenfeng-yszyh",
+    "how": "norm",
+    "shop": "源石注音黑",
+    "status": "published",
+    "norm": "BpmfGenSekiGothic",
+    "id": "a0763908-e13a-43af-923d-45ee581abb4e",
+    "vault_name": "ㄅ源石注音黑體"
+  },
+  {
+    "old": "wenfeng-gensekigothictc",
+    "new": "wenfeng-yshtd",
+    "how": "norm",
+    "shop": "源石黑体丹",
+    "status": "published",
+    "norm": "GenSekiGothicTC",
+    "id": "169587a4-4460-4381-8d5f-e6664bd8441a",
+    "vault_name": "源石黑体丹"
+  },
+  {
+    "old": "wenfeng-genkimintc",
+    "new": "wenfeng-yqmtd",
+    "how": "norm",
+    "shop": "源起明体丹",
+    "status": "published",
+    "norm": "GenKiMinTC",
+    "id": "bc77463a-44f2-40d5-be95-c05bdb98339e",
+    "vault_name": "源起明体丹"
+  },
+  {
+    "old": "wenfeng-genkiminpjp",
+    "new": "wenfeng-yqmcp",
+    "how": "norm",
+    "shop": "源起明朝P",
+    "status": "published",
+    "norm": "GenKiMinPJP",
+    "id": "826e5a48-93b9-406f-b86f-6ac02e12693a",
+    "vault_name": "源起明朝P"
+  },
+  {
+    "old": "wenfeng-genkigothicjp",
+    "new": "wenfeng-yqhtjp",
+    "how": "norm",
+    "shop": "源起黑体 JP",
+    "status": "published",
+    "norm": "GenKiGothicJP",
+    "id": "208fefc5-4fd0-41de-93dd-0b00b66342ab",
+    "vault_name": "源起黑体 JP"
+  },
+  {
+    "old": "wenfeng-genkigothicpjp",
+    "new": "wenfeng-yqhtpjp",
+    "how": "norm",
+    "shop": "源起黑体 PJP",
+    "status": "published",
+    "norm": "GenKiGothicPJP",
+    "id": "d98766e2-4df9-41c3-818c-5670784fa487",
+    "vault_name": "源起黑体 PJP"
+  },
+  {
+    "old": "wenfeng-genkigothictc",
+    "new": "wenfeng-yqhtd",
+    "how": "norm",
+    "shop": "源起黑体丹",
+    "status": "published",
+    "norm": "GenKiGothicTC",
+    "id": "5593355f-bf13-4a29-b62b-e30f6fb91f58",
+    "vault_name": "源起黑体丹"
+  },
+  {
+    "old": "wenfeng-genwanminpjp",
+    "new": "wenfeng-yymcpgwm",
+    "how": "norm",
+    "shop": "源雲明朝P",
+    "status": "published",
+    "norm": "GenWanMinPJP",
+    "id": "35b459bc-0962-4387-9bd9-418705011b00",
+    "vault_name": "源雲明朝P"
+  },
+  {
+    "old": "wenfeng-yiny",
+    "new": "wenfeng-yyhtgng",
+    "how": "norm",
+    "shop": "源音黑体",
+    "status": "published",
+    "norm": "Yiny",
+    "id": "8a85ea98-a2e2-4ed2-b9cd-8e4ff0f644e0",
+    "vault_name": "源音黑体"
+  },
+  {
+    "old": "wenfeng-hyzi",
+    "new": "wenfeng-hyzt",
+    "how": "norm",
+    "shop": "滑油字",
+    "status": "published",
+    "norm": "Hyzi",
+    "id": "644be282-c162-4296-8452-fa138c062815",
+    "vault_name": "滑油字"
+  },
+  {
+    "old": "wenfeng-wdxl-lubrifont-tc",
+    "new": "wenfeng-hyztc",
+    "how": "norm",
+    "shop": "滑油字 TC",
+    "status": "published",
+    "norm": "WDXLLubrifontTC",
+    "id": "82d26bc8-94ff-48e7-84c4-fc3b19d4dfff",
+    "vault_name": "滑油字 TC"
+  },
+  {
+    "old": "wenfeng-slfu",
+    "new": "wenfeng-ysfxt",
+    "how": "norm",
+    "shop": "演示佛系体",
+    "status": "published",
+    "norm": "Slfu",
+    "id": "18983a5b-b25f-4677-ad87-a17e73887934",
+    "vault_name": "演示佛系体"
+  },
+  {
+    "old": "wenfeng-slxx",
+    "new": "wenfeng-ysxxk",
+    "how": "norm",
+    "shop": "演示夏行楷",
+    "status": "published",
+    "norm": "Slxx",
+    "id": "06cbcdbb-00b3-46c0-acee-5c390b4ff0ab",
+    "vault_name": "演示夏行楷"
+  },
+  {
+    "old": "wenfeng-slyr",
+    "new": "wenfeng-ysyrxk",
+    "how": "norm",
+    "shop": "演示悠然小楷",
+    "status": "published",
+    "norm": "Slyr",
+    "id": "04427b58-4554-462f-8cdc-0a4b1837018c",
+    "vault_name": "演示悠然小楷"
+  },
+  {
+    "old": "wenfeng-sly1",
+    "new": "wenfeng-ysyrxke",
+    "how": "norm",
+    "shop": "演示悠然小楷二",
+    "status": "published",
+    "norm": "Sly1",
+    "id": "70484b9e-8832-4a00-95af-b024ba983978",
+    "vault_name": "演示悠然小楷二"
+  },
+  {
+    "old": "wenfeng-ysxh",
+    "new": "wenfeng-ysxhts",
+    "how": "norm",
+    "shop": "演示斜黑体",
+    "status": "published",
+    "norm": "Ysxh",
+    "id": "caf81e12-8291-4f02-9ef3-2e57e6faff6f",
+    "vault_name": "演示斜黑体"
+  },
+  {
+    "old": "wenfeng-slcf",
+    "new": "wenfeng-yscfk",
+    "how": "norm",
+    "shop": "演示春风楷",
+    "status": "published",
+    "norm": "Slcf",
+    "id": "d8c62110-7ae3-4310-8da0-61f9b3fe3c1c",
+    "vault_name": "演示春风楷"
+  },
+  {
+    "old": "wenfeng-slqh",
+    "new": "wenfeng-ysqhk",
+    "how": "norm",
+    "shop": "演示秋鸿楷",
+    "status": "published",
+    "norm": "Slqh",
+    "id": "7673e90d-c2e9-41de-8458-586cb6c2e546",
+    "vault_name": "演示秋鸿楷"
+  },
+  {
+    "old": "wenfeng-toneozquicksnow",
+    "new": "wenfeng-astkx",
+    "how": "norm",
+    "shop": "澳声通快雪",
+    "status": "published",
+    "norm": "ToneOZQuickSnow",
+    "id": "c084c625-00a0-4be7-b7ba-0acdae0207a9",
+    "vault_name": "澳声通快雪"
+  },
+  {
+    "old": "wenfeng-pywk",
+    "new": "wenfeng-astpywk",
+    "how": "norm",
+    "shop": "澳声通拼音文楷",
+    "status": "published",
+    "norm": "Pywk",
+    "id": "dd58064a-0102-4ace-939a-5e08cead9cb7",
+    "vault_name": "澳声通拼音文楷"
+  },
+  {
+    "old": "wenfeng-jzkgemc",
+    "new": "wenfeng-jmct",
+    "how": "norm",
+    "shop": "瀞明朝",
+    "status": "published",
+    "norm": "Jzkgemc",
+    "id": "63559f7e-2ba8-410b-b2b7-93d97d27ada6",
+    "vault_name": "瀞明朝"
+  },
+  {
+    "old": "wenfeng-ddxty",
+    "new": "wenfeng-ddxstyx",
+    "how": "norm",
+    "shop": "点点像素体-圆形",
+    "status": "published",
+    "norm": "DottedSongtiCircleRegular",
+    "id": "ca9bf7b9-f534-4313-8a6a-53473bc42015",
+    "vault_name": "点点像素体-圆形"
+  },
+  {
+    "old": "wenfeng-ddxstyx",
+    "new": "wenfeng-ddxsyt",
+    "how": "norm",
+    "shop": "点点像素圆体",
+    "status": "published",
+    "norm": "Ddxstyx",
+    "id": "35ffde1f-cf4a-4b0b-a6da-d177e8fa9e0f",
+    "vault_name": "点点像素圆体"
+  },
+  {
+    "old": "wenfeng-ddxstlx",
+    "new": "wenfeng-ddxsstlx",
+    "how": "norm",
+    "shop": "点点像素宋体菱形",
+    "status": "published",
+    "norm": "Ddxstlx",
+    "id": "968d4e76-949b-4c45-bf0a-0afa01de9950",
+    "vault_name": "点点像素宋体菱形"
+  },
+  {
+    "old": "wenfeng-ddxstfx",
+    "new": "wenfeng-dzxsstcgt",
+    "how": "norm",
+    "shop": "点阵像素宋体 常规体",
+    "status": "published",
+    "norm": "Ddxstfx",
+    "id": "8a967b73-e331-4bdd-8bc8-0dc8176d6b28",
+    "vault_name": "点阵像素宋体 常规体"
+  },
+  {
+    "old": "wenfeng-mushin",
+    "new": "wenfeng-wxmst",
+    "how": "norm",
+    "shop": "無心",
+    "status": "published",
+    "norm": "Mushin",
+    "id": "9ef6f057-291e-40b1-85b4-90ac16c963d5",
+    "vault_name": "無心"
+  },
+  {
+    "old": "wenfeng-bkd",
+    "new": "wenfeng-bkdft",
+    "how": "norm",
+    "shop": "爆呆",
+    "status": "published",
+    "norm": "Bkd",
+    "id": "284dd858-8a27-4dad-9151-20e422842ba1",
+    "vault_name": "爆呆"
+  },
+  {
+    "old": "wenfeng-swb2jt",
+    "new": "wenfeng-swb2jtst",
+    "how": "norm",
+    "shop": "狮尾B2加糖宋体",
+    "status": "published",
+    "norm": "SweiB2Sugar",
+    "id": "0f75c033-d42d-486c-b953-531494ee0ae3",
+    "vault_name": "狮尾B2加糖宋体"
+  },
+  {
+    "old": "wenfeng-swb2serif",
+    "new": "wenfeng-swb2st",
+    "how": "norm",
+    "shop": "狮尾B2宋体",
+    "status": "published",
+    "norm": "Swb2serif",
+    "id": "1a424308-6311-4af1-a40c-353fc0dcac61",
+    "vault_name": "狮尾B2宋体"
+  },
+  {
+    "old": "wenfeng-swb2leg",
+    "new": "wenfeng-swb2tht",
+    "how": "norm",
+    "shop": "狮尾B2腿黑体",
+    "status": "published",
+    "norm": "Swb2leg",
+    "id": "5635f1e5-79cd-4e95-bb74-5c147f15a47a",
+    "vault_name": "狮尾B2腿黑体"
+  },
+  {
+    "old": "wenfeng-swb2sans",
+    "new": "wenfeng-swb2htsc",
+    "how": "norm",
+    "shop": "狮尾B2黑体",
+    "status": "published",
+    "norm": "Swb2sans",
+    "id": "19c700a4-4a80-4f3e-af95-3a85db5e8f98",
+    "vault_name": "狮尾B2黑体"
+  },
+  {
+    "old": "wenfeng-swdellunaleg",
+    "new": "wenfeng-swdltht",
+    "how": "norm",
+    "shop": "狮尾D卤腿黑体",
+    "status": "published",
+    "norm": "Swdellunaleg",
+    "id": "9ca9a66c-f354-41e5-a66b-722c9e7551de",
+    "vault_name": "狮尾D卤腿黑体"
+  },
+  {
+    "old": "wenfeng-swdlucy",
+    "new": "wenfeng-swdlx",
+    "how": "norm",
+    "shop": "狮尾D露西",
+    "status": "published",
+    "norm": "Swdlucy",
+    "id": "20abeb12-0a5a-4194-91c2-169d535a6612",
+    "vault_name": "狮尾D露西"
+  },
+  {
+    "old": "wenfeng-swxd",
+    "new": "wenfeng-swxdzz",
+    "how": "norm",
+    "shop": "狮尾XD珍珠",
+    "status": "published",
+    "norm": "Swxd",
+    "id": "af9a014e-cdcb-457f-af15-cddb986017a2",
+    "vault_name": "狮尾XD珍珠"
+  },
+  {
+    "old": "wenfeng-sw3tleg",
+    "new": "wenfeng-swstht",
+    "how": "norm",
+    "shop": "狮尾三腿黑体",
+    "status": "published",
+    "norm": "Sw3tleg",
+    "id": "481e009a-64c9-4e44-918d-1ab4336ea999",
+    "vault_name": "狮尾三腿黑体"
+  },
+  {
+    "old": "wenfeng-sw3tsans",
+    "new": "wenfeng-swsjhtsc",
+    "how": "norm",
+    "shop": "狮尾三角黑体",
+    "status": "published",
+    "norm": "Sw3tsans",
+    "id": "01ab7d2b-dfd4-4208-a19b-1b0cf642c239",
+    "vault_name": "狮尾三角黑体"
+  },
+  {
+    "old": "wenfeng-swsugar",
+    "new": "wenfeng-swjtst",
+    "how": "norm",
+    "shop": "狮尾加糖宋体",
+    "status": "published",
+    "norm": "Swsugar",
+    "id": "32e187fd-c22b-4d72-87c0-ae4e6e2e832c",
+    "vault_name": "狮尾加糖宋体"
+  },
+  {
+    "old": "wenfeng-swhalfmoon",
+    "new": "wenfeng-swbyt",
+    "how": "norm",
+    "shop": "狮尾半月体",
+    "status": "published",
+    "norm": "Swhalfmoon",
+    "id": "f9f7b4a6-f61e-4ff9-98b6-2370e1404980",
+    "vault_name": "狮尾半月体"
+  },
+  {
+    "old": "wenfeng-swrightbottoms",
+    "new": "wenfeng-swyxyhtsc",
+    "how": "norm",
+    "shop": "狮尾右下圆黑体",
+    "status": "published",
+    "norm": "Swrightbottoms",
+    "id": "217110cd-4bd5-4b20-ba39-e61569792abd",
+    "vault_name": "狮尾右下圆黑体"
+  },
+  {
+    "old": "wenfeng-swrightbottoml",
+    "new": "wenfeng-swyxtht",
+    "how": "norm",
+    "shop": "狮尾右下腿黑体",
+    "status": "published",
+    "norm": "Swrightbottoml",
+    "id": "076548ae-84f5-4be6-8356-b4425ca8c246",
+    "vault_name": "狮尾右下腿黑体"
+  },
+  {
+    "old": "wenfeng-swfistsans",
+    "new": "wenfeng-swychtsc",
+    "how": "norm",
+    "shop": "狮尾咏春黑体",
+    "status": "published",
+    "norm": "Swfistsans",
+    "id": "6b1f9cb9-2d58-4a18-b6c6-cbeff913d38d",
+    "vault_name": "狮尾咏春黑体"
+  },
+  {
+    "old": "wenfeng-swfistleg",
+    "new": "wenfeng-swytht",
+    "how": "norm",
+    "shop": "狮尾咏腿黑体",
+    "status": "published",
+    "norm": "Swfistleg",
+    "id": "8e6cf2a5-772c-4de3-bfb1-ee85af9b0d4c",
+    "vault_name": "狮尾咏腿黑体"
+  },
+  {
+    "old": "wenfeng-swbellsans",
+    "new": "wenfeng-swlbhtsc",
+    "how": "norm",
+    "shop": "狮尾喇叭黑体",
+    "status": "published",
+    "norm": "Swbellsans",
+    "id": "c14f509d-cfa0-458c-81c1-fea253177602",
+    "vault_name": "狮尾喇叭黑体"
+  },
+  {
+    "old": "wenfeng-swbellleg",
+    "new": "wenfeng-swltht",
+    "how": "norm",
+    "shop": "狮尾喇腿黑体",
+    "status": "published",
+    "norm": "Swbellleg",
+    "id": "4fd08fb5-d473-4ed2-8484-9ffb2fbd8ce9",
+    "vault_name": "狮尾喇腿黑体"
+  },
+  {
+    "old": "wenfeng-swgothic",
+    "new": "wenfeng-swytsc",
+    "how": "norm",
+    "shop": "狮尾圆体",
+    "status": "published",
+    "norm": "Swgothic",
+    "id": "dcae2e90-3ad0-480d-b9ee-0e40206e487c",
+    "vault_name": "狮尾圆体"
+  },
+  {
+    "old": "wenfeng-swspikesans",
+    "new": "wenfeng-swjchtsc",
+    "how": "norm",
+    "shop": "狮尾尖刺黑体",
+    "status": "published",
+    "norm": "Swspikesans",
+    "id": "99a403a5-66e6-4787-b220-974df64787f7",
+    "vault_name": "狮尾尖刺黑体"
+  },
+  {
+    "old": "wenfeng-swspikeleg",
+    "new": "wenfeng-swjtht",
+    "how": "norm",
+    "shop": "狮尾尖腿黑体",
+    "status": "published",
+    "norm": "Swspikeleg",
+    "id": "b66a45f0-60ef-44c8-a153-7bf782560e8b",
+    "vault_name": "狮尾尖腿黑体"
+  },
+  {
+    "old": "wenfeng-swcurveleg",
+    "new": "wenfeng-swwtht",
+    "how": "norm",
+    "shop": "狮尾弯腿黑体",
+    "status": "published",
+    "norm": "Swcurveleg",
+    "id": "e583db79-9bf4-4810-a76b-4f4971940af6",
+    "vault_name": "狮尾弯腿黑体"
+  },
+  {
+    "old": "wenfeng-swcurvesans",
+    "new": "wenfeng-swwhtsc",
+    "how": "norm",
+    "shop": "狮尾弯黑体",
+    "status": "published",
+    "norm": "Swcurvesans",
+    "id": "a1d6deec-f7a3-44ea-872d-5f8690e63828",
+    "vault_name": "狮尾弯黑体"
+  },
+  {
+    "old": "wenfeng-swrainbowleg",
+    "new": "wenfeng-swcht",
+    "how": "norm",
+    "shop": "狮尾彩虹腿",
+    "status": "published",
+    "norm": "Swrainbowleg",
+    "id": "b80cc1dc-a957-46af-9233-d36f840ddd10",
+    "vault_name": "狮尾彩虹腿"
+  },
+  {
+    "old": "wenfeng-swdellunasans",
+    "new": "wenfeng-swdlnhtsc",
+    "how": "norm",
+    "shop": "狮尾德鲁纳黑体",
+    "status": "published",
+    "norm": "Swdellunasans",
+    "id": "98cb414e-b61a-43d6-a9ee-8e39f95765a0",
+    "vault_name": "狮尾德鲁纳黑体"
+  },
+  {
+    "old": "wenfeng-swshearsans",
+    "new": "wenfeng-swkjhtsc",
+    "how": "norm",
+    "shop": "狮尾快剪黑体",
+    "status": "published",
+    "norm": "Swshearsans",
+    "id": "35c1152d-fac9-4126-912f-b9f741b38188",
+    "vault_name": "狮尾快剪黑体"
+  },
+  {
+    "old": "wenfeng-swshearleg",
+    "new": "wenfeng-swktht",
+    "how": "norm",
+    "shop": "狮尾快腿黑体",
+    "status": "published",
+    "norm": "Swshearleg",
+    "id": "e0acfa9a-a7b6-4548-818a-4d6407d76832",
+    "vault_name": "狮尾快腿黑体"
+  },
+  {
+    "old": "wenfeng-swdevilleg",
+    "new": "wenfeng-swetht",
+    "how": "norm",
+    "shop": "狮尾恶腿黑体",
+    "status": "published",
+    "norm": "Swdevilleg",
+    "id": "51e98c22-f0d9-4fa7-8ff4-43c679f826ee",
+    "vault_name": "狮尾恶腿黑体"
+  },
+  {
+    "old": "wenfeng-swdevilsans",
+    "new": "wenfeng-swemhtsc",
+    "how": "norm",
+    "shop": "狮尾恶魔黑体",
+    "status": "published",
+    "norm": "Swdevilsans",
+    "id": "28d88beb-2b90-4091-a065-23bdd2796869",
+    "vault_name": "狮尾恶魔黑体"
+  },
+  {
+    "old": "wenfeng-swaxsans",
+    "new": "wenfeng-swfthtsc",
+    "how": "norm",
+    "shop": "狮尾斧头黑体",
+    "status": "published",
+    "norm": "Swaxsans",
+    "id": "47c79836-b1e7-4b81-a4e6-713db76869e5",
+    "vault_name": "狮尾斧头黑体"
+  },
+  {
+    "old": "wenfeng-swaxleg",
+    "new": "wenfeng-swftht",
+    "how": "norm",
+    "shop": "狮尾斧腿黑体",
+    "status": "published",
+    "norm": "Swaxleg",
+    "id": "3b6eaac1-cdce-4e99-9565-9cd8e5b573f2",
+    "vault_name": "狮尾斧腿黑体"
+  },
+  {
+    "old": "wenfeng-swmatchsans",
+    "new": "wenfeng-swhchtsc",
+    "how": "norm",
+    "shop": "狮尾火柴黑体",
+    "status": "published",
+    "norm": "Swmatchsans",
+    "id": "ff155685-6aa8-4bef-bb81-171d81d64924",
+    "vault_name": "狮尾火柴黑体"
+  },
+  {
+    "old": "wenfeng-swmatchleg",
+    "new": "wenfeng-swhtht",
+    "how": "norm",
+    "shop": "狮尾火腿黑体",
+    "status": "published",
+    "norm": "Swmatchleg",
+    "id": "4ba5f4db-ec98-4582-9fd2-b7e39daeba44",
+    "vault_name": "狮尾火腿黑体"
+  },
+  {
+    "old": "wenfeng-swtoothpaste",
+    "new": "wenfeng-swygyt",
+    "how": "norm",
+    "shop": "狮尾牙膏圆体",
+    "status": "published",
+    "norm": "Swtoothpaste",
+    "id": "097fe9a7-9944-4849-8321-2cc3c63375ab",
+    "vault_name": "狮尾牙膏圆体"
+  },
+  {
+    "old": "wenfeng-swgospelleg",
+    "new": "wenfeng-swfytht",
+    "how": "norm",
+    "shop": "狮尾福腿黑体",
+    "status": "published",
+    "norm": "Swgospelleg",
+    "id": "409c0d03-b65e-4d53-a83d-a4a273c79744",
+    "vault_name": "狮尾福腿黑体"
+  },
+  {
+    "old": "wenfeng-swgospelsans",
+    "new": "wenfeng-swfyhtsc",
+    "how": "norm",
+    "shop": "狮尾福音黑体",
+    "status": "published",
+    "norm": "Swgospelsans",
+    "id": "bd2aa2bb-9937-43da-a3ae-1cd05bfaac70",
+    "vault_name": "狮尾福音黑体"
+  },
+  {
+    "old": "wenfeng-swjayserif",
+    "new": "wenfeng-swjzst",
+    "how": "norm",
+    "shop": "狮尾简中宋体",
+    "status": "published",
+    "norm": "Swjayserif",
+    "id": "3ac08dc7-a03b-4c6a-a3af-f33242bd713d",
+    "vault_name": "狮尾简中宋体"
+  },
+  {
+    "old": "wenfeng-swjaysans",
+    "new": "wenfeng-swjzhtsc",
+    "how": "norm",
+    "shop": "狮尾简中黑体",
+    "status": "published",
+    "norm": "Swjaysans",
+    "id": "3a1950d1-2bc3-4f18-972c-649749b40075",
+    "vault_name": "狮尾简中黑体"
+  },
+  {
+    "old": "wenfeng-swjayleg",
+    "new": "wenfeng-swjztht",
+    "how": "norm",
+    "shop": "狮尾简腿黑体",
+    "status": "published",
+    "norm": "Swjayleg",
+    "id": "ab3beb30-e14a-41c4-b266-5d904d36d49f",
+    "vault_name": "狮尾简腿黑体"
+  },
+  {
+    "old": "wenfeng-swfanserif",
+    "new": "wenfeng-swfzst",
+    "how": "norm",
+    "shop": "狮尾繁中宋体",
+    "status": "published",
+    "norm": "Swfanserif",
+    "id": "2235733d-5ec1-45bf-a7dc-64657a42fb67",
+    "vault_name": "狮尾繁中宋体"
+  },
+  {
+    "old": "wenfeng-swfansans",
+    "new": "wenfeng-swfzhtsc",
+    "how": "norm",
+    "shop": "狮尾繁中黑体",
+    "status": "published",
+    "norm": "Swfansans",
+    "id": "e4ddb835-084b-489d-92b0-98acaa44ed65",
+    "vault_name": "狮尾繁中黑体"
+  },
+  {
+    "old": "wenfeng-swfanleg",
+    "new": "wenfeng-swfztht",
+    "how": "norm",
+    "shop": "狮尾繁腿黑体",
+    "status": "published",
+    "norm": "Swfanleg",
+    "id": "f30ea9e4-b551-46be-8c3f-ca54c7db3326",
+    "vault_name": "狮尾繁腿黑体"
+  },
+  {
+    "old": "wenfeng-swmeatball",
+    "new": "wenfeng-swrwsc",
+    "how": "norm",
+    "shop": "狮尾肉丸",
+    "status": "published",
+    "norm": "Swmeatball",
+    "id": "148aecbd-4d1c-4202-8306-0aba7c242d24",
+    "vault_name": "狮尾肉丸"
+  },
+  {
+    "old": "wenfeng-swgothicleg",
+    "new": "wenfeng-swtyt",
+    "how": "norm",
+    "shop": "狮尾腿圆体",
+    "status": "published",
+    "norm": "Swgothicleg",
+    "id": "deaa4bc2-96c9-49f4-b495-f994dc8708d7",
+    "vault_name": "狮尾腿圆体"
+  },
+  {
+    "old": "wenfeng-swbatsans",
+    "new": "wenfeng-swbfyt",
+    "how": "norm",
+    "shop": "狮尾蝙蝠圆体",
+    "status": "published",
+    "norm": "Swbatsans",
+    "id": "fe7fbe98-5d47-4502-8c14-fcae756ca540",
+    "vault_name": "狮尾蝙蝠圆体"
+  },
+  {
+    "old": "wenfeng-swnutleg",
+    "new": "wenfeng-swlmtht",
+    "how": "norm",
+    "shop": "狮尾螺帽腿黑体",
+    "status": "published",
+    "norm": "Swnutleg",
+    "id": "8dafbb3b-e6ee-4a43-b0ac-b4ead227ec6c",
+    "vault_name": "狮尾螺帽腿黑体"
+  },
+  {
+    "old": "wenfeng-swnutsans",
+    "new": "wenfeng-swlmhtsc",
+    "how": "norm",
+    "shop": "狮尾螺帽黑体",
+    "status": "published",
+    "norm": "Swnutsans",
+    "id": "81e03ea1-8df4-4090-8d7d-1ee5fc07f608",
+    "vault_name": "狮尾螺帽黑体"
+  },
+  {
+    "old": "wenfeng-swaliasleg",
+    "new": "wenfeng-swjutht",
+    "how": "norm",
+    "shop": "狮尾锯腿黑体",
+    "status": "published",
+    "norm": "Swaliasleg",
+    "id": "9eb7f134-756a-439c-baed-98971134c0af",
+    "vault_name": "狮尾锯腿黑体"
+  },
+  {
+    "old": "wenfeng-swaliassans",
+    "new": "wenfeng-swjuchtsc",
+    "how": "norm",
+    "shop": "狮尾锯齿黑体",
+    "status": "published",
+    "norm": "Swaliassans",
+    "id": "231ef7e1-d44e-41c0-93ee-ecaee74bef13",
+    "vault_name": "狮尾锯齿黑体"
+  },
+  {
+    "old": "wenfeng-swbowleg",
+    "new": "wenfeng-swntht",
+    "how": "norm",
+    "shop": "狮尾霓腿黑体",
+    "status": "published",
+    "norm": "Swbowleg",
+    "id": "5ea4d310-7abb-4849-b0f3-83ec9bd32ec8",
+    "vault_name": "狮尾霓腿黑体"
+  },
+  {
+    "old": "wenfeng-swbowsans",
+    "new": "wenfeng-swnhtsc",
+    "how": "norm",
+    "shop": "狮尾霓黑体",
+    "status": "published",
+    "norm": "Swbowsans",
+    "id": "e3965d09-4946-4136-9eb1-18611773eb80",
+    "vault_name": "狮尾霓黑体"
+  },
+  {
+    "old": "wenfeng-swdartleg",
+    "new": "wenfeng-swfbtht",
+    "how": "norm",
+    "shop": "狮尾飞腿黑体",
+    "status": "published",
+    "norm": "Swdartleg",
+    "id": "bf2fdd17-5e77-46f2-a92c-20d75ea6404c",
+    "vault_name": "狮尾飞腿黑体"
+  },
+  {
+    "old": "wenfeng-swdartsans",
+    "new": "wenfeng-swfbhtsc",
+    "how": "norm",
+    "shop": "狮尾飞镖黑体",
+    "status": "published",
+    "norm": "Swdartsans",
+    "id": "80a0b859-432c-4411-9064-60d02a4ba0f3",
+    "vault_name": "狮尾飞镖黑体"
+  },
+  {
+    "old": "wenfeng-swbonesans",
+    "new": "wenfeng-swgthtsc",
+    "how": "norm",
+    "shop": "狮尾骨头黑体",
+    "status": "published",
+    "norm": "Swbonesans",
+    "id": "fd6c17de-8a6b-4759-ba9c-bb1ff48de185",
+    "vault_name": "狮尾骨头黑体"
+  },
+  {
+    "old": "wenfeng-swboneleg",
+    "new": "wenfeng-swgtht",
+    "how": "norm",
+    "shop": "狮尾骨腿黑体",
+    "status": "published",
+    "norm": "Swboneleg",
+    "id": "c5d036f4-4d4f-44e2-b2d9-b5101bd365ac",
+    "vault_name": "狮尾骨腿黑体"
+  },
+  {
+    "old": "wenfeng-swmarkersans",
+    "new": "wenfeng-swmkhtsc",
+    "how": "norm",
+    "shop": "狮尾麦克黑体",
+    "status": "published",
+    "norm": "Swmarkersans",
+    "id": "130eab09-1378-48da-9adb-3afb9a14feb5",
+    "vault_name": "狮尾麦克黑体"
+  },
+  {
+    "old": "wenfeng-swmarkerleg",
+    "new": "wenfeng-swmtht",
+    "how": "norm",
+    "shop": "狮尾麦腿黑体",
+    "status": "published",
+    "norm": "Swmarkerleg",
+    "id": "70ae5462-6e2a-44ae-b098-e9ccf358d5ba",
+    "vault_name": "狮尾麦腿黑体"
+  },
+  {
+    "old": "wenfeng-swsans",
+    "new": "wenfeng-swhtsc",
+    "how": "norm",
+    "shop": "狮尾黑体",
+    "status": "published",
+    "norm": "Swsans",
+    "id": "6810aa85-e7c4-41d4-8a7f-7500857f8480",
+    "vault_name": "狮尾黑体"
+  },
+  {
+    "old": "wenfeng-mkkzs",
+    "new": "wenfeng-mkkzzs",
+    "how": "norm",
+    "shop": "猫啃扛重族宋",
+    "status": "published",
+    "norm": "Mkkzs",
+    "id": "de86fcfa-e2d8-48f2-89a3-fa3cad52e6ef",
+    "vault_name": "猫啃扛重族宋"
+  },
+  {
+    "old": "wenfeng-mkkzh",
+    "new": "wenfeng-mkkzzh",
+    "how": "norm",
+    "shop": "猫啃扛重族黑",
+    "status": "published",
+    "norm": "Mkkzh",
+    "id": "131ff876-c341-4d71-8618-69d1fd12dfc1",
+    "vault_name": "猫啃扛重族黑"
+  },
+  {
+    "old": "wenfeng-mkybkjs",
+    "new": "wenfeng-mkybks",
+    "how": "norm",
+    "shop": "猫啃硬笔楷书",
+    "status": "published",
+    "norm": "Mkybkjs",
+    "id": "a81439c2-008e-46e7-8909-615cda1179b6",
+    "vault_name": "猫啃硬笔楷书"
+  },
+  {
+    "old": "wenfeng-mkwmms",
+    "new": "wenfeng-mkwwms",
+    "how": "norm",
+    "shop": "猫啃网文明宋",
+    "status": "published",
+    "norm": "XinYuGongHeXieSongLLight",
+    "id": "a4fa1da6-2bdb-49ac-bcf6-38367cbccce4",
+    "vault_name": "猫啃网文明宋"
+  },
+  {
+    "old": "wenfeng-b2sc",
+    "new": "wenfeng-mkwybs",
+    "how": "norm",
+    "shop": "猫啃网烟波宋",
+    "status": "published",
+    "norm": "B2SCLight",
+    "id": "e3935f6f-1023-4e42-823b-6a19bce4e43f",
+    "vault_name": "猫啃网烟波宋"
+  },
+  {
+    "old": "wenfeng-mkwxy",
+    "new": "wenfeng-mkwtyt",
+    "how": "norm",
+    "shop": "猫啃网糖圆体",
+    "status": "published",
+    "norm": "Mkwxy",
+    "id": "ba11472c-9500-42c7-9706-1648840f08f4",
+    "vault_name": "猫啃网糖圆体"
+  },
+  {
+    "old": "wenfeng-xxzt",
+    "new": "wenfeng-xzt",
+    "how": "norm",
+    "shop": "玄宗体",
+    "status": "published",
+    "norm": "Xxzt",
+    "id": "3493ed7b-38d7-4523-8339-247d63ef6431",
+    "vault_name": "玄宗体"
+  },
+  {
+    "old": "wenfeng-qssb",
+    "new": "wenfeng-qsstb",
+    "how": "norm",
+    "shop": "秋水书体 Bright",
+    "status": "published",
+    "norm": "Qssb",
+    "id": "6614152e-14c8-4bf2-ae77-f5822820b683",
+    "vault_name": "秋水书体 Bright"
+  },
+  {
+    "old": "wenfeng-qkhc",
+    "new": "wenfeng-qkhtcl",
+    "how": "norm",
+    "shop": "秋空黑体 CL",
+    "status": "published",
+    "norm": "Qkhc",
+    "id": "5f8dacd7-3ea6-4fd2-948a-ddc2cb7e59dc",
+    "vault_name": "秋空黑体 CL"
+  },
+  {
+    "old": "wenfeng-qkhm",
+    "new": "wenfeng-qkhtm",
+    "how": "norm",
+    "shop": "秋空黑体 M",
+    "status": "published",
+    "norm": "Qkhm",
+    "id": "f51bdfd8-98d8-4375-a0d4-57b03236b0a9",
+    "vault_name": "秋空黑体 M"
+  },
+  {
+    "old": "wenfeng-kys",
+    "new": "wenfeng-kyhtsa",
+    "how": "norm",
+    "shop": "空缘黑体",
+    "status": "published",
+    "norm": "Kys",
+    "id": "b7a00000-8b8b-4c78-a250-53e668dfe26b",
+    "vault_name": "空缘黑体"
+  },
+  {
+    "old": "wenfeng-lxht",
+    "new": "wenfeng-lxhtssa",
+    "how": "norm",
+    "shop": "立夏黑体",
+    "status": "published",
+    "norm": "Lxht",
+    "id": "2a575439-49c8-4303-bc0b-20fa054d8c73",
+    "vault_name": "立夏黑体"
+  },
+  {
+    "old": "wenfeng-zkkht",
+    "new": "wenfeng-zkkh",
+    "how": "norm",
+    "shop": "站酷酷黑",
+    "status": "published",
+    "norm": "Zkkht",
+    "id": "27b6b870-d623-4b75-90e4-7fc2f5b66034",
+    "vault_name": "站酷酷黑"
+  },
+  {
+    "old": "wenfeng-zkgdht",
+    "new": "wenfeng-zkgdh",
+    "how": "norm",
+    "shop": "站酷高端黑",
+    "status": "published",
+    "norm": "Zkgdht",
+    "id": "37179233-5561-4606-9058-124b825b7840",
+    "vault_name": "站酷高端黑"
+  },
+  {
+    "old": "wenfeng-abbrfes",
+    "new": "wenfeng-jysht",
+    "how": "norm",
+    "shop": "简语生活体",
+    "status": "published",
+    "norm": "AbbrFes",
+    "id": "373665bb-250a-4a6f-82d8-f6779fe771b4",
+    "vault_name": "简语生活体"
+  },
+  {
+    "old": "wenfeng-jpdz",
+    "new": "wenfeng-jpdzt",
+    "how": "norm",
+    "shop": "精品点阵体",
+    "status": "published",
+    "norm": "Jpdz",
+    "id": "1623f048-6921-42cd-bc01-170fe8aba203",
+    "vault_name": "精品点阵体"
+  },
+  {
+    "old": "wenfeng-bb7",
+    "new": "wenfeng-jpdzt7x7",
+    "how": "norm",
+    "shop": "精品点阵体7x7",
+    "status": "published",
+    "norm": "Bb7",
+    "id": "12d03f1b-0f9e-4606-9afd-1f55ccc31c69",
+    "vault_name": "精品点阵体7x7"
+  },
+  {
+    "old": "wenfeng-bb9",
+    "new": "wenfeng-jpdzt9x9",
+    "how": "norm",
+    "shop": "精品点阵体9x9",
+    "status": "published",
+    "norm": "Bb9",
+    "id": "c16c1587-be57-479f-9290-3ff4be67e830",
+    "vault_name": "精品点阵体9x9"
+  },
+  {
+    "old": "wenfeng-mts1",
+    "new": "wenfeng-fdqst",
+    "how": "norm",
+    "shop": "繁多全宋体",
+    "status": "published",
+    "norm": "Mts1",
+    "id": "41d79050-14bc-4c10-8159-7f38b565ed8f",
+    "vault_name": "繁多全宋体"
+  },
+  {
+    "old": "wenfeng-mts2",
+    "new": "wenfeng-fdqst2",
+    "how": "norm",
+    "shop": "繁多全宋体2",
+    "status": "published",
+    "norm": "Mts2",
+    "id": "dc5162ea-69d1-42ff-a11b-631aa470c35d",
+    "vault_name": "繁多全宋体2"
+  },
+  {
+    "old": "wenfeng-mtk1",
+    "new": "wenfeng-fdqkt",
+    "how": "norm",
+    "shop": "繁多全楷体",
+    "status": "published",
+    "norm": "Mtk1",
+    "id": "c8950fc4-a4ea-4079-a090-31b618290baf",
+    "vault_name": "繁多全楷体"
+  },
+  {
+    "old": "wenfeng-mtk2",
+    "new": "wenfeng-fdqkt2",
+    "how": "norm",
+    "shop": "繁多全楷体2",
+    "status": "published",
+    "norm": "Mtk2",
+    "id": "d754f4f4-f04d-4640-abf1-f7c9814e3aab",
+    "vault_name": "繁多全楷体2"
+  },
+  {
+    "old": "wenfeng-nanodyongmwensong",
+    "new": "wenfeng-nrdws",
+    "how": "norm",
+    "shop": "纳挼点文宋",
+    "status": "published",
+    "norm": "NanoDyongMwenSong",
+    "id": "819d9328-3765-4fbf-9948-cb3f97ad586a",
+    "vault_name": "纳挼点文宋"
+  },
+  {
+    "old": "wenfeng-fupx",
+    "new": "wenfeng-fhxs10",
+    "how": "norm",
+    "shop": "缝合像素",
+    "status": "published",
+    "norm": "Fupx",
+    "id": "cb21d4ab-6bbd-4d68-ba43-e6e16a3fe73b",
+    "vault_name": "缝合像素"
+  },
+  {
+    "old": "wenfeng-fusionpixel12",
+    "new": "wenfeng-fhxs12",
+    "how": "norm",
+    "shop": "缝合像素 12",
+    "status": "published",
+    "norm": "FusionPixel12",
+    "id": "16a1e933-fe0b-4db0-a51c-47e0537969bb",
+    "vault_name": "缝合像素 12"
+  },
+  {
+    "old": "wenfeng-mjdz",
+    "new": "wenfeng-mjdzt",
+    "how": "norm",
+    "shop": "美绩点阵体",
+    "status": "published",
+    "norm": "Mjdz",
+    "id": "835a234e-4f4d-40bf-bb79-fc6923145f50",
+    "vault_name": "美绩点阵体"
+  },
+  {
+    "old": "wenfeng-mjdm",
+    "new": "wenfeng-mjdztmc",
+    "how": "norm",
+    "shop": "美绩点阵体明朝",
+    "status": "published",
+    "norm": "Mjdm",
+    "id": "cc5f26f5-de10-4095-83c8-a65428bef281",
+    "vault_name": "美绩点阵体明朝"
+  },
+  {
+    "old": "wenfeng-hxbsb",
+    "new": "wenfeng-hxbsbt",
+    "how": "norm",
+    "shop": "胡晓波骚包体",
+    "status": "published",
+    "norm": "Hxbsb",
+    "id": "d78ca7f5-7cbe-4889-8f8b-e6948e72976f",
+    "vault_name": "胡晓波骚包体"
+  },
+  {
+    "old": "wenfeng-jiyu-no-tsubasa",
+    "new": "wenfeng-zyzyjp",
+    "how": "norm",
+    "shop": "自由の翼フォント",
+    "status": "published",
+    "norm": "JiyuNoTsubasa",
+    "id": "95320086-e2be-40fc-9865-3daf27b20bff",
+    "vault_name": "自由の翼フォント"
+  },
+  {
+    "old": "wenfeng-rzzyt",
+    "new": "wenfeng-zygb",
+    "how": "norm",
+    "shop": "臻妍GB",
+    "status": "published",
+    "norm": "Rzzyt",
+    "id": "64862922-ca77-43a4-9e4d-e6e35efec8be",
+    "vault_name": "臻妍GB"
+  },
+  {
+    "old": "wenfeng-cheesefoamoolongsong",
+    "new": "wenfeng-zsngwls",
+    "how": "norm",
+    "shop": "芝士奶盖乌龙宋",
+    "status": "published",
+    "norm": "CheeseFoamOolongSong",
+    "id": "12be3b46-481d-430c-a182-66257b6140bd",
+    "vault_name": "芝士奶盖乌龙宋"
+  },
+  {
+    "old": "wenfeng-ysui",
+    "new": "wenfeng-ysls",
+    "how": "norm",
+    "shop": "芫荽",
+    "status": "published",
+    "norm": "Ysui",
+    "id": "f29cdb45-98e4-4e4a-a206-2963d57237b5",
+    "vault_name": "芫荽"
+  },
+  {
+    "old": "wenfeng-hyma",
+    "new": "wenfeng-hymca",
+    "how": "norm",
+    "shop": "花园明朝 A",
+    "status": "published",
+    "norm": "Hyma",
+    "id": "cf168beb-bd70-4989-8e21-530a3178c544",
+    "vault_name": "花园明朝 A"
+  },
+  {
+    "old": "wenfeng-hymb",
+    "new": "wenfeng-hymcb",
+    "how": "norm",
+    "shop": "花园明朝 B",
+    "status": "published",
+    "norm": "Hymb",
+    "id": "3277ffd3-ed09-45c1-8df2-e9c189f3f1ef",
+    "vault_name": "花园明朝 B"
+  },
+  {
+    "old": "wenfeng-kywa",
+    "new": "wenfeng-klwyt",
+    "how": "norm",
+    "shop": "苦累蛙圆体",
+    "status": "published",
+    "norm": "Kywa",
+    "id": "2c4df848-4bf3-40c6-82d5-88626f707c6d",
+    "vault_name": "苦累蛙圆体"
+  },
+  {
+    "old": "wenfeng-fmtming",
+    "new": "wenfeng-fmmt",
+    "how": "norm",
+    "shop": "范美明体",
+    "status": "published",
+    "norm": "Fmtming",
+    "id": "e610ede4-87a8-4963-ab05-54112a1f3425",
+    "vault_name": "范美明体"
+  },
+  {
+    "old": "wenfeng-fmthei",
+    "new": "wenfeng-fmht",
+    "how": "norm",
+    "shop": "范美黑体",
+    "status": "published",
+    "norm": "Fmthei",
+    "id": "5d69781a-391d-4bcd-836f-0795bcead52e",
+    "vault_name": "范美黑体"
+  },
+  {
+    "old": "wenfeng-typejam",
+    "new": "wenfeng-clsxt",
+    "how": "norm",
+    "shop": "草率手写体",
+    "status": "published",
+    "norm": "TypeJam",
+    "id": "1e2f9059-c10e-42ed-bacd-be8636ce8125",
+    "vault_name": "草率手写体"
+  },
+  {
+    "old": "wenfeng-mdmz",
+    "new": "wenfeng-mdmb",
+    "how": "norm",
+    "shop": "莫大毛笔",
+    "status": "published",
+    "norm": "Mdmz",
+    "id": "49feea55-1ff6-41fc-839c-3f9986df918c",
+    "vault_name": "莫大毛笔"
+  },
+  {
+    "old": "wenfeng-mshx",
+    "new": "wenfeng-mssxt",
+    "how": "norm",
+    "shop": "萌神手写体",
+    "status": "published",
+    "norm": "Mshx",
+    "id": "a30c759b-c80e-4e35-a68c-bcd14ed1ad29",
+    "vault_name": "萌神手写体"
+  },
+  {
+    "old": "wenfeng-hsmbzt",
+    "new": "wenfeng-hsmb",
+    "how": "norm",
+    "shop": "衡山毛笔",
+    "status": "published",
+    "norm": "Hsmbzt",
+    "id": "4c31e658-6b06-4f06-afc6-c8479e1688a9",
+    "vault_name": "衡山毛笔"
+  },
+  {
+    "old": "wenfeng-kouzanmouhitu",
+    "new": "wenfeng-hsmbjp",
+    "how": "norm",
+    "shop": "衡山毛筆フォント",
+    "status": "published",
+    "norm": "KouzanMouhitu",
+    "id": "4b15d52a-f127-42ef-a4bf-f9ee0af4269f",
+    "vault_name": "衡山毛筆フォント"
+  },
+  {
+    "old": "wenfeng-kouzansousho",
+    "new": "wenfeng-hsmbcs",
+    "how": "norm",
+    "shop": "衡山毛筆フォント草書",
+    "status": "published",
+    "norm": "KouzanSousho",
+    "id": "91bd2d54-bc54-4bee-bed4-39e8ea00ea1c",
+    "vault_name": "衡山毛筆フォント草書"
+  },
+  {
+    "old": "wenfeng-kouzangyousho",
+    "new": "wenfeng-hsmbxs",
+    "how": "norm",
+    "shop": "衡山毛筆フォント行書",
+    "status": "published",
+    "norm": "KouzanGyousho",
+    "id": "63ab8c36-7027-43fc-be27-b79f6bccc1ac",
+    "vault_name": "衡山毛筆フォント行書"
+  },
+  {
+    "old": "wenfeng-soukou",
+    "new": "wenfeng-zjmc",
+    "how": "norm",
+    "shop": "装甲明朝",
+    "status": "published",
+    "norm": "Soukou",
+    "id": "4c56e973-ca38-4565-97a7-8610351e885d",
+    "vault_name": "装甲明朝"
+  },
+  {
+    "old": "wenfeng-allpun",
+    "new": "wenfeng-xlft",
+    "how": "norm",
+    "shop": "谐灵附体",
+    "status": "published",
+    "norm": "AllPun",
+    "id": "7fa37aa4-492b-4471-af1b-b63c582b6846",
+    "vault_name": "谐灵附体"
+  },
+  {
+    "old": "wenfeng-chogokubosogothic",
+    "new": "wenfeng-cjxtjp",
+    "how": "norm",
+    "shop": "超極細ゴシック体",
+    "status": "published",
+    "norm": "ChogokubosoGothic",
+    "id": "491a3c41-14a9-4923-bff7-58c5bceaa18c",
+    "vault_name": "超極細ゴシック体"
+  },
+  {
+    "old": "wenfeng-cylyt",
+    "new": "wenfeng-cylytt",
+    "how": "norm",
+    "shop": "辰宇落雁体 Thin",
+    "status": "published",
+    "norm": "Cylyt",
+    "id": "03a8e39e-da59-487c-a95e-b1ce23e15550",
+    "vault_name": "辰宇落雁体 Thin"
+  },
+  {
+    "old": "wenfeng-zoomlacusong",
+    "new": "wenfeng-zlcsjt",
+    "how": "name",
+    "shop": "逐浪粗宋简体",
+    "status": "published",
+    "norm": "ZoomlaCusong",
+    "id": "3b07c16f-c0f7-4be2-be65-61545c96a086",
+    "vault_name": "逐浪粗宋简体"
+  },
+  {
+    "old": "wenfeng-zoomlamengyas",
+    "new": "wenfeng-zlmyz",
+    "how": "name",
+    "shop": "逐浪萌芽字",
+    "status": "published",
+    "norm": "ZoomlaMengyas",
+    "id": "e6432772-271d-45ce-9663-2e2eb21d4d40",
+    "vault_name": "逐浪萌芽字"
+  },
+  {
+    "old": "wenfeng-tekitoupoem",
+    "new": "wenfeng-tktpjp",
+    "how": "norm",
+    "shop": "適当ポエム",
+    "status": "published",
+    "norm": "TekitouPoem",
+    "id": "db0d1db7-f261-4719-a052-d0888d246f31",
+    "vault_name": "適当ポエム"
+  },
+  {
+    "old": "wenfeng-xsong",
+    "new": "wenfeng-xstes",
+    "how": "norm",
+    "shop": "邪宋",
+    "status": "published",
+    "norm": "Xsong",
+    "id": "652ca59a-f577-4e28-af58-9adfcbab1b14",
+    "vault_name": "邪宋"
+  },
+  {
+    "old": "wenfeng-zmxs",
+    "new": "wenfeng-zhi-mang-xing",
+    "how": "steal-swap",
+    "shop": "钟齐志莽行书",
+    "status": "published",
+    "norm": "Zmxs",
+    "id": "7f48fdc1-8032-4d2d-8f94-5f64cce36943",
+    "vault_name": "钟齐志莽行书"
+  },
+  {
+    "old": "wenfeng-ljmc",
+    "new": "wenfeng-zqljmc",
+    "how": "norm",
+    "shop": "钟齐流江毛草",
+    "status": "published",
+    "norm": "Ljmc",
+    "id": "fdd53213-6cc4-456c-9a93-af4ec73488f9",
+    "vault_name": "钟齐流江毛草"
+  },
+  {
+    "old": "wenfeng-kslgbht",
+    "new": "wenfeng-gbhb",
+    "how": "norm",
+    "shop": "钢笔鹤-B",
+    "status": "published",
+    "norm": "Kslgbht",
+    "id": "c873260f-6b45-4256-8c51-0d3e5fdca3e1",
+    "vault_name": "钢笔鹤-B"
+  },
+  {
+    "old": "wenfeng-cbds",
+    "new": "wenfeng-zbds16",
+    "how": "norm",
+    "shop": "长坂点宋",
+    "status": "published",
+    "norm": "Cbds",
+    "id": "c828ee26-21ca-4e50-a93d-8a6dd4513482",
+    "vault_name": "长坂点宋"
+  },
+  {
+    "old": "wenfeng-changban12",
+    "new": "wenfeng-zbds12",
+    "how": "norm",
+    "shop": "长坂点宋 12",
+    "status": "published",
+    "norm": "ChangBan12",
+    "id": "49d5fbc3-2fdc-474d-8b21-2eb1a4f015c4",
+    "vault_name": "长坂点宋 12"
+  },
+  {
+    "old": "wenfeng-sft",
+    "new": "wenfeng-sftb",
+    "how": "norm",
+    "shop": "随峰体 Beta",
+    "status": "published",
+    "norm": "Sft",
+    "id": "97451ae3-699b-4f3c-ad9a-e4aefbe11fbd",
+    "vault_name": "随峰体 Beta"
+  },
+  {
+    "old": "wenfeng-denkichip",
+    "new": "wenfeng-dcx8y12",
+    "how": "norm",
+    "shop": "電気チップ / x8y12pxDenkiChip",
+    "status": "published",
+    "norm": "DenkiChip",
+    "id": "bbe33f0e-9b36-4208-989c-3eae9d0219d7",
+    "vault_name": "電気チップ / x8y12pxDenkiChip"
+  },
+  {
+    "old": "wenfeng-xwbright",
+    "new": "wenfeng-xwwkb",
+    "how": "norm",
+    "shop": "霞鹜文楷 Bright",
+    "status": "published",
+    "norm": "Xwbright",
+    "id": "3d410dd0-88c8-4908-bede-6b44fadb7475",
+    "vault_name": "霞鹜文楷 Bright"
+  },
+  {
+    "old": "wenfeng-xwbrightcode",
+    "new": "wenfeng-xwwkbc",
+    "how": "norm",
+    "shop": "霞鹜文楷 Bright Code",
+    "status": "published",
+    "norm": "Xwbrightcode",
+    "id": "dea72ac1-3faf-4933-98d8-6ed5338e4ea7",
+    "vault_name": "霞鹜文楷 Bright Code"
+  },
+  {
+    "old": "wenfeng-wenkaimono",
+    "new": "wenfeng-xwwkdk",
+    "how": "norm",
+    "shop": "霞鹜文楷等宽",
+    "status": "published",
+    "norm": "WenKaiMono",
+    "id": "51f59eac-5b86-4b75-8509-b2be7eaf825a",
+    "vault_name": "霞鹜文楷等宽"
+  },
+  {
+    "old": "wenfeng-wenkaimonotc",
+    "new": "wenfeng-xwwkdktc",
+    "how": "norm",
+    "shop": "霞鹜文楷等宽 TC",
+    "status": "published",
+    "norm": "WenKaiMonoTC",
+    "id": "1d21e6e0-4fb2-4feb-a879-128670e1bc8d",
+    "vault_name": "霞鹜文楷等宽 TC"
+  },
+  {
+    "old": "wenfeng-xwxxhcode",
+    "new": "wenfeng-xwxxhc",
+    "how": "norm",
+    "shop": "霞鹜新晰黑 Code",
+    "status": "published",
+    "norm": "Xwxxhcode",
+    "id": "6fe351d8-6c07-4135-97cf-2742ff9396bf",
+    "vault_name": "霞鹜新晰黑 Code"
+  },
+  {
+    "old": "wenfeng-xwxxhplus",
+    "new": "wenfeng-xwxxhp",
+    "how": "norm",
+    "shop": "霞鹜新晰黑 Plus",
+    "status": "published",
+    "norm": "Xwxxhplus",
+    "id": "efa018b3-969b-4d98-84ba-8e523eaa78bb",
+    "vault_name": "霞鹜新晰黑 Plus"
+  },
+  {
+    "old": "wenfeng-xwxxhscreen",
+    "new": "wenfeng-xwxxhs",
+    "how": "norm",
+    "shop": "霞鹜新晰黑 Screen",
+    "status": "published",
+    "norm": "Xwxxhscreen",
+    "id": "55e0f90a-e2bf-4758-91de-f7c6b130a58b",
+    "vault_name": "霞鹜新晰黑 Screen"
+  },
+  {
+    "old": "wenfeng-xwxxhscreenfull",
+    "new": "wenfeng-xwxxhsf",
+    "how": "norm",
+    "shop": "霞鹜新晰黑 Screen Full",
+    "status": "published",
+    "norm": "Xwxxhscreenfull",
+    "id": "01c89650-d69f-4626-b455-9ec040775471",
+    "vault_name": "霞鹜新晰黑 Screen Full"
+  },
+  {
+    "old": "wenfeng-xwxzsplus",
+    "new": "wenfeng-xwxzsp",
+    "how": "norm",
+    "shop": "霞鹜新致宋 Plus",
+    "status": "published",
+    "norm": "Xwxzsplus",
+    "id": "74a7d4ae-621c-4f65-b18a-739c608569f6",
+    "vault_name": "霞鹜新致宋 Plus"
+  },
+  {
+    "old": "wenfeng-xwxzsscreen",
+    "new": "wenfeng-xwxzss",
+    "how": "norm",
+    "shop": "霞鹜新致宋 Screen",
+    "status": "published",
+    "norm": "Xwxzsscreen",
+    "id": "8c16a22f-71ee-4e55-bca7-d8be3a14fdc1",
+    "vault_name": "霞鹜新致宋 Screen"
+  },
+  {
+    "old": "wenfeng-xwxzsscreenfull",
+    "new": "wenfeng-xwxzssf",
+    "how": "norm",
+    "shop": "霞鹜新致宋 Screen Full",
+    "status": "published",
+    "norm": "Xwxzsscreenfull",
+    "id": "36502809-affc-4b57-ac90-00f79c0c3e19",
+    "vault_name": "霞鹜新致宋 Screen Full"
+  },
+  {
+    "old": "wenfeng-xwzkgb",
+    "new": "wenfeng-xwzk",
+    "how": "norm",
+    "shop": "霞鹜臻楷",
+    "status": "published",
+    "norm": "Xwzkgb",
+    "id": "ae752c1c-1511-4cc4-b806-a4bd8aa02370",
+    "vault_name": "霞鹜臻楷"
+  },
+  {
+    "old": "wenfeng-xwzksgb",
+    "new": "wenfeng-xwzks",
+    "how": "norm",
+    "shop": "霞鹜臻楷 Slab",
+    "status": "published",
+    "norm": "Xwzksgb",
+    "id": "837c129a-2efd-49dc-adb0-4483f40d2aa5",
+    "vault_name": "霞鹜臻楷 Slab"
+  },
+  {
+    "old": "wenfeng-aoyagisoseki",
+    "new": "wenfeng-qlsstas",
+    "how": "norm",
+    "shop": "青柳疎石フォント",
+    "status": "published",
+    "norm": "AoyagiSoseki",
+    "id": "41b4cc9a-5054-4f6b-98d9-b0edc1fea452",
+    "vault_name": "青柳疎石フォント"
+  },
+  {
+    "old": "wenfeng-aoyagikouzant",
+    "new": "wenfeng-qlhct",
+    "how": "norm",
+    "shop": "青柳衡山フォントT",
+    "status": "published",
+    "norm": "AoyagiKouzanT",
+    "id": "dcf31419-f1a8-47d4-9e9e-a3753a5ef8cf",
+    "vault_name": "青柳衡山フォントT"
+  },
+  {
+    "old": "wenfeng-aoyagireisho",
+    "new": "wenfeng-qllst",
+    "how": "norm",
+    "shop": "青柳隷書しも",
+    "status": "published",
+    "norm": "AoyagiReisho",
+    "id": "ef61ea8b-b3ea-4f3d-b0c2-c9bfd68338db",
+    "vault_name": "青柳隷書しも"
+  },
+  {
+    "old": "wenfeng-ffs",
+    "new": "wenfeng-fhst",
+    "how": "norm",
+    "shop": "飞花宋体",
+    "status": "published",
+    "norm": "Ffs",
+    "id": "9ea5f6af-4020-4abb-8fa7-e5a4f7bbdb2a",
+    "vault_name": "飞花宋体"
+  },
+  {
+    "old": "wenfeng-dela",
+    "new": "wenfeng-mtht",
+    "how": "norm",
+    "shop": "馒头黑体",
+    "status": "published",
+    "norm": "Dela",
+    "id": "25cefb5c-b67d-446d-b1af-e59414a98521",
+    "vault_name": "馒头黑体"
+  },
+  {
+    "old": "wenfeng-xcdz",
+    "new": "wenfeng-xcdzj",
+    "how": "norm",
+    "shop": "香萃打字机",
+    "status": "published",
+    "norm": "Xcdz",
+    "id": "39a52c13-4618-4864-89df-d3c6336bc038",
+    "vault_name": "香萃打字机"
+  },
+  {
+    "old": "wenfeng-xcdj",
+    "new": "wenfeng-xcdzjt",
+    "how": "norm",
+    "shop": "香萃打字机体",
+    "status": "published",
+    "norm": "Xcdj",
+    "id": "d80ba053-a883-4729-9b3b-a1f9ba77ce37",
+    "vault_name": "香萃打字机体"
+  },
+  {
+    "old": "wenfeng-xcjx",
+    "new": "wenfeng-xcjxs",
+    "how": "norm",
+    "shop": "香萃汲学宋",
+    "status": "published",
+    "norm": "Xcjx",
+    "id": "400eb0cc-91f5-4dbb-97d2-98f2c6c76866",
+    "vault_name": "香萃汲学宋"
+  },
+  {
+    "old": "wenfeng-xccx",
+    "new": "wenfeng-xccxs",
+    "how": "norm",
+    "shop": "香萃潮汐宋",
+    "status": "published",
+    "norm": "Xccx",
+    "id": "73d8769d-fd8a-420a-a1d3-e4572021fe58",
+    "vault_name": "香萃潮汐宋"
+  },
+  {
+    "old": "wenfeng-xcdc",
+    "new": "wenfeng-xcdcs",
+    "how": "norm",
+    "shop": "香萃等粗宋",
+    "status": "published",
+    "norm": "Xcdc",
+    "id": "de9fd1b1-f46c-46cb-be89-ca9f20d10201",
+    "vault_name": "香萃等粗宋"
+  },
+  {
+    "old": "wenfeng-xcld",
+    "new": "wenfeng-xcldh",
+    "how": "norm",
+    "shop": "香萃零度黑",
+    "status": "published",
+    "norm": "Xcld",
+    "id": "26abf312-2441-447a-a66d-e3d3c01188f4",
+    "vault_name": "香萃零度黑"
+  },
+  {
+    "old": "wenfeng-msz",
+    "new": "wenfeng-mszks",
+    "how": "norm",
+    "shop": "马善政楷书",
+    "status": "published",
+    "norm": "Msz",
+    "id": "30d4d764-6182-44d0-90a1-338bd59129d9",
+    "vault_name": "马善政楷书"
+  },
+  {
+    "old": "wenfeng-mlyu",
+    "new": "wenfeng-mlkyt",
+    "how": "norm",
+    "shop": "马路口圆体",
+    "status": "published",
+    "norm": "Mlyu",
+    "id": "aed558d4-8779-4424-9be5-26655d4914ab",
+    "vault_name": "马路口圆体"
+  },
+  {
+    "old": "wenfeng-rawmarukojp",
+    "new": "wenfeng-mlkytjp",
+    "how": "norm",
+    "shop": "马路口圆体 JP",
+    "status": "published",
+    "norm": "RawMarukoJP",
+    "id": "f33b7393-5080-47ad-b168-5ee6cba4967f",
+    "vault_name": "马路口圆体 JP"
+  },
+  {
+    "old": "wenfeng-rawmarukotc",
+    "new": "wenfeng-mlkyttc",
+    "how": "norm",
+    "shop": "马路口圆体 TC",
+    "status": "published",
+    "norm": "RawMarukoTC",
+    "id": "55a1f5a0-6945-4306-8c3b-80320b08d7f8",
+    "vault_name": "马路口圆体 TC"
+  },
+  {
+    "old": "wenfeng-hongleixiaozhitiao",
+    "new": "wenfeng-hlxztqct",
+    "how": "name",
+    "shop": "鸿雷小纸条青春体",
+    "status": "published",
+    "norm": "HongleiXiaozhitiao",
+    "id": "e91de44b-cfcd-424b-b382-dcd5bea4a85d",
+    "vault_name": "鸿雷小纸条青春体"
+  },
+  {
+    "old": "wenfeng-hongleizhuoshu",
+    "new": "wenfeng-hlzsjt",
+    "how": "name",
+    "shop": "鸿雷拙书简体",
+    "status": "published",
+    "norm": "HongleiZhuoshu",
+    "id": "12dfb1cb-c2af-4b23-ac29-7f1dd45a8b5d",
+    "vault_name": "鸿雷拙书简体"
+  },
+  {
+    "old": "wenfeng-hongleibanshu",
+    "new": "wenfeng-hlbst",
+    "how": "name",
+    "shop": "鸿雷板书体",
+    "status": "published",
+    "norm": "HongleiBanshu",
+    "id": "23746673-019f-4fa4-bacf-5e6de626c7e8",
+    "vault_name": "鸿雷板书体"
+  },
+  {
+    "old": "wenfeng-hongleixingshu",
+    "new": "wenfeng-hlxsjt",
+    "how": "name",
+    "shop": "鸿雷行书简体",
+    "status": "published",
+    "norm": "HongleiXingshu",
+    "id": "2ce47ece-b6c0-4a70-9503-ce1c0ddb8530",
+    "vault_name": "鸿雷行书简体"
+  },
+  {
+    "old": "wenfeng-plwk",
+    "new": "wenfeng-plwkpl",
+    "how": "norm",
+    "shop": "鹏翎文楷",
+    "status": "published",
+    "norm": "Plwk",
+    "id": "408685d9-f439-4f19-bc28-0a0d2e77d523",
+    "vault_name": "鹏翎文楷"
+  },
+  {
+    "old": "wenfeng-bspsc",
+    "new": "wenfeng-htmzt",
+    "how": "norm",
+    "shop": "黑糖梅子糖",
+    "status": "published",
+    "norm": "Bspsc",
+    "id": "69845ca7-c4f8-492a-afc7-2fa58ed2a74d",
+    "vault_name": "黑糖梅子糖"
+  },
+  {
+    "old": "wenfeng-kurobaragothic",
+    "new": "wenfeng-hqwjp",
+    "how": "norm",
+    "shop": "黒薔薇ゴシック",
+    "status": "published",
+    "norm": "KurobaraGothic",
+    "id": "573121c7-4d1e-4d95-84ef-59d94ca6b4fe",
+    "vault_name": "黒薔薇ゴシック"
+  },
+  {
+    "old": "wenfeng-qiji",
+    "new": "wenfeng-qjt",
+    "how": "norm",
+    "shop": "齐伋体",
+    "status": "published",
+    "norm": "Qiji",
+    "id": "94ea0702-0c27-44ff-ab86-98a094a72bb5",
+    "vault_name": "齐伋体"
+  },
+  {
+    "old": "wenfeng-lzti",
+    "new": "wenfeng-lsclzt",
+    "how": "norm",
+    "shop": "龙珠体",
+    "status": "published",
+    "norm": "Lzti",
+    "id": "41cfbf38-a292-4db2-85cb-87f4a4dc35fc",
+    "vault_name": "龙珠体"
+  },
+  {
+    "old": "wenfeng-yzklct",
+    "new": "wenfeng-lct",
+    "how": "norm",
+    "shop": "龙藏体",
+    "status": "published",
+    "norm": "Yzklct",
+    "id": "4da4acce-485c-4224-b3af-1ae439c38628",
+    "vault_name": "龙藏体"
+  },
+  {
+    "old": "wenfeng-gothicnguyen",
+    "new": "wenfeng-xyygn",
+    "how": "norm",
+    "shop": "𦁣夕源",
+    "status": "published",
+    "norm": "GothicNguyen",
+    "id": "713f1df1-a6de-43d5-994d-17ba132b91f4",
+    "vault_name": "𦁣夕源"
+  }
+]
